@@ -1,2 +1,2 @@
-npm lint
-npm build
+npm run lint
+npm run build
