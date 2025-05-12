@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "outDir": "dist",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationDir": "./dist",
+    "isolatedModules": false,
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "strict": true,
+    "types": [
+      "vite/client",
+      "jest",
+      "@testing-library/jest-dom"
+    ]
+  },
+  "include": [
+    "packages/*"
+  ],
+  "exclude": [
+    "node_modules",
+    ".storybook",
+    ".dev_docs",
+    ".template/**/*.*",
+    "/vite.base.config.ts"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }],
+}
