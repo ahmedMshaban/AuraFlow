@@ -13,3 +13,18 @@ export interface RecordingResult {
   /** Duration of the recording in milliseconds */
   duration: number;
 }
+
+export interface UseVideoRecorderProps {
+  recordingDuration?: number;
+  onRecordingComplete?: (result: RecordingResult) => void;
+}
+
+export interface VideoRecorderState {
+  isRecording: boolean;
+  isProcessing: boolean;
+  countdown: number | null;
+  recordingTime: number | null;
+  cameraReady: boolean;
+  startRecordingWithCountdown: () => Promise<void>;
+  setupRecorder: (stream: MediaStream) => void;
+}
