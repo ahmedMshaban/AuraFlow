@@ -1,4 +1,6 @@
 import StressDetector from './shared/modules/stress-detector/StressDetector';
+import { Button } from '@chakra-ui/react';
+
 import './App.css';
 
 function App() {
