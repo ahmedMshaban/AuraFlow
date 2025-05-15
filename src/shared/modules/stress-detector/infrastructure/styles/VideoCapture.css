@@ -1,0 +1,118 @@
+.video-capture {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.record-button {
+  padding: 12px 24px;
+  background-color: #d40000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.record-button:hover {
+  background-color: #ff0000;
+}
+
+.record-button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.countdown {
+  margin: 20px 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.recording-indicator {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  font-weight: bold;
+  color: #d40000;
+}
+
+.recording-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #d40000;
+  margin-left: 10px;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.recording-preview {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+.recording-preview h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.recording-preview video {
+  max-width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.recording-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.recording-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #0078d4;
+  color: white;
+  font-size: 14px;
+}
+
+.recording-actions button:hover {
+  background-color: #106ebe;
+}
+
+.recording-actions button:nth-child(2) {
+  background-color: #d40000;
+}
+
+.recording-actions button:nth-child(2):hover {
+  background-color: #ff0000;
+}
