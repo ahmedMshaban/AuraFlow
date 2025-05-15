@@ -155,8 +155,6 @@ const WebcamCapture: React.FC<WebcamCaptureProps> = ({ onCaptureReady, onStreamA
     }
   };
 
-  console.log('WebcamCapture component mounted');
-
   return (
     <div className="face-analyzer">
       <div className="video-container">

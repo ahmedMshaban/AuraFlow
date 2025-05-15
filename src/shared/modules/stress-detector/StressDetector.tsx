@@ -48,7 +48,7 @@ const StressDetector: React.FC<StressDetectorProps> = ({ onAnalysisComplete }) =
    * Handle when recording is complete
    */
   const handleRecordingComplete = useCallback(
-    async (recordingResult) => {
+    async (recordingResult: import('./infrastructure/types/VideoRecorder.types').RecordingResult) => {
       if (!recordingResult || !recordingResult.blob) {
         setError('Recording failed or was empty.');
         return;

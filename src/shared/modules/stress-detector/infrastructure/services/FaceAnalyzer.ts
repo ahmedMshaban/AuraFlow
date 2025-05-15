@@ -50,10 +50,11 @@ export class FaceAnalyzer {
 
   /**
    * Detects facial expressions in a video element
-   */
-  public async detectExpressions(
+   */ public async detectExpressions(
     video: HTMLVideoElement,
-  ): Promise<faceapi.WithFaceExpressions<faceapi.DetectSingleFaceResult> | null> {
+  ): Promise<faceapi.WithFaceExpressions<
+    faceapi.WithFaceLandmarks<{ detection: faceapi.FaceDetection }, faceapi.FaceLandmarks68>
+  > | null> {
     if (!this.modelsLoaded) {
       throw new Error('Models not loaded. Call loadModels() first');
     }
