@@ -1,18 +1,11 @@
-import StressDetector from './shared/modules/stress-detector/StressDetector';
-import { Button } from '@chakra-ui/react';
-
+import FaceAnalysis from './shared/modules/stress-detector/FaceAnalysis';
 import './App.css';
 
 function App() {
   return (
     <div className="app">
       <h1>Stress Detection</h1>
-
-      <StressDetector
-        onAnalysisComplete={(result) => {
-          console.log('Analysis complete:', result);
-        }}
-      />
+      <FaceAnalysis />
     </div>
   );
 }

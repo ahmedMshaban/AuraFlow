@@ -6,7 +6,7 @@
  */
 
 import * as faceapi from 'face-api.js';
-import type { FaceExpressions, StressAnalysisResult } from '../types/FaceExpressions';
+import type { FaceExpressions, StressAnalysisResult } from '../types/FaceExpressions.types';
 
 /**
  * Class for analyzing facial expressions and detecting stress levels
