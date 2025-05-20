@@ -25,6 +25,8 @@ export interface VideoRecorderState {
   countdown: number | null;
   recordingTime: number | null;
   cameraReady: boolean;
+  hasRecorded: boolean;
   startRecordingWithCountdown: () => Promise<void>;
   setupRecorder: (stream: MediaStream) => void;
+  resetRecording: () => void;
 }

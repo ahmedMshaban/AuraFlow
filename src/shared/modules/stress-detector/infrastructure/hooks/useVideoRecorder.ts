@@ -15,6 +15,7 @@ export const useVideoRecorder = ({
   const [countdown, setCountdown] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState<number | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  const [hasRecorded, setHasRecorded] = useState(false);
 
   /**
    * Update recording timer during recording
@@ -38,20 +39,41 @@ export const useVideoRecorder = ({
       if (timerId) clearInterval(timerId);
     };
   }, [isRecording, recordingTime]);
-
   /**
    * Setup the recorder with a media stream
    */
   const setupRecorder = useCallback((stream: MediaStream) => {
-    videoRecorder.setup(stream);
-    setCameraReady(true);
-  }, []);
+    try {
+      // Check if the stream is valid and has video tracks
+      if (!stream || stream.getVideoTracks().length === 0) {
+        console.error('Invalid media stream: No video tracks found');
+        return;
+      }
 
+      // Setup the recorder
+      videoRecorder.setup(stream);
+      console.log('Video recorder setup complete');
+      setCameraReady(true);
+    } catch (error) {
+      console.error('Failed to setup video recorder:', error);
+      setCameraReady(false);
+    }
+  }, []);
   /**
    * Start the recording process with a countdown
    */
   const startRecordingWithCountdown = useCallback(async () => {
-    if (!cameraReady) return;
+    // Prevent recording multiple times
+    if (hasRecorded) {
+      console.log('Recording already completed. No need to record again.');
+      return;
+    }
+
+    // Check if camera is ready to record
+    if (!cameraReady) {
+      console.error('Camera is not ready. Please ensure camera access is granted.');
+      return;
+    }
 
     // Start countdown
     setIsProcessing(true);
@@ -71,15 +93,25 @@ export const useVideoRecorder = ({
       }, 1000);
     });
 
-    // Start recording
+    // Set recording state first
     setIsRecording(true);
     setCountdown(null);
     setRecordingTime(Math.floor(recordingDuration / 1000));
 
     try {
+      console.log('Starting recording with duration:', recordingDuration);
+
+      // Make sure we have a short delay before starting recording to ensure states have updated
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       const result = await videoRecorder.startRecording({
         duration: recordingDuration,
       });
+
+      console.log('Recording completed successfully');
+
+      // Mark as recorded to prevent further recordings
+      setHasRecorded(true);
 
       // Call the callback if provided
       if (onRecordingComplete) {
@@ -92,7 +124,17 @@ export const useVideoRecorder = ({
       setIsProcessing(false);
       setRecordingTime(null);
     }
-  }, [cameraReady, recordingDuration, onRecordingComplete]);
+  }, [cameraReady, recordingDuration, onRecordingComplete, hasRecorded]);
+  /**
+   * Reset recording state to allow recording again
+   */
+  const resetRecording = useCallback(() => {
+    setHasRecorded(false);
+    setIsRecording(false);
+    setIsProcessing(false);
+    setCountdown(null);
+    setRecordingTime(null);
+  }, []);
 
   return {
     isRecording,
@@ -100,7 +142,9 @@ export const useVideoRecorder = ({
     countdown,
     recordingTime,
     cameraReady,
+    hasRecorded,
     startRecordingWithCountdown,
     setupRecorder,
+    resetRecording,
   };
 };

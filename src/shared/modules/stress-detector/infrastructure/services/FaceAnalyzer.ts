@@ -72,33 +72,32 @@ export class FaceAnalyzer {
       return null;
     }
   }
-
   /**
    * Analyzes facial expressions to determine stress level
    *
-   * This is a simplified algorithm that uses a weighted combination of
-   * negative emotions (anger, fear, disgust, sadness) to estimate stress.
+   * This method determines stress by checking if one of the negative emotions
+   * (angry, fearful, disgusted, sad) is the dominant facial expression.
    */
   public analyzeStress(expressions: FaceExpressions): StressAnalysisResult {
-    // Calculate raw stress score from negative emotions
-    // Higher weights for emotions more associated with stress
-    const stressScore =
-      expressions.angry * 0.4 + expressions.fearful * 0.3 + expressions.disgusted * 0.15 + expressions.sad * 0.15;
-
-    // Convert to a 0-100 scale
-    const stressLevel = Math.min(Math.round(stressScore * 100), 100);
-
     // Find dominant expression
     const dominantExpression = Object.entries(expressions).reduce(
       (max, [expression, score]) => (score > max[1] ? [expression, score] : max),
       ['none', 0],
     )[0];
 
+    // Check if the dominant expression is one of the stress indicators
+    const stressIndicators = ['angry', 'fearful', 'disgusted', 'sad'];
+    const isStressed = stressIndicators.includes(dominantExpression);
+
+    // Still calculate a stress level for backward compatibility
+    // but it's simply 100 if stressed, 0 if not
+    const stressLevel = isStressed ? 100 : 0;
+
     return {
       stressLevel,
       dominantExpression,
       expressions,
-      isStressed: stressLevel > 65, // Threshold for "stressed"
+      isStressed,
       timestamp: new Date(),
     };
   }
