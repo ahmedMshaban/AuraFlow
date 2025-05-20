@@ -20,7 +20,7 @@ export class VideoRecorder {
    * Default recording options
    */
   private defaultOptions: RecordingOptions = {
-    duration: 5000, // 5 seconds
+    duration: 3000, // 3 seconds
     mimeType: 'video/webm;codecs=vp9',
   };
 

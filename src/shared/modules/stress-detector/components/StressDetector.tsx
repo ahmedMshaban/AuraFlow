@@ -9,11 +9,10 @@ import React from 'react';
 import VideoCapture from './VideoCapture';
 import { useFaceModel } from '../infrastructure/hooks/useFaceModel';
 import { useFaceAnalysis } from '../infrastructure/hooks/useFaceAnalysis';
-import { useStressAnalysisUtils } from '../infrastructure/hooks/useStressAnalysisUtils';
 import type { StressDetectorProps } from '../infrastructure/types/StressDetector.types';
 import '../infrastructure/styles/StressDetector.css';
 
-const StressDetector: React.FC<StressDetectorProps> = ({ onAnalysisComplete }) => {
+const StressDetector: React.FC<StressDetectorProps> = ({ onAnalysisComplete, currentStep }) => {
   const { isLoading: modelsLoading, modelsLoaded, error: modelError } = useFaceModel();
 
   const {
@@ -23,8 +22,6 @@ const StressDetector: React.FC<StressDetectorProps> = ({ onAnalysisComplete }) =
     handleRecordingComplete,
     handleReset,
   } = useFaceAnalysis({ onAnalysisComplete });
-
-  const { getStressLevelText, getRecommendations } = useStressAnalysisUtils();
 
   // Combine errors from different sources
   const error = modelError || analysisError;
@@ -42,8 +39,9 @@ const StressDetector: React.FC<StressDetectorProps> = ({ onAnalysisComplete }) =
       {modelsLoaded && !analysisResult && (
         <>
           <VideoCapture
-            recordingDuration={5000}
+            recordingDuration={3000}
             onRecordingComplete={handleRecordingComplete}
+            currentStep={currentStep}
           />
 
           {isLoading && (
@@ -65,61 +63,6 @@ const StressDetector: React.FC<StressDetectorProps> = ({ onAnalysisComplete }) =
       {analysisResult && (
         <div className="analysis-result">
           <h2>Stress Analysis Results</h2>
-
-          <div className="stress-level">
-            <div className="stress-meter">
-              <div
-                className="stress-indicator"
-                style={{ width: `${analysisResult.stressLevel}%` }}
-              ></div>
-            </div>
-            <p>
-              Stress Level:{' '}
-              <span className={`stress-${getStressLevelText(analysisResult.stressLevel).toLowerCase()}`}>
-                {getStressLevelText(analysisResult.stressLevel)} ({analysisResult.stressLevel}%)
-              </span>
-            </p>
-          </div>
-
-          <div className="expressions">
-            <h3>Expression Analysis</h3>
-            <p>
-              Dominant expression: <strong>{analysisResult.dominantExpression}</strong>
-            </p>
-            <div className="expression-bars">
-              {Object.entries(analysisResult.expressions).map(([expression, value]) => (
-                <div
-                  className="expression-bar"
-                  key={expression}
-                >
-                  <span className="expression-name">{expression}</span>
-                  <div className="expression-meter">
-                    <div
-                      className="expression-indicator"
-                      style={{ width: `${value * 100}%` }}
-                    ></div>
-                  </div>
-                  <span className="expression-value">{Math.round(value * 100)}%</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="recommendations">
-            <h3>Recommendations</h3>
-            <ul>
-              {getRecommendations(analysisResult).map((recommendation, index) => (
-                <li key={index}>{recommendation}</li>
-              ))}
-            </ul>
-          </div>
-
-          <button
-            className="reset-button"
-            onClick={handleReset}
-          >
-            Start Over
-          </button>
         </div>
       )}
     </div>

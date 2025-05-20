@@ -3,6 +3,7 @@ export interface WebcamCaptureProps {
   onCaptureReady?: () => void;
   /** Called when a media stream becomes available */
   onStreamAvailable?: (stream: MediaStream) => void;
+  currentStep?: number;
 }
 
 export interface UseWebcamProps {

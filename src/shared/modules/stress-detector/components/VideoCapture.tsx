@@ -4,7 +4,7 @@
  * Specifically focused on capturing 5-second video segments for stress analysis.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import WebcamCapture from './WebcamCapture';
 import { useVideoRecorder } from '../infrastructure/hooks/useVideoRecorder';
@@ -12,7 +12,7 @@ import { useWebcamSetup } from '../infrastructure/hooks/useWebcamSetup';
 import type { VideoCaptureProps } from '../infrastructure/types/VideoCapture.types';
 import '../infrastructure/styles/VideoCapture.css';
 
-const VideoCapture: React.FC<VideoCaptureProps> = ({ recordingDuration = 5000, onRecordingComplete }) => {
+const VideoCapture: React.FC<VideoCaptureProps> = ({ recordingDuration = 3000, onRecordingComplete, currentStep }) => {
   // Use our custom hooks for video recording and webcam setup
   const {
     isRecording,
@@ -32,26 +32,24 @@ const VideoCapture: React.FC<VideoCaptureProps> = ({ recordingDuration = 5000, o
     onStreamAvailable: setupRecorder,
   });
 
+  useEffect(() => {
+    if (currentStep === 1 && cameraReady && !isRecording && !isProcessing) {
+      startRecordingWithCountdown();
+    }
+
+    // Cleanup function to stop the camera when the component unmounts
+  }, [currentStep, cameraReady, isRecording, isProcessing, startRecordingWithCountdown]);
+
   return (
     <div className="video-capture">
       {/* Use WebcamCapture as the base for video input */}
       <WebcamCapture
         onCaptureReady={handleCaptureReady}
         onStreamAvailable={handleStreamAvailable}
+        currentStep={currentStep}
       />
 
       <div className="controls">
-        {/* Recording controls */}
-        {cameraReady && !isRecording && !isProcessing && (
-          <button
-            className="record-button"
-            onClick={startRecordingWithCountdown}
-            disabled={!cameraReady || isRecording || isProcessing}
-          >
-            Record 5-Second Video
-          </button>
-        )}
-
         {/* Countdown display */}
         {countdown !== null && (
           <div className="countdown">

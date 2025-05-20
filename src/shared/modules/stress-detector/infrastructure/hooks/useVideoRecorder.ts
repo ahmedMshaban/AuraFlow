@@ -6,7 +6,7 @@ import { videoRecorder } from '../services/VideoRecorder';
 import type { UseVideoRecorderProps, VideoRecorderState } from '../types/VideoRecorder.types';
 
 export const useVideoRecorder = ({
-  recordingDuration = 5000,
+  recordingDuration = 3000,
   onRecordingComplete,
 }: UseVideoRecorderProps): VideoRecorderState => {
   // State for recording process

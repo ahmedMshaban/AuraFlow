@@ -5,4 +5,5 @@ export interface VideoCaptureProps {
   recordingDuration?: number;
   /** Called when recording is completed */
   onRecordingComplete?: (result: RecordingResult) => void;
+  currentStep?: number;
 }

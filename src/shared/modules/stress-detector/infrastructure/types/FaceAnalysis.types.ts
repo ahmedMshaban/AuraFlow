@@ -15,5 +15,4 @@ export interface UseFaceAnalysisResult {
 
 export interface UseStressAnalysisUtilsResult {
   getStressLevelText: (level: number) => string;
-  getRecommendations: (result: StressAnalysisResult) => string[];
 }

@@ -31,7 +31,7 @@ const FaceAnalysis = () => {
                 count={3}
               >
                 <Steps.List>
-                  {[0, 1, 2].map((index) => (
+                  {[0, 1].map((index) => (
                     <Steps.Item
                       key={index}
                       index={index}
@@ -99,16 +99,20 @@ const FaceAnalysis = () => {
                         <StressDetector
                           onAnalysisComplete={(result) => {
                             console.log('Analysis complete:', result);
+                            setStep(2);
                           }}
+                          currentStep={step}
                         />
                       </>
                     )}
+
+                    {index === 2 && (
+                      <div>
+                        <p>All set! Your workspace will now adapt to keep you in the zone.</p>
+                      </div>
+                    )}
                   </Steps.Content>
                 ))}
-
-                <Steps.CompletedContent>
-                  All set! Your workspace will now adapt to keep you in the zone.
-                </Steps.CompletedContent>
               </Steps.Root>
             </Dialog.Body>
             <Dialog.CloseTrigger asChild>
