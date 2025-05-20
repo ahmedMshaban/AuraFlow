@@ -124,16 +124,6 @@ export class VideoRecorder {
   }
 
   /**
-   * Manually stops recording
-   */
-  public stopRecording(): void {
-    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
-      this.mediaRecorder.stop();
-      console.log('Recording stopped manually');
-    }
-  }
-
-  /**
    * Cleans up resources
    */
   public cleanup(): void {
