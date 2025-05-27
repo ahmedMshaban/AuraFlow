@@ -98,11 +98,11 @@ class StressMonitoringService {
     // Dispatch an event to notify the app that a stress test should be shown
     const event = new CustomEvent('triggerStressTest');
     window.dispatchEvent(event);
-  } /**
+  }
+  /**
    * Record the result of a stress test
    * @param result The stress analysis result
-   */
-  public recordTestResult(result: StressAnalysisResult): void {
+   */ public recordTestResult(result: StressAnalysisResult): void {
     // Convert the FaceExpressions object to a plain object to make it serializable
     // Only dispatch if expressions is present (not null)
     if (result.expressions) {
@@ -111,8 +111,13 @@ class StressMonitoringService {
         expressions: Object.fromEntries(
           Object.entries(result.expressions).map(([key, value]) => [key, Number(value)]),
         ) as typeof result.expressions,
-        // Ensure timestamp is always a Date object
-        timestamp: result.timestamp instanceof Date ? result.timestamp : new Date(result.timestamp),
+        // Ensure timestamp is always a NUMBER, not a Date object for serialization
+        timestamp:
+          result.timestamp instanceof Date
+            ? result.timestamp.getTime()
+            : typeof result.timestamp === 'number'
+              ? result.timestamp
+              : Date.now(),
       };
       store.dispatch(recordStressResult(serializedResult));
     } else {

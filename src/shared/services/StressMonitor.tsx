@@ -28,16 +28,31 @@ export const StressMonitor: React.FC = () => {
       window.removeEventListener('triggerStressTest', handleTriggerStressTest);
     };
   }, []);
-
   // Handle analysis completion
   const handleAnalysisComplete = (result: StressAnalysisResult) => {
     console.log('Stress analysis completed with result:', result);
 
-    // Record the result in Redux
-    dispatch(recordStressResult(result));
+    // Serialize the result before sending to Redux
+    const serializedResult = {
+      ...result,
+      // Convert FaceExpressions object to a plain object with numeric values
+      expressions: result.expressions
+        ? Object.fromEntries(Object.entries(result.expressions).map(([key, value]) => [key, Number(value)]))
+        : {},
+      // Ensure timestamp is a number, not a Date object
+      timestamp:
+        result.timestamp instanceof Date
+          ? result.timestamp.getTime()
+          : typeof result.timestamp === 'number'
+            ? result.timestamp
+            : Date.now(),
+    };
+
+    // Record the serialized result in Redux
+    dispatch(recordStressResult(serializedResult));
 
     // Also record in the service to schedule the next test
-    stressMonitoringService.recordTestResult(result);
+    stressMonitoringService.recordTestResult(serializedResult);
 
     // Hide the analysis component
     setShowAnalysis(false);

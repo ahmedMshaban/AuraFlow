@@ -14,9 +14,9 @@ export type StressAnalysisResult = {
   /** Dominant expression detected */
   dominantExpression: string;
   /** Raw expression scores */
-  expressions: FaceExpressions;
+  expressions: FaceExpressions | Record<string, number>;
   /** Whether stress level is considered high */
   isStressed: boolean;
-  /** Timestamp when analysis was performed */
-  timestamp: Date;
+  /** Timestamp when analysis was performed - can be Date or number for serialization */
+  timestamp: Date | number;
 };

@@ -27,7 +27,7 @@ export const store = configureStore({
         // Ignore non-serializable values in the redux-persist actions
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         // Ignore non-serializable values in specific paths
-        ignoredPaths: ['stressMonitoring.lastStressResult.timestamp'],
+        ignoredPaths: ['stressMonitoring.lastStressResult.timestamp', 'stressMonitoring.lastStressResult.expressions'],
       },
     }),
 });
