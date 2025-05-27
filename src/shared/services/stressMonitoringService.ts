@@ -128,7 +128,6 @@ class StressMonitoringService {
     // Schedule the next test
     this.scheduleNextTest();
   }
-
   /**
    * Clear any scheduled stress test
    */
@@ -137,6 +136,15 @@ class StressMonitoringService {
       window.clearTimeout(this.timerId);
       this.timerId = null;
     }
+  }
+
+  /**
+   * Public method to clear all scheduled tests
+   * Used when logging out or unmounting the stress monitoring component
+   */
+  public clearAllScheduledTests(): void {
+    this.clearScheduledTest();
+    console.log('All stress monitoring tests cleared');
   }
 }
 

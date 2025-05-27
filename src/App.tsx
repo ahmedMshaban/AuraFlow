@@ -2,6 +2,7 @@ import { useRoutes } from 'react-router';
 
 import { AuthProvider } from './shared/contexts/authContext';
 import StoreProvider from './shared/services/StoreProvider';
+import AuthenticatedStressMonitoring from './shared/components/AuthenticatedStressMonitoring';
 
 import Login from './modules/login';
 import Register from './modules/register';
@@ -35,6 +36,7 @@ function App() {
     <StoreProvider>
       <AuthProvider>
         <div className="app">{routesElement}</div>
+        <AuthenticatedStressMonitoring />
       </AuthProvider>
     </StoreProvider>
   );

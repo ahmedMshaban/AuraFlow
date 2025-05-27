@@ -1,11 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../store';
-import { stressMonitoringService } from './stressMonitoringService';
 import { StressAdaptationProvider } from '../adaptations/StressAdaptationContext';
-import StressAdaptations from '../adaptations/StressAdaptation';
-import StressMonitor from './StressMonitor';
 
 interface StoreProviderProps {
   children: React.ReactNode;
@@ -13,12 +10,11 @@ interface StoreProviderProps {
 
 /**
  * Provider component that initializes Redux and the stress monitoring service
+ * only when user is logged in
  */
 export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
-  // Initialize the stress monitoring service when the app starts
-  useEffect(() => {
-    stressMonitoringService.initialize();
-  }, []);
+  // We can't use useAuth here directly because it needs to be inside the AuthProvider
+  // We'll modify the App.tsx structure instead
   return (
     <Provider store={store}>
       <PersistGate
@@ -27,8 +23,6 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
       >
         <StressAdaptationProvider>
           {children}
-          <StressMonitor />
-          <StressAdaptations />
         </StressAdaptationProvider>
       </PersistGate>
     </Provider>
