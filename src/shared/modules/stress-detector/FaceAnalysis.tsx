@@ -2,8 +2,13 @@ import { useState } from 'react';
 import { Button, CloseButton, Dialog, Portal, ButtonGroup, Steps } from '@chakra-ui/react';
 
 import StressDetector from './components/StressDetector';
+import type { StressAnalysisResult } from './infrastructure/types/FaceExpressions.types';
 
-const FaceAnalysis = () => {
+interface FaceAnalysisProps {
+  onAnalysisComplete?: (result: StressAnalysisResult) => void;
+}
+
+const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ onAnalysisComplete }) => {
   const [open, setOpen] = useState(true);
   const [step, setStep] = useState(0);
 
@@ -95,10 +100,14 @@ const FaceAnalysis = () => {
 
                     {index === 1 && (
                       <>
-                        <p>Stay still — we’re snapping your calm vibe! </p>
+                        <p>Stay still — we’re snapping your calm vibe! </p>{' '}
                         <StressDetector
                           onAnalysisComplete={(result) => {
                             console.log('Analysis complete:', result);
+                            // Call the parent callback if provided
+                            if (onAnalysisComplete) {
+                              onAnalysisComplete(result);
+                            }
                             setStep(2);
                           }}
                           currentStep={step}

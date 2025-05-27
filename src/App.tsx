@@ -1,11 +1,13 @@
 import { useRoutes } from 'react-router';
 
 import { AuthProvider } from './shared/contexts/authContext';
+import StoreProvider from './shared/services/StoreProvider';
 
 import Login from './modules/login';
 import Register from './modules/register';
 import Home from './modules/home';
 import './App.css';
+import './shared/adaptations/themes.css';
 
 function App() {
   const routesArray = [
@@ -30,9 +32,11 @@ function App() {
   const routesElement = useRoutes(routesArray);
 
   return (
-    <AuthProvider>
-      <div className="app">{routesElement}</div>
-    </AuthProvider>
+    <StoreProvider>
+      <AuthProvider>
+        <div className="app">{routesElement}</div>
+      </AuthProvider>
+    </StoreProvider>
   );
 }
 
