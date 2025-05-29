@@ -19,14 +19,11 @@ const Home = () => {
             navigate('/login');
           });
         }}
-        className="text-sm text-blue-600 underline"
       >
         Logout
       </button>
 
-      <div className="text-2xl font-bold pt-14">
-        Hello {currentUser?.displayName || currentUser?.email}, you are now logged in.
-      </div>
+      <div>Hello {currentUser?.displayName || currentUser?.email}, you are now logged in.</div>
 
       {/* For testing and development purposes */}
       <div style={{ marginTop: '30px' }}>
