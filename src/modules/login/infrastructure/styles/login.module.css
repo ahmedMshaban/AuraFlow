@@ -1,0 +1,32 @@
+.loginContainer {
+  height: 100dvh;
+  background-color: rgb(13, 12, 17);
+  background-image: url('../../../../assets/images/blur_bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 40px;
+}
+
+.logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+.registerContainer {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.registerContainer p {
+  color: rgba(255, 255, 255, 0.75);
+}

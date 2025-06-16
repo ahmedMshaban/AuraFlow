@@ -1,21 +1,20 @@
 import { useState } from 'react';
-import { Navigate, Link, useNavigate } from 'react-router';
+import { Navigate, Link } from 'react-router';
 
-import { useAuth } from '../../shared/contexts/authContext';
+import { useAuth } from '../../shared/hooks/useAuth';
 import { doCreateUserWithEmailAndPassword } from '../../shared/auth/firebase/auth';
+import type { AuthContextType } from '@/shared/types/authContext';
 
 const Register = () => {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage] = useState('');
 
-  const { userLoggedIn } = useAuth();
+  const { userLoggedIn } = useAuth() as AuthContextType;
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!isRegistering) {
       setIsRegistering(true);

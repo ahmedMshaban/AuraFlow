@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
-import { useAuth } from '../contexts/authContext';
+import { useAuth } from '../hooks/useAuth';
 import { stressMonitoringService } from '../services/stressMonitoringService';
 import StressMonitor from '../services/StressMonitor';
 import StressAdaptations from '../adaptations/StressAdaptation';
+import type { AuthContextType } from '../types/authContext';
 
 /**
  * Component that initializes and renders stress monitoring components
  * only when a user is authenticated
  */
 export const AuthenticatedStressMonitoring: React.FC = () => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useAuth() as AuthContextType;
 
   // Initialize stress monitoring only when user is logged in
   useEffect(() => {

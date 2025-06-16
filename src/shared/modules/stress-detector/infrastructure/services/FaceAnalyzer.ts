@@ -89,8 +89,7 @@ export class FaceAnalyzer {
     const stressIndicators = ['angry', 'fearful', 'disgusted', 'sad'];
     const isStressed = stressIndicators.includes(dominantExpression);
 
-    // Still calculate a stress level for backward compatibility
-    // but it's simply 100 if stressed, 0 if not
+    // Simply 100 if stressed, 0 if not
     const stressLevel = isStressed ? 100 : 0;
 
     return {

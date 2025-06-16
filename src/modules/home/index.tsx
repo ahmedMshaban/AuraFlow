@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 
-import { useAuth } from '../../shared/contexts/authContext';
+import { useAuth } from '../../shared/hooks/useAuth';
 import { doSignOut } from '../../shared/auth/firebase/auth';
 import StressMonitoringPanel from '../../shared/components/StressMonitoringPanel';
+import type { AuthContextType } from '@/shared/types/authContext';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { currentUser } = useAuth() as AuthContextType;
   const [showPanel, setShowPanel] = useState(false);
 
   return (

@@ -1,7 +1,7 @@
 /**
  *
  * A component that extends WebcamCapture with video recording capabilities.
- * Specifically focused on capturing 5-second video segments for stress analysis.
+ * Specifically focused on capturing 3-second video segments for stress analysis.
  */
 
 import React, { useEffect } from 'react';

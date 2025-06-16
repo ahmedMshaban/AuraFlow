@@ -2,7 +2,7 @@
  * VideoRecorder.ts
  *
  * A service for recording short video segments from a given MediaStream.
- * Used for capturing 5-second clips for stress detection analysis.
+ * Used for capturing 3-second clips for stress detection analysis.
  */
 
 import type { RecordingResult, RecordingOptions } from '../types/VideoRecorder.types';

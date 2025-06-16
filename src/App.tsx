@@ -7,7 +7,6 @@ import AuthenticatedStressMonitoring from './shared/components/AuthenticatedStre
 import Login from './modules/login';
 import Register from './modules/register';
 import Home from './modules/home';
-import './App.css';
 import './shared/adaptations/themes.css';
 
 function App() {
@@ -35,7 +34,7 @@ function App() {
   return (
     <StoreProvider>
       <AuthProvider>
-        <div className="app">{routesElement}</div>
+        <main className="app">{routesElement}</main>
         <AuthenticatedStressMonitoring />
       </AuthProvider>
     </StoreProvider>

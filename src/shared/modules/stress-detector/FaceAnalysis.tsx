@@ -26,7 +26,7 @@ const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ onAnalysisComplete }) => {
             <Dialog.Header>
               <Dialog.Title>
                 {step === 0 && 'Let’s Make AuraFlow Work Better for You!'}
-                {step === 1 && '5 seconds to calibrate!'}
+                {step === 1 && '3 seconds to calibrate!'}
               </Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
