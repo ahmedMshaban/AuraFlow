@@ -1,0 +1,53 @@
+.roboto-regular {
+  font-family: var(--font-roboto);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: 'wdth' 100;
+}
+
+.roboto-medium {
+  font-family: var(--font-roboto);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings: 'wdth' 100;
+}
+
+.roboto-bold {
+  font-family: var(--font-roboto);
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-variation-settings: 'wdth' 100;
+}
+
+:root {
+  --font-roboto: 'Roboto', sans-serif;
+}
+
+body {
+  font-family: var(--font-roboto);
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-roboto);
+  font-weight: 700;
+}
+
+/* Form */
+input {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.form-error {
+  color: var(--chakra-colors-fg-error);
+  font-size: var(--chakra-font-sizes-xs);
+  margin: 0 auto;
+}

@@ -1,17 +1,23 @@
 import { useState } from 'react';
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '@/shared/auth/firebase/auth';
+import { getErrorMessage } from '@/shared/helpers';
+
+import type { LoginFormValues } from '../types/login-types';
 
 const useLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const [errorMessage] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginFormValues) => {
     if (!isSigningIn) {
       setIsSigningIn(true);
-      await doSignInWithEmailAndPassword(email, password);
+      setError(null);
+      try {
+        await doSignInWithEmailAndPassword(data.email, data.password);
+      } catch (err) {
+        setError(getErrorMessage(err));
+        setIsSigningIn(false);
+      }
     }
   };
 
@@ -19,19 +25,17 @@ const useLogin = () => {
     e.preventDefault();
     if (!isSigningIn) {
       setIsSigningIn(true);
-      doSignInWithGoogle().catch(() => {
+      setError(null);
+      doSignInWithGoogle().catch((err) => {
+        setError(getErrorMessage(err));
         setIsSigningIn(false);
       });
     }
   };
 
   return {
-    email,
-    password,
-    setEmail,
-    setPassword,
     isSigningIn,
-    errorMessage,
+    error,
     onSubmit,
     onGoogleSignIn,
   };

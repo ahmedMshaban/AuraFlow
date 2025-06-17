@@ -8,6 +8,7 @@ import Login from './modules/login';
 import Register from './modules/register';
 import Home from './modules/home';
 import './shared/adaptations/themes.css';
+import './App.css';
 
 function App() {
   const routesArray = [
