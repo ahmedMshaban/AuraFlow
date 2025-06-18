@@ -157,7 +157,7 @@ export const buttonRecipe = defineRecipe({
       outline: {
         borderWidth: '1px',
         borderColor: 'rgba(255, 255, 255, 0.2)',
-        color: 'colorPalette.fg',
+        color: 'white',
         _hover: {
           bg: 'rgba(255, 255, 255, 0.1)',
         },

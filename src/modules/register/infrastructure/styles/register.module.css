@@ -1,4 +1,4 @@
-.loginContainer {
+.registerContainer {
   height: 100dvh;
   background-color: rgb(13, 12, 17);
   background-image: url('../../../../assets/images/blur_bg.png');
@@ -20,18 +20,55 @@
   object-fit: contain;
 }
 
-.registerContainer {
+.mainContentContainer {
+  max-width: 1280px;
+  width: 100%;
+  padding: 2.5rem;
+  display: flex;
+  margin: 0 auto;
+  gap: 2rem;
+}
+
+.auraFlowDescription {
+  flex: 1;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: center;
+}
+
+.bannerImage {
+  border-radius: 1.5rem;
+}
+
+.imageCredit {
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.loginContainer {
   margin-left: auto;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.registerContainer p {
+.loginContainer p {
   color: rgba(255, 255, 255, 0.75);
 }
 
-.loginForm {
+.registerForm {
   backdrop-filter: blur(10px);
   background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.01));
   border-radius: 1.5rem;
@@ -44,7 +81,7 @@
   margin: 0 auto;
 }
 
-.loginForm h1 {
+.registerForm h1 {
   font-family: var(--font-roboto-bold);
   font-size: 2rem;
   color: rgb(255, 255, 255);
@@ -52,46 +89,7 @@
   text-align: center;
 }
 
-.loginButton {
+.registerButton {
   width: 100%;
   margin-bottom: 1.5rem;
-}
-
-.orContainer {
-  color: rgb(255, 255, 255);
-  align-items: center;
-  display: flex;
-  margin-bottom: 1.5rem;
-
-  hr {
-    color: rgb(255, 255, 255);
-    opacity: 0.2;
-    width: 100%;
-  }
-
-  div {
-    flex-shrink: 0;
-    padding: 0px 1rem;
-    text-align: center;
-    opacity: 0.75;
-    font-size: 12px;
-    letter-spacing: 1px;
-  }
-}
-
-.googleButton {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  transition:
-    background 0.2s ease-in-out,
-    color 0.15s ease-in-out;
-  border: none;
-}
-
-.googleButton:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.googleIcon {
-  width: 24px;
 }

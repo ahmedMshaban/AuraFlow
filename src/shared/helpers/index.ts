@@ -1,1 +1,1 @@
-export { getErrorMessage } from './getErrorMessage';
+export { getSignInErrorMessage, getRegisterErrorMessage } from './getErrorMessages';

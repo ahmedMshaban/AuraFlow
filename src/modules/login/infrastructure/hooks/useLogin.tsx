@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '@/shared/auth/firebase/auth';
-import { getErrorMessage } from '@/shared/helpers';
+import { getSignInErrorMessage } from '@/shared/helpers';
 
 import type { LoginFormValues } from '../types/login-types';
 
@@ -15,7 +15,7 @@ const useLogin = () => {
       try {
         await doSignInWithEmailAndPassword(data.email, data.password);
       } catch (err) {
-        setError(getErrorMessage(err));
+        setError(getSignInErrorMessage(err));
         setIsSigningIn(false);
       }
     }
@@ -27,7 +27,7 @@ const useLogin = () => {
       setIsSigningIn(true);
       setError(null);
       doSignInWithGoogle().catch((err) => {
-        setError(getErrorMessage(err));
+        setError(getSignInErrorMessage(err));
         setIsSigningIn(false);
       });
     }

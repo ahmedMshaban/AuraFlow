@@ -1,29 +1,19 @@
-import { useState } from 'react';
 import { Navigate, Link } from 'react-router';
 
-import { useAuth } from '../../shared/hooks/useAuth';
-import { doCreateUserWithEmailAndPassword } from '../../shared/auth/firebase/auth';
 import type { AuthContextType } from '@/shared/types/authContext';
+import { Button } from '@/shared/theme/button/Button';
+
+import { useAuth } from '../../shared/hooks/useAuth';
+import styles from './infrastructure/styles/register.module.css';
+import logo from '../../assets/images/auraFlow-normal-colors.png';
+import bannerImage from '../../assets/images/23548095_Male animator sitting at computer desk and creating project.svg';
+import RegisterForm from './components/RegisterForm';
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setconfirmPassword] = useState('');
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [errorMessage] = useState('');
-
   const { userLoggedIn } = useAuth() as AuthContextType;
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!isRegistering) {
-      setIsRegistering(true);
-      await doCreateUserWithEmailAndPassword(email, password);
-    }
-  };
-
   return (
-    <>
+    <div className={styles.registerContainer}>
       {userLoggedIn && (
         <Navigate
           to={'/home'}
@@ -31,71 +21,46 @@ const Register = () => {
         />
       )}
 
-      <main>
-        <div>
-          <div>
-            <div>
-              <h3>Create a New Account</h3>
-            </div>
-          </div>
-          <form onSubmit={onSubmit}>
-            <div>
-              <label>Email</label>
-              <input
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-            </div>
-
-            <div>
-              <label>Password</label>
-              <input
-                disabled={isRegistering}
-                type="password"
-                autoComplete="new-password"
-                required
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-            </div>
-
-            <div>
-              <label>Confirm Password</label>
-              <input
-                disabled={isRegistering}
-                type="password"
-                autoComplete="off"
-                required
-                value={confirmPassword}
-                onChange={(e) => {
-                  setconfirmPassword(e.target.value);
-                }}
-              />
-            </div>
-
-            {errorMessage && <span>{errorMessage}</span>}
-
-            <button
-              type="submit"
-              disabled={isRegistering}
-            >
-              {isRegistering ? 'Signing Up...' : 'Sign Up'}
-            </button>
-            <div>
-              Already have an account? {'   '}
-              <Link to={'/login'}>Continue</Link>
-            </div>
-          </form>
+      <header className={styles.header}>
+        <img
+          alt="AuraFlow logo"
+          src={logo}
+          className={styles.logo}
+        />
+        <div className={styles.loginContainer}>
+          <p> Already have an account? </p>
+          <Button
+            asChild
+            variant="outline"
+          >
+            <Link to={'/login'}>Sign in</Link>
+          </Button>
         </div>
-      </main>
-    </>
+      </header>
+
+      <div className={styles.mainContentContainer}>
+        <div className={styles.auraFlowDescription}>
+          <img
+            alt="AuraFlow banner"
+            src={bannerImage}
+            className={styles.bannerImage}
+          />
+          <a
+            className={styles.imageCredit}
+            href="https://www.freepik.com/free-vector/male-animator-sitting-computer-desk-creating-project-graphic-motion-designer-sitting-workplace-studio-developing-web-game-flat-vector-illustration-design-art-concept_23548095.htm#fromView=search&page=1&position=3&uuid=097cef02-a65c-4a90-a8df-1aaf43e7f5f6&query=focus+on+desktop"
+          >
+            Image by pch.vector on Freepik
+          </a>
+          <h2 className={styles.title}>Get more done</h2>
+          <p className={styles.subtitle}>Boost your productivity and efficiency</p>
+        </div>
+        <div className={styles.registerForm}>
+          <h1>Get started for FREE</h1>
+
+          <RegisterForm />
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-export const getErrorMessage = (error: unknown): string => {
+export const getSignInErrorMessage = (error: unknown): string => {
   if (!(error instanceof Error)) return 'An unexpected error occurred';
 
   const errorCode = error.message.match(/\(([^)]+)\)/)?.[1] ?? '';
@@ -20,5 +20,18 @@ export const getErrorMessage = (error: unknown): string => {
       return 'Network error. Please check your connection';
     default:
       return 'Failed to sign in. Please try again';
+  }
+};
+
+export const getRegisterErrorMessage = (error: unknown): string => {
+  if (!(error instanceof Error)) return 'An unexpected error occurred';
+
+  const errorCode = error.message.match(/\(([^)]+)\)/)?.[1] ?? '';
+
+  switch (errorCode) {
+    case 'auth/email-already-in-use':
+      return 'Email already in use';
+    default:
+      return 'Failed to create account. Please try again';
   }
 };

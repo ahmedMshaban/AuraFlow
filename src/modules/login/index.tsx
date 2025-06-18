@@ -6,7 +6,7 @@ import { Button } from '@/shared/theme/button/Button';
 import { useAuth } from '../../shared/hooks/useAuth';
 import useLogin from './infrastructure/hooks/useLogin';
 import styles from './infrastructure/styles/login.module.css';
-import logo from '../../assets/images/auraFlow-normal-white.png';
+import logo from '../../assets/images/auraFlow-normal-colors.png';
 import gmailIcon from '../../assets/images/icons/gmail-icon.svg';
 import LoginForm from './components/LoginForm';
 
