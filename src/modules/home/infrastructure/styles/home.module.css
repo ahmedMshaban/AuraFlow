@@ -1,0 +1,62 @@
+.homePageContainer {
+  display: flex;
+  height: 100dvh;
+  padding: 8px;
+  box-sizing: border-box;
+  flex-direction: column;
+  background-color: rgb(0, 0, 0);
+  position: relative;
+}
+
+.innerContainer {
+  display: flex;
+  overflow: hidden;
+  flex-grow: 1;
+  flex-direction: row;
+  position: relative;
+}
+
+.mainContentContainer {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex: 1 1 0%;
+  height: 100%;
+  border-radius: 8px;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgb(13, 12, 17);
+  background-image: url('../../../../assets/images/blur_bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  flex: 1 1 0%;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.sidebarToggleButton {
+  color: white;
+  margin-left: auto;
+  width: 60px;
+  border-radius: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 14px;
+}
+
+.sidebarToggleButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s ease-in-out;
+}

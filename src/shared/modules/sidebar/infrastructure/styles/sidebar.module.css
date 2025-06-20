@@ -1,0 +1,23 @@
+.sidebarContainer {
+  transition: width 0.5s;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.sidebarContent {
+  margin-left: 8px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgb(13, 12, 17);
+  background-image: linear-gradient(0deg, black 40%, transparent), url('../../../../assets/images/blur_bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
