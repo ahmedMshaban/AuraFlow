@@ -53,11 +53,6 @@ body.theme-focus .non-essential-element {
 }
 
 /* Reduce visual noise in calm theme */
-body.theme-calm h1,
-body.theme-calm h2,
-body.theme-calm h3 {
-  font-weight: 400;
-}
 
 body.theme-calm button:not(.important-action) {
   background-color: #f5f5f5;

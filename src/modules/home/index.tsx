@@ -1,13 +1,11 @@
 import { FaColumns } from 'react-icons/fa';
 
-import { useAuth } from '../../shared/hooks/useAuth';
-import type { AuthContextType } from '@/shared/types/authContext';
 import Sidebar from '@/shared/modules/sidebar';
 import useSidebar from '@/shared/modules/sidebar/infrastructure/hooks/useSidebar';
 import styles from './infrastructure/styles/home.module.css';
+import Greeting from './components/Greeting';
 
 const Home = () => {
-  const { currentUser } = useAuth() as AuthContextType;
   const { isSidebarOpen, toggleSidebar } = useSidebar();
 
   return (
@@ -21,7 +19,11 @@ const Home = () => {
           >
             <FaColumns size={32} />
           </div>
-          Good Evening, {currentUser?.displayName}
+          <Greeting />
+          <div className={styles.workAreasContainer}>
+            <div className={styles.workArea}>Emails</div>
+            <div className={styles.workArea}>Tasks</div>
+          </div>
         </div>
         <Sidebar isOpen={isSidebarOpen} />
       </div>
