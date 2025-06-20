@@ -4,9 +4,12 @@ import Sidebar from '@/shared/modules/sidebar';
 import useSidebar from '@/shared/modules/sidebar/infrastructure/hooks/useSidebar';
 import styles from './infrastructure/styles/home.module.css';
 import Greeting from './components/Greeting';
+import Filters from './components/Filters';
+import useFilters from './infrastructure/hooks/useFilters';
 
 const Home = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const { selectedView, setSelectedView } = useFilters();
 
   return (
     <div className={styles.homePageContainer}>
@@ -19,10 +22,19 @@ const Home = () => {
           >
             <FaColumns size={32} />
           </div>
+
           <Greeting />
+
           <div className={styles.workAreasContainer}>
-            <div className={styles.workArea}>Emails</div>
-            <div className={styles.workArea}>Tasks</div>
+            <Filters
+              selectedView={selectedView}
+              setSelectedView={setSelectedView}
+            />
+
+            <div className={styles.workAreas}>
+              <div className={styles.workArea}>Emails</div>
+              <div className={styles.workArea}>Tasks</div>
+            </div>
           </div>
         </div>
         <Sidebar isOpen={isSidebarOpen} />

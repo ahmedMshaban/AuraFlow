@@ -56,3 +56,7 @@ input {
   font-size: var(--chakra-font-sizes-xs);
   margin: 0 auto;
 }
+
+.chakra-select__trigger {
+  border: 0;
+}

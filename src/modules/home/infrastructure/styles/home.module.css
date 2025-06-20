@@ -71,14 +71,14 @@
 }
 
 .date {
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .greeting {
-  font-size: 28px;
+  font-size: 32px;
 }
 
-.workAreasContainer {
+.workAreas {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -105,4 +105,31 @@
     opacity 0.25s ease-in-out,
     transform 0.3s ease-in;
   overflow: hidden;
+}
+
+.filterContainer {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  width: 550px;
+  border-radius: 60px;
+  background: #252628;
+  justify-content: center;
+  color: white;
+  padding: 0 1rem;
+  height: 48px;
+  margin-bottom: 1.5rem;
+}
+
+.filterItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  height: 100%;
+}
+
+.filterItem:last-child {
+  border-right: none;
 }
