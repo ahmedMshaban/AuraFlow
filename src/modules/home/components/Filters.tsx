@@ -1,11 +1,15 @@
 import { FaCheck } from 'react-icons/fa6';
-import { Portal, Select } from '@chakra-ui/react';
+import { Portal, Select, createListCollection } from '@chakra-ui/react';
 
 import styles from '../infrastructure/styles/home.module.css';
 import type { FiltersProps } from '../infrastructure/types/home.types';
-import { filterViewsCollection } from '../infrastructure/helpers/constant';
+import getFilterOptions from '../infrastructure/helpers/getFilterOptions';
 
-const Filters = ({ selectedView, setSelectedView }: FiltersProps) => {
+const Filters = ({ selectedView, setSelectedView, isCurrentlyStressed }: FiltersProps) => {
+  const filterViewsCollection = createListCollection({
+    items: getFilterOptions(isCurrentlyStressed),
+  });
+
   return (
     <div className={styles.filterContainer}>
       <div className={styles.filterItem}>
@@ -44,10 +48,10 @@ const Filters = ({ selectedView, setSelectedView }: FiltersProps) => {
         </Select.Root>
       </div>
       <div className={styles.filterItem}>
-        <FaCheck /> 0 tasks completed
+        <FaCheck /> 0 {isCurrentlyStressed ? 'tasks to go' : 'tasks completed'}
       </div>
       <div className={styles.filterItem}>
-        <FaCheck /> 5 unread emails
+        <FaCheck /> 5 {isCurrentlyStressed ? 'important emails' : 'unread emails'}
       </div>
     </div>
   );

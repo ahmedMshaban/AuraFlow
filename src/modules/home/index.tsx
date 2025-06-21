@@ -1,5 +1,6 @@
 import { FaColumns } from 'react-icons/fa';
 
+import { useStressAnalytics } from '@/shared/hooks/useStressAnalytics';
 import Sidebar from '@/shared/modules/sidebar';
 import useSidebar from '@/shared/modules/sidebar/infrastructure/hooks/useSidebar';
 import styles from './infrastructure/styles/home.module.css';
@@ -10,6 +11,7 @@ import useFilters from './infrastructure/hooks/useFilters';
 const Home = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
   const { selectedView, setSelectedView } = useFilters();
+  const { isCurrentlyStressed } = useStressAnalytics();
 
   return (
     <div className={styles.homePageContainer}>
@@ -29,6 +31,7 @@ const Home = () => {
             <Filters
               selectedView={selectedView}
               setSelectedView={setSelectedView}
+              isCurrentlyStressed={isCurrentlyStressed}
             />
 
             <div className={styles.workAreas}>

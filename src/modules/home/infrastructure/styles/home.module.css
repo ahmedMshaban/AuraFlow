@@ -25,8 +25,7 @@
   border-radius: 8px;
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: rgb(13, 12, 17);
-  background-image: url('../../../../assets/images/blur_bg.png');
+  background-color: #1e1f21;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
