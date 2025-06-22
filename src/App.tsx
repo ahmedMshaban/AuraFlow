@@ -3,6 +3,7 @@ import { useRoutes } from 'react-router';
 import { AuthProvider } from './shared/contexts/authContext';
 import StoreProvider from './shared/services/StoreProvider';
 import AuthenticatedStressMonitoring from './shared/components/AuthenticatedStressMonitoring';
+import { RouteGuard, NotFound } from './shared/components';
 
 import Login from './modules/login';
 import Register from './modules/register';
@@ -13,20 +14,40 @@ import './App.css';
 function App() {
   const routesArray = [
     {
-      path: '*',
-      element: <Login />,
+      path: '/',
+      element: (
+        <RouteGuard isPublicRoute>
+          <Login />
+        </RouteGuard>
+      ),
     },
     {
       path: '/login',
-      element: <Login />,
+      element: (
+        <RouteGuard isPublicRoute>
+          <Login />
+        </RouteGuard>
+      ),
     },
     {
       path: '/register',
-      element: <Register />,
+      element: (
+        <RouteGuard isPublicRoute>
+          <Register />
+        </RouteGuard>
+      ),
     },
     {
       path: '/home',
-      element: <Home />,
+      element: (
+        <RouteGuard>
+          <Home />
+        </RouteGuard>
+      ),
+    },
+    {
+      path: '*',
+      element: <NotFound />,
     },
   ];
 

@@ -6,6 +6,7 @@ export type AuthContextType = {
   isGoogleUser: boolean;
   currentUser: User | null;
   setCurrentUser: (user: User | null) => void;
+  loading: boolean;
 };
 
 export type AuthContextProviderProps = {

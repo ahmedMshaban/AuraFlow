@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import type { User } from 'firebase/auth';
+import { Flex, Spinner, Text } from '@chakra-ui/react';
 
 import { auth } from '../../auth/firebase/firebase';
 import type { AuthContextProviderProps } from '../../types/authContext';
@@ -34,14 +35,33 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
 
     setLoading(false);
   }
-
   const value = {
     userLoggedIn,
     isEmailUser,
     isGoogleUser,
     currentUser,
     setCurrentUser,
+    loading,
   };
-
-  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {loading ? (
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          minH="100vh"
+          gap={4}
+        >
+          <Spinner
+            color="blue.500"
+            size="xl"
+          />
+          <Text color="gray.600">Checking authentication...</Text>
+        </Flex>
+      ) : (
+        children
+      )}
+    </AuthContext.Provider>
+  );
 }
