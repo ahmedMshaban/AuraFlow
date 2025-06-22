@@ -139,7 +139,7 @@ const Emails = ({
       )}
 
       {/* Emails with Tabs */}
-      {otherEmails.length > 0 ? (
+      {otherEmails.length > 0 || focusedEmails.length > 0 ? (
         <Box>
           {shouldShowFocusedOnly ? (
             // Show only focused emails when stressed

@@ -24,6 +24,20 @@ The Gmail integration includes intelligent email stress analysis:
 - **Selective fetching**: Only fetches email details for displayed emails
 - **Background refresh**: Non-blocking email updates
 
+## focus tab vs others tab
+
+### Focused Emails (High Priority/Immediate Attention)
+- Starred emails (user explicitly marked as important)
+- Unread important emails from personal category (CATEGORY_PERSONAL + IMPORTANT + UNREAD)
+- Unread emails from known contacts (not promotional)
+- Recent emails marked as important (within last 24-48 hours)
+
+### Other Emails (Lower Priority/Background Processing)
+Promotional emails (CATEGORY_PROMOTIONS) - regardless of importance
+Social media notifications (CATEGORY_SOCIAL)
+Updates and newsletters (CATEGORY_UPDATES)
+Forum emails (CATEGORY_FORUMS)
+Read important emails (already processed)
 ## notes
 
 - Currently, we only have read-only access to Gmail, so the "mark as read" feature is unavailable.

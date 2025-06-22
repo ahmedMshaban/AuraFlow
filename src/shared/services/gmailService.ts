@@ -422,57 +422,108 @@ class GmailService {
       data: emailsWithPriority,
       success: true,
     };
-  }
-  /**
-   * Get emails categorized by priority levels using Gmail's native categories
+  }  /**
+   * Get emails categorized by priority levels with clear separation
+   * Focused: Starred, Personal Important Unread, Recent Important
+   * Others: Promotional, Social, Updates, Forums, Read emails
    */
   async getEmailsByPriority(
     focusedCount: number = 5,
     otherCount: number = 5,
   ): Promise<GmailApiResponse<{ focused: GmailMessage[]; others: GmailMessage[] }>> {
     try {
-      // Fetch focused emails directly from important/starred and primary categories
-      const [importantEmails, starredEmails, primaryEmails, promotionalEmails] = await Promise.all([
-        this.getImportantEmails(Math.ceil(focusedCount / 2)),
-        this.getStarredEmails(Math.ceil(focusedCount / 2)),
-        this.getEmailsByCategory('primary', focusedCount),
+      // Fetch different categories of emails
+      const [
+        starredEmails,
+        personalEmails,
+        promotionalEmails,
+        socialEmails,
+        updatesEmails,
+        forumEmails,
+      ] = await Promise.all([
+        this.getStarredEmails(focusedCount),
+        this.getEmailsByCategory('primary', focusedCount * 2), // Get more to filter
         this.getEmailsByCategory('promotions', otherCount),
+        this.getEmailsByCategory('social', Math.ceil(otherCount / 3)),
+        this.getEmailsByCategory('updates', Math.ceil(otherCount / 3)),
+        this.getEmailsByCategory('forums', Math.ceil(otherCount / 3)),
       ]);
 
-      // Combine important and starred for focused (remove duplicates)
+      // === FOCUSED EMAILS (High Priority) ===
       const focusedEmailsSet = new Set<string>();
-      const focusedEmails: GmailMessage[] = []; // Add important emails first
-      if (importantEmails.success) {
-        importantEmails.data.forEach((email: GmailMessage) => {
-          if (!focusedEmailsSet.has(email.id) && focusedEmails.length < focusedCount) {
-            focusedEmailsSet.add(email.id);
-            focusedEmails.push(email);
-          }
-        });
-      }
+      const focusedEmails: GmailMessage[] = [];
 
-      // Add starred emails if we still need more
-      if (starredEmails.success && focusedEmails.length < focusedCount) {
+      // 1. Add starred emails first (highest priority)
+      if (starredEmails.success) {
         starredEmails.data.forEach((email: GmailMessage) => {
-          if (!focusedEmailsSet.has(email.id) && focusedEmails.length < focusedCount) {
+          if (focusedEmails.length < focusedCount) {
             focusedEmailsSet.add(email.id);
             focusedEmails.push(email);
           }
         });
       }
 
-      // If still need more focused emails, add from primary category
-      if (primaryEmails.success && focusedEmails.length < focusedCount) {
-        primaryEmails.data.forEach((email: GmailMessage) => {
-          if (!focusedEmailsSet.has(email.id) && focusedEmails.length < focusedCount) {
+      // 2. Add unread important emails from personal category (excluding promotional)
+      if (personalEmails.success && focusedEmails.length < focusedCount) {
+        personalEmails.data.forEach((email: GmailMessage) => {
+          if (
+            !focusedEmailsSet.has(email.id) &&
+            focusedEmails.length < focusedCount &&
+            !email.read &&
+            email.important &&
+            !email.labels.includes('CATEGORY_PROMOTIONS') &&
+            !email.labels.includes('CATEGORY_SOCIAL')
+          ) {
             focusedEmailsSet.add(email.id);
             focusedEmails.push(email);
           }
         });
       }
 
-      // Use promotional emails for "others" category
-      const otherEmails = promotionalEmails.success ? promotionalEmails.data.slice(0, otherCount) : [];
+      // 3. Add recent unread emails (last 24 hours) from personal category
+      if (personalEmails.success && focusedEmails.length < focusedCount) {
+        const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+        personalEmails.data.forEach((email: GmailMessage) => {
+          if (
+            !focusedEmailsSet.has(email.id) &&
+            focusedEmails.length < focusedCount &&
+            !email.read &&
+            new Date(email.date).getTime() > oneDayAgo &&
+            !email.labels.includes('CATEGORY_PROMOTIONS') &&
+            !email.labels.includes('CATEGORY_SOCIAL')
+          ) {
+            focusedEmailsSet.add(email.id);
+            focusedEmails.push(email);
+          }
+        });
+      }
+
+      // === OTHER EMAILS (Lower Priority) ===
+      const otherEmails: GmailMessage[] = [];
+      const otherEmailsSet = new Set<string>();
+
+      // Add emails that are specifically categorized as background/bulk
+      const otherCategories = [
+        { emails: promotionalEmails, name: 'promotional' },
+        { emails: socialEmails, name: 'social' },
+        { emails: updatesEmails, name: 'updates' },
+        { emails: forumEmails, name: 'forums' },
+      ];
+
+      otherCategories.forEach(({ emails }) => {
+        if (emails.success && otherEmails.length < otherCount) {
+          emails.data.forEach((email: GmailMessage) => {
+            if (
+              !otherEmailsSet.has(email.id) &&
+              !focusedEmailsSet.has(email.id) && // Don't duplicate from focused
+              otherEmails.length < otherCount
+            ) {
+              otherEmailsSet.add(email.id);
+              otherEmails.push(email);
+            }
+          });
+        }
+      });
 
       return {
         data: {
@@ -551,6 +602,29 @@ class GmailService {
       error: response.error,
     };
   }
+
+  /**
+   * EMAIL CATEGORIZATION STRATEGY
+   * ============================
+   * 
+   * FOCUSED EMAILS (High Priority - Requires Immediate Attention):
+   * 1. Starred emails (user explicitly marked as important)
+   * 2. Unread important emails from personal category (excluding promotional/social)
+   * 3. Recent unread emails from personal category (last 24 hours)
+   * 
+   * OTHER EMAILS (Lower Priority - Background Processing):
+   * 1. Promotional emails (CATEGORY_PROMOTIONS) - newsletters, marketing, etc.
+   * 2. Social media notifications (CATEGORY_SOCIAL)
+   * 3. Updates and newsletters (CATEGORY_UPDATES)
+   * 4. Forum emails (CATEGORY_FORUMS)
+   * 
+   * KEY PRINCIPLES:
+   * - NO DUPLICATES: Each email appears in only one category
+   * - PRIORITY-BASED: Focused takes precedence over others
+   * - USER-INTENT: Starred emails are highest priority
+   * - CONTEXT-AWARE: Promotional emails go to "others" regardless of importance flag
+   * - RECENCY: Recent personal emails get priority
+   */
 }
 
 // Create singleton instance

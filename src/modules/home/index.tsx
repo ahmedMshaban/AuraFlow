@@ -28,6 +28,33 @@ const Home = () => {
     signOut,
     fetchEmailsByPriority,
   } = useGmail();
+  console.log('=== EMAIL CATEGORIZATION DEBUG ===');
+  console.log('Focused Emails:', focusedEmails.length, focusedEmails.map(e => ({ 
+    id: e.id, 
+    subject: e.subject, 
+    labels: e.labels,
+    read: e.read,
+    important: e.important,
+    starred: e.starred 
+  })));
+  console.log('Other Emails:', otherEmails.length, otherEmails.map(e => ({ 
+    id: e.id, 
+    subject: e.subject, 
+    labels: e.labels,
+    read: e.read,
+    important: e.important,
+    starred: e.starred 
+  })));
+  
+  // Check for duplicates
+  const focusedIds = new Set(focusedEmails.map(e => e.id));
+  const otherIds = new Set(otherEmails.map(e => e.id));
+  const duplicates = [...focusedIds].filter(id => otherIds.has(id));
+  if (duplicates.length > 0) {
+    console.warn('DUPLICATE EMAILS FOUND:', duplicates);
+  } else {
+    console.log('✅ No duplicates found between focused and other emails');
+  }
 
   return (
     <div className={styles.homePageContainer}>
