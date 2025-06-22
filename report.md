@@ -23,3 +23,7 @@ The Gmail integration includes intelligent email stress analysis:
 - **Token caching**: Reduces API calls with intelligent token management
 - **Selective fetching**: Only fetches email details for displayed emails
 - **Background refresh**: Non-blocking email updates
+
+## notes
+
+- Currently, we only have read-only access to Gmail, so the "mark as read" feature is unavailable.

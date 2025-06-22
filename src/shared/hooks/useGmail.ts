@@ -15,6 +15,8 @@ export const useGmail = () => {
   });
 
   const [emails, setEmails] = useState<GmailMessageWithStress[]>([]);
+  const [focusedEmails, setFocusedEmails] = useState<GmailMessageWithStress[]>([]);
+  const [otherEmails, setOtherEmails] = useState<GmailMessageWithStress[]>([]);
   const [isLoadingEmails, setIsLoadingEmails] = useState(false);
   const [emailsError, setEmailsError] = useState<string | null>(null);
 
@@ -200,15 +202,23 @@ export const useGmail = () => {
         const emailsResponse = await gmailService.getEmailsByPriority(focusedCount, otherCount);
 
         if (emailsResponse.success) {
-          // Combine both categories for the existing emails state
+          // Set the separated emails
+          setFocusedEmails(emailsResponse.data.focused);
+          setOtherEmails(emailsResponse.data.others);
+
+          // Also combine for backward compatibility
           const combinedEmails = [...emailsResponse.data.focused, ...emailsResponse.data.others];
           setEmails(combinedEmails);
         } else {
           setEmailsError(emailsResponse.error || 'Failed to fetch emails by priority');
+          setFocusedEmails([]);
+          setOtherEmails([]);
         }
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Failed to fetch emails by priority';
         setEmailsError(errorMessage);
+        setFocusedEmails([]);
+        setOtherEmails([]);
       } finally {
         setIsLoadingEmails(false);
       }
@@ -262,6 +272,8 @@ export const useGmail = () => {
 
     // Email data
     emails,
+    focusedEmails, // Add this
+    otherEmails,
     isLoadingEmails,
     emailsError,
 

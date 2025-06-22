@@ -5,10 +5,18 @@ import styles from '../infrastructure/styles/home.module.css';
 import type { FiltersProps } from '../infrastructure/types/home.types';
 import getFilterOptions from '../infrastructure/helpers/getFilterOptions';
 
-const Filters = ({ selectedView, setSelectedView, isCurrentlyStressed }: FiltersProps) => {
+const Filters = ({
+  selectedView,
+  setSelectedView,
+  isCurrentlyStressed,
+  numOfFocusedEmails,
+  numOfOtherEmails,
+}: FiltersProps) => {
   const filterViewsCollection = createListCollection({
     items: getFilterOptions(isCurrentlyStressed),
   });
+
+  const totalEmails = (numOfFocusedEmails ?? 0) + (numOfOtherEmails ?? 0);
 
   return (
     <div className={styles.filterContainer}>
@@ -51,7 +59,8 @@ const Filters = ({ selectedView, setSelectedView, isCurrentlyStressed }: Filters
         <FaCheck /> 0 {isCurrentlyStressed ? 'tasks to go' : 'tasks completed'}
       </div>
       <div className={styles.filterItem}>
-        <FaCheck /> 5 {isCurrentlyStressed ? 'important emails' : 'unread emails'}
+        <FaCheck /> {isCurrentlyStressed ? numOfFocusedEmails : totalEmails}{' '}
+        {isCurrentlyStressed ? 'important emails' : 'unread emails'}
       </div>
     </div>
   );

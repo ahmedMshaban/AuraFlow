@@ -1,30 +1,28 @@
 import { useEffect, useState } from 'react';
 import { FiMail, FiAlertTriangle } from 'react-icons/fi';
 import { Box, Button, VStack, HStack, Text, Heading, Badge, Spinner } from '@chakra-ui/react';
-import { useGmail } from '../../../../shared/hooks/useGmail';
-import { useStressAnalytics } from '../../../../shared/hooks/useStressAnalytics';
+
+import { useStressAnalytics } from '@/shared/hooks/useStressAnalytics';
+import type { EmailsProps } from '../../infrastructure/types/emails.types';
 
 import EmailItem from './EmailItem';
 import EmailAuthentication from './EmailAuthentication';
 
-interface EmailsProps {
-  maxEmails?: number; // Number of emails to fetch for each category (focused and others)
-}
-
-const Emails = ({ maxEmails = 5 }: EmailsProps) => {
+const Emails = ({
+  maxEmails = 5,
+  isAuthenticated,
+  isLoading,
+  error,
+  profile,
+  isLoadingEmails,
+  emailsError,
+  focusedEmails,
+  otherEmails,
+  authenticate,
+  signOut,
+  fetchEmailsByPriority,
+}: EmailsProps) => {
   const [activeTab, setActiveTab] = useState<'focused' | 'others'>('focused');
-  const {
-    isAuthenticated,
-    isLoading,
-    error,
-    profile,
-    emails,
-    isLoadingEmails,
-    emailsError,
-    authenticate,
-    signOut,
-    fetchEmailsByPriority,
-  } = useGmail();
 
   const { isCurrentlyStressed } = useStressAnalytics();
 
@@ -35,14 +33,6 @@ const Emails = ({ maxEmails = 5 }: EmailsProps) => {
       fetchEmailsByPriority(maxEmails, maxEmails);
     }
   }, [isAuthenticated, fetchEmailsByPriority, maxEmails]);
-
-  // Filter emails by priority
-  const focusedEmails = emails.filter(
-    (email) => email.stressAnalysis?.priority === 'high' || email.stressAnalysis?.priority === 'medium',
-  );
-  const otherEmails = emails.filter(
-    (email) => email.stressAnalysis?.priority === 'low' || !email.stressAnalysis?.priority,
-  );
 
   // If user is stressed, show only focused tab
   const shouldShowFocusedOnly = isCurrentlyStressed;
@@ -149,7 +139,7 @@ const Emails = ({ maxEmails = 5 }: EmailsProps) => {
       )}
 
       {/* Emails with Tabs */}
-      {emails.length > 0 ? (
+      {otherEmails.length > 0 ? (
         <Box>
           {shouldShowFocusedOnly ? (
             // Show only focused emails when stressed

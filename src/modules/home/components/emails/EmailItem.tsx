@@ -1,7 +1,7 @@
 import { FiCalendar } from 'react-icons/fi';
 import { Box, HStack, Text, Heading, Badge } from '@chakra-ui/react';
 
-import type { GmailMessageWithStress } from '../../../../shared/types/gmail.types';
+import type { GmailMessageWithStress } from '@/shared/types/gmail.types';
 import formatDate from '../../infrastructure/helpers/formatDate';
 import getPriorityIcon from '../../infrastructure/helpers/getPriorityIcon';
 import getStressColor from '../../infrastructure/helpers/getStressColor';
