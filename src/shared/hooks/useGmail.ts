@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { gmailService } from '../services/gmailService';
-import type { GmailAuthStatus, GmailMessage, GmailMessageWithStress, GmailQueryParams } from '../types/gmail.types';
+import type { GmailAuthStatus, GmailMessageWithStress } from '../types/gmail.types';
 
 /**
  * Custom hook for Gmail integration with stress analysis
@@ -140,53 +140,6 @@ export const useGmail = () => {
     }
   }, []);
 
-  // Fetch emails with stress analysis
-  const fetchEmails = useCallback(
-    async (params: GmailQueryParams = {}): Promise<void> => {
-      if (!authStatus.isAuthenticated) {
-        setEmailsError('Not authenticated');
-        return;
-      }
-
-      setIsLoadingEmails(true);
-      setEmailsError(null);
-
-      try {
-        const emailsResponse = await gmailService.getEmailsWithStressAnalysis(params);
-
-        if (emailsResponse.success) {
-          setEmails(emailsResponse.data);
-        } else {
-          setEmailsError(emailsResponse.error || 'Failed to fetch emails');
-        }
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Failed to fetch emails';
-        setEmailsError(errorMessage);
-      } finally {
-        setIsLoadingEmails(false);
-      }
-    },
-    [authStatus.isAuthenticated],
-  );
-
-  // Get emails without stress analysis
-  const fetchEmailsBasic = useCallback(
-    async (params: GmailQueryParams = {}): Promise<GmailMessage[]> => {
-      if (!authStatus.isAuthenticated) {
-        throw new Error('Not authenticated');
-      }
-
-      const emailsResponse = await gmailService.getEmails(params);
-
-      if (emailsResponse.success) {
-        return emailsResponse.data.messages;
-      } else {
-        throw new Error(emailsResponse.error || 'Failed to fetch emails');
-      }
-    },
-    [authStatus.isAuthenticated],
-  );
-
   // Fetch emails categorized by priority
   const fetchEmailsByPriority = useCallback(
     async (focusedCount: number = 5, otherCount: number = 5): Promise<void> => {
@@ -226,42 +179,6 @@ export const useGmail = () => {
     [authStatus.isAuthenticated],
   );
 
-  // Calculate stress statistics from current emails
-  const getStressStatistics = useCallback(() => {
-    if (emails.length === 0) {
-      return {
-        totalEmails: 0,
-        highStressEmails: 0,
-        mediumStressEmails: 0,
-        lowStressEmails: 0,
-        averageStressScore: 0,
-        mostStressfulEmail: null,
-      };
-    }
-
-    const highStressEmails = emails.filter((email) => email.stressAnalysis?.priority === 'high');
-    const mediumStressEmails = emails.filter((email) => email.stressAnalysis?.priority === 'medium');
-    const lowStressEmails = emails.filter((email) => email.stressAnalysis?.priority === 'low');
-
-    const totalStressScore = emails.reduce((sum, email) => sum + (email.stressAnalysis?.stressScore || 0), 0);
-    const averageStressScore = totalStressScore / emails.length;
-
-    const mostStressfulEmail = emails.reduce((highest, current) => {
-      const currentScore = current.stressAnalysis?.stressScore || 0;
-      const highestScore = highest?.stressAnalysis?.stressScore || 0;
-      return currentScore > highestScore ? current : highest;
-    }, emails[0]);
-
-    return {
-      totalEmails: emails.length,
-      highStressEmails: highStressEmails.length,
-      mediumStressEmails: mediumStressEmails.length,
-      lowStressEmails: lowStressEmails.length,
-      averageStressScore: Math.round(averageStressScore),
-      mostStressfulEmail,
-    };
-  }, [emails]);
-
   return {
     // Authentication state
     authStatus,
@@ -280,11 +197,6 @@ export const useGmail = () => {
     // Actions
     authenticate,
     signOut,
-    fetchEmails,
-    fetchEmailsBasic,
     fetchEmailsByPriority,
-
-    // Analytics
-    getStressStatistics,
   };
 };

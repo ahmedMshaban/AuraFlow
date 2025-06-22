@@ -71,9 +71,7 @@ export interface EmailStressAnalysis {
     deadlineKeywords: number;
     negativeEmotions: number;
   };
-  stressScore: number; // 0-100
   priority: 'low' | 'medium' | 'high';
-  suggestedAction: string;
 }
 
 export interface GmailMessageWithStress extends GmailMessage {

@@ -4,4 +4,5 @@ export interface FiltersProps {
   isCurrentlyStressed: boolean;
   numOfFocusedEmails: number | undefined;
   numOfOtherEmails: number | undefined;
+  isLoadingEmails: boolean;
 }

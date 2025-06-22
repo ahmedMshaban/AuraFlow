@@ -50,6 +50,7 @@ const Home = () => {
               isCurrentlyStressed={isCurrentlyStressed}
               numOfFocusedEmails={focusedEmails.length}
               numOfOtherEmails={otherEmails.length}
+              isLoadingEmails={isLoadingEmails}
             />
 
             <div className={styles.workAreas}>

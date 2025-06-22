@@ -1,5 +1,5 @@
 import { FaCheck } from 'react-icons/fa6';
-import { Portal, Select, createListCollection } from '@chakra-ui/react';
+import { Portal, Select, Box, createListCollection, Skeleton } from '@chakra-ui/react';
 
 import styles from '../infrastructure/styles/home.module.css';
 import type { FiltersProps } from '../infrastructure/types/home.types';
@@ -11,6 +11,7 @@ const Filters = ({
   isCurrentlyStressed,
   numOfFocusedEmails,
   numOfOtherEmails,
+  isLoadingEmails,
 }: FiltersProps) => {
   const filterViewsCollection = createListCollection({
     items: getFilterOptions(isCurrentlyStressed),
@@ -58,10 +59,17 @@ const Filters = ({
       <div className={styles.filterItem}>
         <FaCheck /> 0 {isCurrentlyStressed ? 'tasks to go' : 'tasks completed'}
       </div>
-      <div className={styles.filterItem}>
-        <FaCheck /> {isCurrentlyStressed ? numOfFocusedEmails : totalEmails}{' '}
-        {isCurrentlyStressed ? 'important emails' : 'unread emails'}
-      </div>
+      <Box className={styles.filterItem}>
+        <Skeleton
+          height="6"
+          loading={isLoadingEmails}
+          className={styles.filterItem}
+        >
+          <FaCheck />
+          {isCurrentlyStressed ? numOfFocusedEmails : totalEmails}{' '}
+          {isCurrentlyStressed ? 'important emails' : 'unread emails'}
+        </Skeleton>
+      </Box>
     </div>
   );
 };

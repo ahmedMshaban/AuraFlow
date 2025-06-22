@@ -5,7 +5,6 @@ import type {
   GmailListResponse,
   GmailQueryParams,
   GoogleOAuthConfig,
-  EmailStressAnalysis,
   GmailMessageWithStress,
   GmailApiProfile,
   GoogleTokenResponse,
@@ -215,6 +214,7 @@ class GmailService {
       }
     }
   }
+
   /**
    * Make authenticated API request to Gmail
    */
@@ -326,6 +326,7 @@ class GmailService {
       success: true,
     };
   }
+
   /**
    * Get detailed information for a specific message
    */
@@ -370,67 +371,29 @@ class GmailService {
   }
 
   /**
-   * Analyze email content for stress indicators
+   * Determine email priority based on Gmail's native indicators
    */
-  analyzeEmailStress(message: GmailMessage): EmailStressAnalysis {
-    const text = `${message.subject} ${message.snippet}`.toLowerCase();
-
-    // Stress indicator patterns
-    const urgentKeywords = ['urgent', 'asap', 'immediately', 'emergency', 'critical', 'deadline'];
-    const deadlineKeywords = ['due', 'deadline', 'expires', 'ends', 'final notice'];
-    const negativeKeywords = ['problem', 'issue', 'error', 'failed', 'wrong', 'complaint'];
-
-    // Count indicators
-    const urgentCount = urgentKeywords.filter((word) => text.includes(word)).length;
-    const allCapsWords = (message.subject.match(/\b[A-Z]{2,}\b/g) || []).length;
-    const exclamationMarks = (message.subject.match(/!/g) || []).length;
-    const deadlineCount = deadlineKeywords.filter((word) => text.includes(word)).length;
-    const negativeCount = negativeKeywords.filter((word) => text.includes(word)).length;
-
-    // Calculate stress score (0-100)
-    let stressScore = 0;
-    stressScore += urgentCount * 20;
-    stressScore += allCapsWords * 10;
-    stressScore += exclamationMarks * 15;
-    stressScore += deadlineCount * 25;
-    stressScore += negativeCount * 15;
-
-    // Cap at 100
-    stressScore = Math.min(stressScore, 100);
-
-    // Determine priority
-    let priority: 'low' | 'medium' | 'high' = 'low';
-    if (stressScore >= 60) priority = 'high';
-    else if (stressScore >= 30) priority = 'medium';
-
-    // Suggest action based on stress level
-    let suggestedAction = 'Review when convenient';
-    if (priority === 'high') {
-      suggestedAction = 'Address immediately - high stress content detected';
-    } else if (priority === 'medium') {
-      suggestedAction = 'Review soon - moderate urgency detected';
+  private getEmailPriority(message: GmailMessage): 'low' | 'medium' | 'high' {
+    // Use Gmail's native importance and other indicators
+    if (message.important || message.starred) {
+      return 'high';
     }
 
-    return {
-      stressIndicators: {
-        urgentKeywords: urgentCount,
-        allCapsWords,
-        exclamationMarks,
-        deadlineKeywords: deadlineCount,
-        negativeEmotions: negativeCount,
-      },
-      stressScore,
-      priority,
-      suggestedAction,
-    };
+    // Check if it's in primary category (personal emails)
+    if (
+      message.labels.includes('CATEGORY_PERSONAL') ||
+      !message.labels.some((label) => label.startsWith('CATEGORY_'))
+    ) {
+      return 'medium';
+    }
+
+    return 'low';
   }
 
   /**
-   * Get emails with stress analysis
+   * Get emails with Gmail's native priority classification
    */
-  async getEmailsWithStressAnalysis(
-    params: GmailQueryParams = {},
-  ): Promise<GmailApiResponse<GmailMessageWithStress[]>> {
+  async getEmailsWithPriority(params: GmailQueryParams = {}): Promise<GmailApiResponse<GmailMessageWithStress[]>> {
     const emailsResponse = await this.getEmails(params);
 
     if (!emailsResponse.success) {
@@ -441,19 +404,28 @@ class GmailService {
       };
     }
 
-    const emailsWithStress: GmailMessageWithStress[] = emailsResponse.data.messages.map((email) => ({
+    const emailsWithPriority: GmailMessageWithStress[] = emailsResponse.data.messages.map((email) => ({
       ...email,
-      stressAnalysis: this.analyzeEmailStress(email),
+      stressAnalysis: {
+        priority: this.getEmailPriority(email),
+        stressIndicators: {
+          urgentKeywords: 0,
+          allCapsWords: 0,
+          exclamationMarks: 0,
+          deadlineKeywords: 0,
+          negativeEmotions: 0,
+        },
+      },
     }));
 
     return {
-      data: emailsWithStress,
+      data: emailsWithPriority,
       success: true,
     };
   }
 
   /**
-   * Get emails categorized by priority levels
+   * Get emails categorized by priority levels using Gmail's native indicators
    */
   async getEmailsByPriority(
     focusedCount: number = 5,
@@ -461,10 +433,9 @@ class GmailService {
   ): Promise<GmailApiResponse<{ focused: GmailMessageWithStress[]; others: GmailMessageWithStress[] }>> {
     try {
       // Fetch more emails than needed to ensure we have enough of each priority
-      // We'll fetch 3x the requested amount to account for filtering
-      const totalToFetch = Math.max((focusedCount + otherCount) * 3, 20);
+      const totalToFetch = Math.max(focusedCount + otherCount, 20);
 
-      const emailsResponse = await this.getEmailsWithStressAnalysis({
+      const emailsResponse = await this.getEmailsWithPriority({
         maxResults: totalToFetch,
       });
 
@@ -478,11 +449,15 @@ class GmailService {
 
       const allEmails = emailsResponse.data;
 
-      // Separate emails by priority
-      const highPriorityEmails = allEmails.filter((email) => email.stressAnalysis?.priority === 'high');
-      const mediumPriorityEmails = allEmails.filter((email) => email.stressAnalysis?.priority === 'medium');
+      // Separate emails by Gmail's native priority indicators
+      const highPriorityEmails = allEmails.filter(
+        (email: GmailMessageWithStress) => email.stressAnalysis?.priority === 'high',
+      );
+      const mediumPriorityEmails = allEmails.filter(
+        (email: GmailMessageWithStress) => email.stressAnalysis?.priority === 'medium',
+      );
       const lowPriorityEmails = allEmails.filter(
-        (email) => email.stressAnalysis?.priority === 'low' || !email.stressAnalysis?.priority,
+        (email: GmailMessageWithStress) => email.stressAnalysis?.priority === 'low' || !email.stressAnalysis?.priority,
       );
 
       // Combine high and medium for focused (prioritize high first)
