@@ -7,6 +7,8 @@ import styles from './infrastructure/styles/home.module.css';
 import Greeting from './components/Greeting';
 import Filters from './components/Filters';
 import useFilters from './infrastructure/hooks/useFilters';
+import Emails from './components/Emails';
+import Tasks from './components/Tasks';
 
 const Home = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
@@ -35,8 +37,12 @@ const Home = () => {
             />
 
             <div className={styles.workAreas}>
-              <div className={styles.workArea}>Emails</div>
-              <div className={styles.workArea}>Tasks</div>
+              <div className={styles.workArea}>
+                <Emails />
+              </div>
+              <div className={styles.workArea}>
+                <Tasks />
+              </div>
             </div>
           </div>
         </div>
