@@ -423,51 +423,56 @@ class GmailService {
       success: true,
     };
   }
-
   /**
-   * Get emails categorized by priority levels using Gmail's native indicators
+   * Get emails categorized by priority levels using Gmail's native categories
    */
   async getEmailsByPriority(
     focusedCount: number = 5,
     otherCount: number = 5,
-  ): Promise<GmailApiResponse<{ focused: GmailMessageWithStress[]; others: GmailMessageWithStress[] }>> {
+  ): Promise<GmailApiResponse<{ focused: GmailMessage[]; others: GmailMessage[] }>> {
     try {
-      // Fetch more emails than needed to ensure we have enough of each priority
-      const totalToFetch = Math.max(focusedCount + otherCount, 20);
+      // Fetch focused emails directly from important/starred and primary categories
+      const [importantEmails, starredEmails, primaryEmails, promotionalEmails] = await Promise.all([
+        this.getImportantEmails(Math.ceil(focusedCount / 2)),
+        this.getStarredEmails(Math.ceil(focusedCount / 2)),
+        this.getEmailsByCategory('primary', focusedCount),
+        this.getEmailsByCategory('promotions', otherCount),
+      ]);
 
-      const emailsResponse = await this.getEmailsWithPriority({
-        maxResults: totalToFetch,
-      });
-
-      if (!emailsResponse.success) {
-        return {
-          data: { focused: [], others: [] },
-          success: false,
-          error: emailsResponse.error,
-        };
+      // Combine important and starred for focused (remove duplicates)
+      const focusedEmailsSet = new Set<string>();
+      const focusedEmails: GmailMessage[] = []; // Add important emails first
+      if (importantEmails.success) {
+        importantEmails.data.forEach((email: GmailMessage) => {
+          if (!focusedEmailsSet.has(email.id) && focusedEmails.length < focusedCount) {
+            focusedEmailsSet.add(email.id);
+            focusedEmails.push(email);
+          }
+        });
       }
 
-      const allEmails = emailsResponse.data;
+      // Add starred emails if we still need more
+      if (starredEmails.success && focusedEmails.length < focusedCount) {
+        starredEmails.data.forEach((email: GmailMessage) => {
+          if (!focusedEmailsSet.has(email.id) && focusedEmails.length < focusedCount) {
+            focusedEmailsSet.add(email.id);
+            focusedEmails.push(email);
+          }
+        });
+      }
 
-      // Separate emails by Gmail's native priority indicators
-      const highPriorityEmails = allEmails.filter(
-        (email: GmailMessageWithStress) => email.stressAnalysis?.priority === 'high',
-      );
-      const mediumPriorityEmails = allEmails.filter(
-        (email: GmailMessageWithStress) => email.stressAnalysis?.priority === 'medium',
-      );
-      const lowPriorityEmails = allEmails.filter(
-        (email: GmailMessageWithStress) => email.stressAnalysis?.priority === 'low' || !email.stressAnalysis?.priority,
-      );
+      // If still need more focused emails, add from primary category
+      if (primaryEmails.success && focusedEmails.length < focusedCount) {
+        primaryEmails.data.forEach((email: GmailMessage) => {
+          if (!focusedEmailsSet.has(email.id) && focusedEmails.length < focusedCount) {
+            focusedEmailsSet.add(email.id);
+            focusedEmails.push(email);
+          }
+        });
+      }
 
-      // Combine high and medium for focused (prioritize high first)
-      const focusedEmails = [
-        ...highPriorityEmails.slice(0, focusedCount),
-        ...mediumPriorityEmails.slice(0, Math.max(0, focusedCount - highPriorityEmails.length)),
-      ].slice(0, focusedCount);
-
-      // Take low priority emails for others
-      const otherEmails = lowPriorityEmails.slice(0, otherCount);
+      // Use promotional emails for "others" category
+      const otherEmails = promotionalEmails.success ? promotionalEmails.data.slice(0, otherCount) : [];
 
       return {
         data: {
@@ -483,6 +488,68 @@ class GmailService {
         error: error instanceof Error ? error.message : 'Failed to fetch emails by priority',
       };
     }
+  }
+
+  /**
+   * Get emails from specific Gmail categories using native labels
+   */
+  async getEmailsByCategory(
+    category: 'primary' | 'social' | 'promotions' | 'updates' | 'forums',
+    maxResults: number = 10,
+  ): Promise<GmailApiResponse<GmailMessage[]>> {
+    const categoryLabels: Record<string, string> = {
+      primary: 'CATEGORY_PERSONAL',
+      social: 'CATEGORY_SOCIAL',
+      promotions: 'CATEGORY_PROMOTIONS',
+      updates: 'CATEGORY_UPDATES',
+      forums: 'CATEGORY_FORUMS',
+    };
+
+    const params: GmailQueryParams = {
+      maxResults,
+      labelIds: [categoryLabels[category]],
+    };
+
+    const response = await this.getEmails(params);
+    return {
+      data: response.success ? response.data.messages : [],
+      success: response.success,
+      error: response.error,
+    };
+  }
+
+  /**
+   * Get important emails using Gmail's native importance markers
+   */
+  async getImportantEmails(maxResults: number = 10): Promise<GmailApiResponse<GmailMessage[]>> {
+    const params: GmailQueryParams = {
+      maxResults,
+      labelIds: ['IMPORTANT'],
+    };
+
+    const response = await this.getEmails(params);
+    return {
+      data: response.success ? response.data.messages : [],
+      success: response.success,
+      error: response.error,
+    };
+  }
+
+  /**
+   * Get starred emails
+   */
+  async getStarredEmails(maxResults: number = 10): Promise<GmailApiResponse<GmailMessage[]>> {
+    const params: GmailQueryParams = {
+      maxResults,
+      labelIds: ['STARRED'],
+    };
+
+    const response = await this.getEmails(params);
+    return {
+      data: response.success ? response.data.messages : [],
+      success: response.success,
+      error: response.error,
+    };
   }
 }
 
