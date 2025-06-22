@@ -185,6 +185,37 @@ export const useGmail = () => {
     [authStatus.isAuthenticated],
   );
 
+  // Fetch emails categorized by priority
+  const fetchEmailsByPriority = useCallback(
+    async (focusedCount: number = 5, otherCount: number = 5): Promise<void> => {
+      if (!authStatus.isAuthenticated) {
+        setEmailsError('Not authenticated');
+        return;
+      }
+
+      setIsLoadingEmails(true);
+      setEmailsError(null);
+
+      try {
+        const emailsResponse = await gmailService.getEmailsByPriority(focusedCount, otherCount);
+
+        if (emailsResponse.success) {
+          // Combine both categories for the existing emails state
+          const combinedEmails = [...emailsResponse.data.focused, ...emailsResponse.data.others];
+          setEmails(combinedEmails);
+        } else {
+          setEmailsError(emailsResponse.error || 'Failed to fetch emails by priority');
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to fetch emails by priority';
+        setEmailsError(errorMessage);
+      } finally {
+        setIsLoadingEmails(false);
+      }
+    },
+    [authStatus.isAuthenticated],
+  );
+
   // Calculate stress statistics from current emails
   const getStressStatistics = useCallback(() => {
     if (emails.length === 0) {
@@ -221,11 +252,6 @@ export const useGmail = () => {
     };
   }, [emails]);
 
-  // Check if there are urgent emails that might affect user stress
-  const hasUrgentEmails = useCallback(() => {
-    return emails.some((email) => email.stressAnalysis?.priority === 'high');
-  }, [emails]);
-
   return {
     // Authentication state
     authStatus,
@@ -244,9 +270,9 @@ export const useGmail = () => {
     signOut,
     fetchEmails,
     fetchEmailsBasic,
+    fetchEmailsByPriority,
 
     // Analytics
     getStressStatistics,
-    hasUrgentEmails,
   };
 };

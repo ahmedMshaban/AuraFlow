@@ -451,6 +451,64 @@ class GmailService {
       success: true,
     };
   }
+
+  /**
+   * Get emails categorized by priority levels
+   */
+  async getEmailsByPriority(
+    focusedCount: number = 5,
+    otherCount: number = 5,
+  ): Promise<GmailApiResponse<{ focused: GmailMessageWithStress[]; others: GmailMessageWithStress[] }>> {
+    try {
+      // Fetch more emails than needed to ensure we have enough of each priority
+      // We'll fetch 3x the requested amount to account for filtering
+      const totalToFetch = Math.max((focusedCount + otherCount) * 3, 20);
+
+      const emailsResponse = await this.getEmailsWithStressAnalysis({
+        maxResults: totalToFetch,
+      });
+
+      if (!emailsResponse.success) {
+        return {
+          data: { focused: [], others: [] },
+          success: false,
+          error: emailsResponse.error,
+        };
+      }
+
+      const allEmails = emailsResponse.data;
+
+      // Separate emails by priority
+      const highPriorityEmails = allEmails.filter((email) => email.stressAnalysis?.priority === 'high');
+      const mediumPriorityEmails = allEmails.filter((email) => email.stressAnalysis?.priority === 'medium');
+      const lowPriorityEmails = allEmails.filter(
+        (email) => email.stressAnalysis?.priority === 'low' || !email.stressAnalysis?.priority,
+      );
+
+      // Combine high and medium for focused (prioritize high first)
+      const focusedEmails = [
+        ...highPriorityEmails.slice(0, focusedCount),
+        ...mediumPriorityEmails.slice(0, Math.max(0, focusedCount - highPriorityEmails.length)),
+      ].slice(0, focusedCount);
+
+      // Take low priority emails for others
+      const otherEmails = lowPriorityEmails.slice(0, otherCount);
+
+      return {
+        data: {
+          focused: focusedEmails,
+          others: otherEmails,
+        },
+        success: true,
+      };
+    } catch (error) {
+      return {
+        data: { focused: [], others: [] },
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch emails by priority',
+      };
+    }
+  }
 }
 
 // Create singleton instance

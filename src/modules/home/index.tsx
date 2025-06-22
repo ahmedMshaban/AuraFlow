@@ -7,7 +7,7 @@ import styles from './infrastructure/styles/home.module.css';
 import Greeting from './components/Greeting';
 import Filters from './components/Filters';
 import useFilters from './infrastructure/hooks/useFilters';
-import Emails from './components/Emails';
+import Emails from './components/emails/Emails';
 import Tasks from './components/Tasks';
 
 const Home = () => {
