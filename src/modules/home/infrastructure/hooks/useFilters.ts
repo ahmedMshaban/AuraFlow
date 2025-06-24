@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import type { ViewType } from '../types/home.types';
 
 const useFilters = () => {
-  const [selectedView, setSelectedView] = useState('my-day');
+  const [selectedView, setSelectedView] = useState<ViewType>('my-day');
 
   return { selectedView, setSelectedView };
 };

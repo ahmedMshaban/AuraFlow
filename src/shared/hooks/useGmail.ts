@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
+
 import { gmailService } from '../services/gmailService';
 import type { GmailAuthStatus, GmailMessageWithStress } from '../types/gmail.types';
+import type { ViewType } from '../../modules/home/infrastructure/types/home.types';
 
 /**
  * Custom hook for Gmail integration with stress analysis
  */
-export const useGmail = () => {
+export const useGmail = (selectedView: ViewType) => {
   const [authStatus, setAuthStatus] = useState<GmailAuthStatus>({
     isAuthenticated: false,
     isLoading: false,
@@ -14,7 +16,6 @@ export const useGmail = () => {
     accessToken: null,
   });
 
-  const [emails, setEmails] = useState<GmailMessageWithStress[]>([]);
   const [focusedEmails, setFocusedEmails] = useState<GmailMessageWithStress[]>([]);
   const [otherEmails, setOtherEmails] = useState<GmailMessageWithStress[]>([]);
   const [isLoadingEmails, setIsLoadingEmails] = useState(false);
@@ -134,13 +135,16 @@ export const useGmail = () => {
         profile: null,
         accessToken: null,
       });
-      setEmails([]);
+      setFocusedEmails([]);
+      setOtherEmails([]);
+      setIsLoadingEmails(false);
+      setEmailsError(null);
     } catch (error) {
       console.error('Sign out error:', error);
     }
   }, []);
 
-  // Fetch emails categorized by priority
+  // Fetch emails categorized by priority with date filtering based on selected view
   const fetchEmailsByPriority = useCallback(
     async (focusedCount: number = 5, otherCount: number = 5): Promise<void> => {
       if (!authStatus.isAuthenticated) {
@@ -152,16 +156,16 @@ export const useGmail = () => {
       setEmailsError(null);
 
       try {
-        const emailsResponse = await gmailService.getEmailsByPriority(focusedCount, otherCount);
+        const emailsResponse = await gmailService.getEmailsByPriority(
+          focusedCount,
+          otherCount,
+          selectedView, // Pass the selectedView for date filtering
+        );
 
         if (emailsResponse.success) {
           // Set the separated emails
           setFocusedEmails(emailsResponse.data.focused);
           setOtherEmails(emailsResponse.data.others);
-
-          // Also combine for backward compatibility
-          const combinedEmails = [...emailsResponse.data.focused, ...emailsResponse.data.others];
-          setEmails(combinedEmails);
         } else {
           setEmailsError(emailsResponse.error || 'Failed to fetch emails by priority');
           setFocusedEmails([]);
@@ -176,7 +180,7 @@ export const useGmail = () => {
         setIsLoadingEmails(false);
       }
     },
-    [authStatus.isAuthenticated],
+    [authStatus.isAuthenticated, selectedView],
   );
 
   return {
@@ -187,9 +191,7 @@ export const useGmail = () => {
     error: authStatus.error,
     profile: authStatus.profile,
 
-    // Email data
-    emails,
-    focusedEmails, // Add this
+    focusedEmails,
     otherEmails,
     isLoadingEmails,
     emailsError,

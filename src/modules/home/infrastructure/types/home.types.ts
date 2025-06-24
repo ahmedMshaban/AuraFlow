@@ -1,6 +1,8 @@
+export type ViewType = 'my-day' | 'my-week' | 'my-month';
+
 export interface FiltersProps {
-  selectedView: string;
-  setSelectedView: (view: string) => void;
+  selectedView: ViewType;
+  setSelectedView: (view: ViewType) => void;
   isCurrentlyStressed: boolean;
   numOfFocusedEmails: number | undefined;
   numOfOtherEmails: number | undefined;

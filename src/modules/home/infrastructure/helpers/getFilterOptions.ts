@@ -1,5 +1,7 @@
+import type { ViewType } from '../types/home.types';
+
 // When user is stressed, simplify options to reduce cognitive load
-const getFilterOptions = (isCurrentlyStressed: boolean) => {
+const getFilterOptions = (isCurrentlyStressed: boolean): Array<{ label: string; value: ViewType }> => {
   if (isCurrentlyStressed) {
     return [{ label: 'My Day', value: 'my-day' }];
   }

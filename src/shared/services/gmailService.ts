@@ -12,6 +12,7 @@ import type {
   GmailApiMessage,
   GoogleOAuthClient,
 } from '../types/gmail.types';
+import type { ViewType } from '../../modules/home/infrastructure/types/home.types';
 
 class GmailService {
   private accessToken: string | null = null;
@@ -72,6 +73,7 @@ class GmailService {
       document.head.appendChild(script);
     });
   }
+
   /**
    * Handle OAuth callback
    */
@@ -265,6 +267,7 @@ class GmailService {
       };
     }
   }
+
   /**
    * Get user profile information
    */
@@ -287,6 +290,7 @@ class GmailService {
       success: true,
     };
   }
+
   /**
    * Get list of emails with optional filtering
    */
@@ -422,32 +426,31 @@ class GmailService {
       data: emailsWithPriority,
       success: true,
     };
-  }  /**
-   * Get emails categorized by priority levels with clear separation
+  }
+
+  /**
+   * Get emails categorized by priority levels with clear separation and date filtering
    * Focused: Starred, Personal Important Unread, Recent Important
    * Others: Promotional, Social, Updates, Forums, Read emails
-   */
-  async getEmailsByPriority(
+   */ async getEmailsByPriority(
     focusedCount: number = 5,
     otherCount: number = 5,
+    viewType: ViewType = 'my-day',
   ): Promise<GmailApiResponse<{ focused: GmailMessage[]; others: GmailMessage[] }>> {
     try {
-      // Fetch different categories of emails
-      const [
-        starredEmails,
-        personalEmails,
-        promotionalEmails,
-        socialEmails,
-        updatesEmails,
-        forumEmails,
-      ] = await Promise.all([
-        this.getStarredEmails(focusedCount),
-        this.getEmailsByCategory('primary', focusedCount * 2), // Get more to filter
-        this.getEmailsByCategory('promotions', otherCount),
-        this.getEmailsByCategory('social', Math.ceil(otherCount / 3)),
-        this.getEmailsByCategory('updates', Math.ceil(otherCount / 3)),
-        this.getEmailsByCategory('forums', Math.ceil(otherCount / 3)),
-      ]);
+      // Get date query for the selected view
+      const dateQuery = this.getDateQueryForView(viewType);
+
+      // Fetch different categories of emails with date filtering
+      const [starredEmails, personalEmails, promotionalEmails, socialEmails, updatesEmails, forumEmails] =
+        await Promise.all([
+          this.getStarredEmailsWithDateFilter(focusedCount, dateQuery),
+          this.getEmailsByCategoryWithDateFilter('primary', focusedCount * 2, dateQuery), // Get more to filter
+          this.getEmailsByCategoryWithDateFilter('promotions', otherCount, dateQuery),
+          this.getEmailsByCategoryWithDateFilter('social', Math.ceil(otherCount / 3), dateQuery),
+          this.getEmailsByCategoryWithDateFilter('updates', Math.ceil(otherCount / 3), dateQuery),
+          this.getEmailsByCategoryWithDateFilter('forums', Math.ceil(otherCount / 3), dateQuery),
+        ]);
 
       // === FOCUSED EMAILS (High Priority) ===
       const focusedEmailsSet = new Set<string>();
@@ -604,33 +607,123 @@ class GmailService {
   }
 
   /**
+   * Get emails from specific Gmail categories with date filtering
+   */
+  async getEmailsByCategoryWithDateFilter(
+    category: 'primary' | 'social' | 'promotions' | 'updates' | 'forums',
+    maxResults: number = 10,
+    dateQuery: string = '',
+  ): Promise<GmailApiResponse<GmailMessage[]>> {
+    const categoryLabels: Record<string, string> = {
+      primary: 'CATEGORY_PERSONAL',
+      social: 'CATEGORY_SOCIAL',
+      promotions: 'CATEGORY_PROMOTIONS',
+      updates: 'CATEGORY_UPDATES',
+      forums: 'CATEGORY_FORUMS',
+    };
+
+    const params: GmailQueryParams = {
+      maxResults,
+      labelIds: [categoryLabels[category]],
+      q: dateQuery, // Add date filtering
+    };
+
+    const response = await this.getEmails(params);
+    return {
+      data: response.success ? response.data.messages : [],
+      success: response.success,
+      error: response.error,
+    };
+  }
+
+  /**
+   * Get starred emails with date filtering
+   */
+  async getStarredEmailsWithDateFilter(
+    maxResults: number = 10,
+    dateQuery: string = '',
+  ): Promise<GmailApiResponse<GmailMessage[]>> {
+    const params: GmailQueryParams = {
+      maxResults,
+      labelIds: ['STARRED'],
+      q: dateQuery, // Add date filtering
+    };
+
+    const response = await this.getEmails(params);
+    return {
+      data: response.success ? response.data.messages : [],
+      success: response.success,
+      error: response.error,
+    };
+  }
+
+  /**
    * EMAIL CATEGORIZATION STRATEGY
    * ============================
-   * 
+   *
    * FOCUSED EMAILS (High Priority - Requires Immediate Attention):
    * 1. Starred emails (user explicitly marked as important)
    * 2. Unread important emails from personal category (excluding promotional/social)
    * 3. Recent unread emails from personal category (last 24 hours)
-   * 
+   *
    * OTHER EMAILS (Lower Priority - Background Processing):
    * 1. Promotional emails (CATEGORY_PROMOTIONS) - newsletters, marketing, etc.
    * 2. Social media notifications (CATEGORY_SOCIAL)
    * 3. Updates and newsletters (CATEGORY_UPDATES)
    * 4. Forum emails (CATEGORY_FORUMS)
-   * 
+   *
    * KEY PRINCIPLES:
    * - NO DUPLICATES: Each email appears in only one category
    * - PRIORITY-BASED: Focused takes precedence over others
    * - USER-INTENT: Starred emails are highest priority
    * - CONTEXT-AWARE: Promotional emails go to "others" regardless of importance flag
    * - RECENCY: Recent personal emails get priority
+   */ /**
+   * Generate Gmail search query for date filtering based on view type
    */
+  private getDateQueryForView(viewType: ViewType): string {
+    const today = new Date();
+
+    switch (viewType) {
+      case 'my-day': {
+        // Get emails from today only
+        const todayStr = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+        return `after:${todayStr} before:${this.getTomorrowDateString(today)}`;
+      }
+
+      case 'my-week': {
+        // Get emails from this week (last 7 days)
+        const weekAgo = new Date(today);
+        weekAgo.setDate(today.getDate() - 7);
+        const weekAgoStr = weekAgo.toISOString().split('T')[0];
+        return `after:${weekAgoStr}`;
+      }
+
+      case 'my-month': {
+        // Get emails from this month (last 30 days)
+        const monthAgo = new Date(today);
+        monthAgo.setDate(today.getDate() - 30);
+        const monthAgoStr = monthAgo.toISOString().split('T')[0];
+        return `after:${monthAgoStr}`;
+      }
+
+      default:
+        return ''; // No date filter
+    }
+  }
+
+  /**
+   * Helper function to get tomorrow's date string
+   */
+  private getTomorrowDateString(today: Date): string {
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
+  }
 }
 
-// Create singleton instance
 export const gmailService = new GmailService();
 
-// Type declarations for Google APIs (global)
 declare global {
   interface Window {
     google?: {

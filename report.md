@@ -41,3 +41,4 @@ Read important emails (already processed)
 ## notes
 
 - Currently, we only have read-only access to Gmail, so the "mark as read" feature is unavailable.
+

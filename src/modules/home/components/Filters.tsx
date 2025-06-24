@@ -2,7 +2,7 @@ import { FaCheck } from 'react-icons/fa6';
 import { Portal, Select, Box, createListCollection, Skeleton } from '@chakra-ui/react';
 
 import styles from '../infrastructure/styles/home.module.css';
-import type { FiltersProps } from '../infrastructure/types/home.types';
+import type { FiltersProps, ViewType } from '../infrastructure/types/home.types';
 import getFilterOptions from '../infrastructure/helpers/getFilterOptions';
 
 const Filters = ({
@@ -28,7 +28,7 @@ const Filters = ({
           variant="outline"
           defaultValue={[selectedView]}
           value={[selectedView]}
-          onValueChange={(e) => setSelectedView(e.value[0])}
+          onValueChange={(e) => setSelectedView(e.value[0] as ViewType)}
         >
           <Select.HiddenSelect />
           <Select.Control>
