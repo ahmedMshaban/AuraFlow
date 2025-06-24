@@ -6,10 +6,9 @@ import { useStressAdaptation } from './StressAdaptationContext';
  */
 export const StressAdaptations: React.FC = () => {
   const { theme, simplifyUI, motivationalMessage, isBreakSuggested, dismissBreakSuggestion } = useStressAdaptation();
-
   // Apply theme class to the document body
   React.useEffect(() => {
-    document.body.classList.remove('theme-default', 'theme-calm', 'theme-focus');
+    document.body.classList.remove('theme-default', 'theme-calm');
     document.body.classList.add(`theme-${theme}`);
 
     return () => {
@@ -21,7 +20,6 @@ export const StressAdaptations: React.FC = () => {
   const themeLabel = {
     default: 'Standard',
     calm: 'Calming',
-    focus: 'Focus Mode',
   }[theme];
 
   return (
@@ -31,7 +29,7 @@ export const StressAdaptations: React.FC = () => {
         bottom: isBreakSuggested ? '20px' : '-200px',
         right: '20px',
         transition: 'bottom 0.5s ease-in-out',
-        backgroundColor: theme === 'calm' ? '#e3f2fd' : theme === 'focus' ? '#f5f5f5' : '#ffffff',
+        backgroundColor: theme === 'calm' ? '#e3f2fd' : '#ffffff',
         padding: '15px',
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0,0,0,0.1)',

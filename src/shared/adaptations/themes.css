@@ -1,53 +1,331 @@
 /* Theme styles for stress adaptations */
 
-/* Default theme */
+/* Default theme - User wellbeing focused, energizing but gentle */
 body.theme-default {
-  --bg-color: #ffffff;
-  --text-color: #333333;
-  --accent-color: #2196f3;
-  --border-color: #e0e0e0;
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  /* Wellbeing colors - soft, energizing but not overwhelming */
+  --bg-primary: #f8fafe;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f6ff;
+  --bg-accent: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  /* Text colors */
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --text-inverse: #ffffff;
+
+  /* Accent colors for wellbeing */
+  --accent-primary: #667eea;
+  --accent-secondary: #764ba2;
+  --accent-success: #48bb78;
+  --accent-warning: #ed8936;
+  --accent-info: #4299e1;
+
+  /* Border and shadow */
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e0;
+  --border-dark: #a0aec0;
+  --shadow-sm: 0 1px 3px rgba(102, 126, 234, 0.12);
+  --shadow-md: 0 4px 6px rgba(102, 126, 234, 0.15);
+  --shadow-lg: 0 10px 15px rgba(102, 126, 234, 0.2);
+  /* Component specific */
+  --sidebar-bg: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  --card-bg: #ffffff;
+  --card-border: var(--border-light);
+  --filter-bg: rgba(255, 255, 255, 0.95);
+  --filter-text: #2d3748;
+  --filter-border: rgba(102, 126, 234, 0.3);
+
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
 }
 
-/* Calm theme - for high stress levels */
+/* Calm theme - for high stress levels, very soothing */
 body.theme-calm {
-  --bg-color: #f5f9ff;
-  --text-color: #445566;
-  --accent-color: #64b5f6;
-  --border-color: #e3f2fd;
-  --shadow-color: rgba(100, 149, 237, 0.1);
+  /* Calming colors - soft blues and greens, nature-inspired */
+  --bg-primary: #f0f8ff;
+  --bg-secondary: #fafcff;
+  --bg-tertiary: #e8f4fd;
+  --bg-accent: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
 
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  /* Gentle text colors */
+  --text-primary: #2c5282;
+  --text-secondary: #3182ce;
+  --text-muted: #4299e1;
+  --text-inverse: #ffffff;
+
+  /* Soothing accent colors */
+  --accent-primary: #63b3ed;
+  --accent-secondary: #4299e1;
+  --accent-success: #68d391;
+  --accent-warning: #f6ad55;
+  --accent-info: #81e6d9;
+
+  /* Soft borders and shadows */
+  --border-light: #bee3f8;
+  --border-medium: #90cdf4;
+  --border-dark: #63b3ed;
+  --shadow-sm: 0 1px 3px rgba(99, 179, 237, 0.08);
+  --shadow-md: 0 4px 6px rgba(99, 179, 237, 0.1);
+  --shadow-lg: 0 10px 15px rgba(99, 179, 237, 0.12);
+
+  /* Component specific - very calming */
+  --sidebar-bg: linear-gradient(145deg, #a8edea 0%, #fed6e3 100%);
+  --card-bg: #fafcff;
+  --card-border: var(--border-light);
+  --filter-bg: rgba(250, 252, 255, 0.95);
+  --filter-text: #2c5282;
+  --filter-border: rgba(99, 179, 237, 0.3);
+
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.4s ease;
 }
 
-/* Focus theme - for moderate stress levels */
-body.theme-focus {
-  --bg-color: #fafafa;
-  --text-color: #424242;
-  --accent-color: #78909c;
-  --border-color: #eeeeee;
-  --shadow-color: rgba(0, 0, 0, 0.05);
-
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-/* UI simplification */
-body.theme-calm .non-essential-element,
-body.theme-focus .non-essential-element {
-  opacity: 0.5;
+/* UI simplification for stress states */
+body.theme-calm .non-essential-element {
+  opacity: 0.6;
   transition: opacity 0.3s ease;
+}
+
+/* Enhanced focus states for stressed users */
+body.theme-calm *:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reduced motion for stressed users */
+@media (prefers-reduced-motion: reduce) {
+  body.theme-calm * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Stress state visual indicators */
+body.theme-calm {
+  /* More subtle visual cue for high stress - no animation to avoid distraction */
+  background: linear-gradient(45deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+  background-size: 200% 200%;
+}
+
+/* Enhanced focus states and transitions */
+body.theme-calm * {
+  /* Smoother transitions for stressed users */
+  transition-timing-function: ease-out;
+}
+
+/* Button enhancements for calm theme */
+body.theme-calm button,
+body.theme-calm .chakra-button {
+  background: var(--accent-primary) !important;
+  color: var(--text-inverse) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 12px 24px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+body.theme-calm button:hover,
+body.theme-calm .chakra-button:hover {
+  background: var(--accent-secondary) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* Card enhancements */
+body.theme-calm .workArea {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(250, 252, 255, 0.95);
+  border: 1px solid rgba(190, 227, 248, 0.4);
+  box-shadow:
+    0 8px 32px rgba(99, 179, 237, 0.08),
+    0 2px 8px rgba(99, 179, 237, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+body.theme-default .workArea {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  box-shadow:
+    0 8px 32px rgba(102, 126, 234, 0.12),
+    0 2px 8px rgba(102, 126, 234, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Enhanced hover effects per theme */
+body.theme-calm .workArea:hover {
+  background: rgba(250, 252, 255, 0.98);
+  border-color: rgba(99, 179, 237, 0.5);
+  box-shadow:
+    0 20px 50px rgba(99, 179, 237, 0.15),
+    0 8px 25px rgba(99, 179, 237, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+body.theme-default .workArea:hover {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(102, 126, 234, 0.4);
+  box-shadow:
+    0 20px 50px rgba(102, 126, 234, 0.18),
+    0 8px 25px rgba(102, 126, 234, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+/* Enhanced work area styling for stress-responsive design */
+body.theme-default .workAreaHeader {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 254, 0.85) 100%);
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+body.theme-calm .workAreaHeader {
+  background: linear-gradient(135deg, rgba(250, 252, 255, 0.98) 0%, rgba(232, 244, 253, 0.9) 100%);
+  border-bottom: 1px solid rgba(99, 179, 237, 0.15);
+}
+
+body.theme-calm .workAreaTitle {
+  color: var(--text-primary);
+  text-shadow: 0 1px 2px rgba(44, 82, 130, 0.1);
+}
+
+body.theme-default .workAreaTitle {
+  color: var(--text-primary);
+  text-shadow: 0 1px 2px rgba(45, 55, 72, 0.1);
+}
+
+body.theme-calm .workAreaTitle::before {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-info) 100%);
+  box-shadow:
+    0 0 12px rgba(99, 179, 237, 0.4),
+    0 2px 4px rgba(99, 179, 237, 0.2);
+}
+
+body.theme-default .workAreaTitle::before {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  box-shadow:
+    0 0 8px rgba(102, 126, 234, 0.3),
+    0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+/* Stress-responsive card animations */
+body.theme-calm .workArea {
+  animation: gentleBreathing 8s ease-in-out infinite;
+}
+
+@keyframes gentleBreathing {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 32px rgba(99, 179, 237, 0.08),
+      0 2px 8px rgba(99, 179, 237, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+  50% {
+    box-shadow:
+      0 12px 40px rgba(99, 179, 237, 0.12),
+      0 4px 12px rgba(99, 179, 237, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      0 0 30px rgba(99, 179, 237, 0.06);
+  }
+}
+
+/* Subtle float animation for default theme */
+body.theme-default .workArea {
+  animation: subtleFloat 12s ease-in-out infinite;
+}
+
+@keyframes subtleFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+/* Disable animations for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  body.theme-calm .workArea {
+    animation: none;
+  }
+}
+
+/* Work area status indicators */
+.workArea[data-status='loading']::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-warning);
+  border-radius: 50%;
+  animation: statusPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(237, 137, 54, 0.4);
+  z-index: 10;
+}
+
+.workArea[data-status='error']::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #e53e3e 0%, #fc8181 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(229, 62, 62, 0.4);
+  z-index: 10;
+}
+
+.workArea[data-status='success']::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, var(--accent-success) 0%, var(--accent-info) 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(72, 187, 120, 0.4);
+  z-index: 10;
+}
+
+@keyframes statusPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+/* Enhanced theme-specific card styling */
+body.theme-calm .workArea[data-status='loading']::after {
+  background: var(--accent-info);
+  box-shadow: 0 0 12px rgba(129, 230, 217, 0.4);
+}
+
+body.theme-calm .workArea[data-status='success']::after {
+  background: var(--accent-success);
+  box-shadow: 0 0 12px rgba(104, 211, 145, 0.4);
+}
+
+body.theme-default .workArea[data-status='loading']::after {
+  background: var(--accent-warning);
+  box-shadow: 0 0 8px rgba(237, 137, 54, 0.4);
+}
+
+body.theme-default .workArea[data-status='success']::after {
+  background: var(--accent-success);
+  box-shadow: 0 0 8px rgba(72, 187, 120, 0.4);
 }

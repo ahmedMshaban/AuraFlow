@@ -10,6 +10,7 @@ import Filters from './components/Filters';
 import useFilters from './infrastructure/hooks/useFilters';
 import Emails from './components/emails/Emails';
 import Tasks from './components/Tasks';
+import { getEmailDescription, getTaskDescription } from './infrastructure/helpers/getWorkAreaDescription';
 
 const Home = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
@@ -52,25 +53,39 @@ const Home = () => {
               numOfOtherEmails={otherEmails.length}
               isLoadingEmails={isLoadingEmails}
             />
-
             <div className={styles.workAreas}>
-              <div className={styles.workArea}>
-                <Emails
-                  isAuthenticated={isAuthenticated}
-                  isLoading={isLoading}
-                  error={error}
-                  profile={profile}
-                  focusedEmails={focusedEmails}
-                  otherEmails={otherEmails}
-                  isLoadingEmails={isLoadingEmails}
-                  emailsError={emailsError}
-                  authenticate={authenticate}
-                  signOut={signOut}
-                  fetchEmailsByPriority={fetchEmailsByPriority}
-                />
+              <div
+                className={styles.workArea}
+                data-status={isLoadingEmails ? 'loading' : emailsError ? 'error' : 'success'}
+              >
+                <div className={styles.workAreaHeader}>
+                  <h2 className={styles.workAreaTitle}>📧 Smart Email Management</h2>
+                  <p className={styles.workAreaSubtitle}>{getEmailDescription(isCurrentlyStressed)}</p>
+                </div>
+                <div className={styles.workAreaContent}>
+                  <Emails
+                    isAuthenticated={isAuthenticated}
+                    isLoading={isLoading}
+                    error={error}
+                    profile={profile}
+                    focusedEmails={focusedEmails}
+                    otherEmails={otherEmails}
+                    isLoadingEmails={isLoadingEmails}
+                    emailsError={emailsError}
+                    authenticate={authenticate}
+                    signOut={signOut}
+                    fetchEmailsByPriority={fetchEmailsByPriority}
+                  />
+                </div>
               </div>
               <div className={styles.workArea}>
-                <Tasks />
+                <div className={styles.workAreaHeader}>
+                  <h2 className={styles.workAreaTitle}>✅ Mindful Task Management</h2>
+                  <p className={styles.workAreaSubtitle}>{getTaskDescription(isCurrentlyStressed)}</p>
+                </div>
+                <div className={styles.workAreaContent}>
+                  <Tasks />
+                </div>
               </div>
             </div>
           </div>

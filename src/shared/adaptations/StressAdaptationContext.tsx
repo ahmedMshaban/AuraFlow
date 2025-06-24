@@ -7,7 +7,7 @@ import * as adaptations from './stressAdaptations.types';
 // Type for the stress adaptation context
 interface StressAdaptationContextType {
   // Current UI adaptations
-  theme: 'default' | 'calm' | 'focus';
+  theme: 'default' | 'calm';
   simplifyUI: boolean;
   reduceNotifications: boolean;
   suggestedBreakInterval: number;

@@ -67,7 +67,7 @@ const Emails = ({
   }
 
   return (
-    <Box p={5}>
+    <Box>
       {/* Header with profile info and disconnect option */}
       <Box
         display="flex"

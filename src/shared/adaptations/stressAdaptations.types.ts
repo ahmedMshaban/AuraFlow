@@ -18,12 +18,11 @@ export interface AdaptationOptions {
 
 /**
  * Determines the appropriate theme based on stress level
+ * Only two themes: default (for low/moderate stress) and calm (for high stress)
  */
-export function getAdaptedTheme({ stressLevel }: AdaptationOptions): 'default' | 'calm' | 'focus' {
+export function getAdaptedTheme({ stressLevel }: AdaptationOptions): 'default' | 'calm' {
   if (stressLevel >= STRESS_THRESHOLDS.HIGH) {
     return 'calm';
-  } else if (stressLevel >= STRESS_THRESHOLDS.MODERATE) {
-    return 'focus';
   } else {
     return 'default';
   }
