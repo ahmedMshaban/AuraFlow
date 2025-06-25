@@ -111,6 +111,7 @@ const Home = () => {
                     deleteTask={deleteTask}
                     toggleTaskStatus={toggleTaskStatus}
                     isCreating={isCreating}
+                    isCurrentlyStressed={isCurrentlyStressed}
                   />
                 </div>
               </div>

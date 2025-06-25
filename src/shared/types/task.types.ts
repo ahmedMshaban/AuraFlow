@@ -67,6 +67,7 @@ export interface TasksProps {
   deleteTask: (taskId: string) => Promise<void>;
   toggleTaskStatus: (taskId: string, currentStatus: string) => Promise<void>;
   isCreating: boolean;
+  isCurrentlyStressed: boolean;
 }
 
 export interface TaskFormProps {

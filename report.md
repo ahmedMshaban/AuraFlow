@@ -144,3 +144,24 @@ Stress Mode (My Day):
 ⏰  7 tasks for today (higher load)
 all done today! 🎉 (nothing remaining)
 This creates a supportive, wellbeing-focused experience that adapts to the user's stress level and encourages healthy productivity habits! 🌟
+
+
+Stress-Mode Tab Reduction:
+
+In stress mode: Shows only a single "Priority" tab
+Combines overdue tasks + high-priority upcoming tasks
+Hides normal tabs (upcoming, overdue, completed) to reduce cognitive load
+Positive Messaging:
+
+Helper text: "🧘‍♀️ Focus Mode: Showing overdue tasks + high-priority upcoming tasks only"
+Encouraging empty state: "🎉 No priority tasks right now - you're doing great!"
+Proper Integration:
+
+TasksProps includes isCurrentlyStressed: boolean
+Home component passes isCurrentlyStressed prop correctly
+No compilation errors
+Consistent UX:
+
+Same stress-mode pattern as emails
+Reduces cognitive load by focusing on what matters most
+Uses emojis and positive reinforcement

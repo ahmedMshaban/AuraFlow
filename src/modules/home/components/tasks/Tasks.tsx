@@ -4,6 +4,7 @@ import { Box, Button, VStack, HStack, Text, Spinner } from '@chakra-ui/react';
 import type { TasksProps } from '@/shared/types/task.types';
 import TaskForm from './TaskForm';
 import TaskItem from './TaskItem';
+import getTabsForMode from '../../infrastructure/helpers/getTasksTabsForMode';
 
 const Tasks = ({
   upcomingTasks,
@@ -16,32 +17,18 @@ const Tasks = ({
   deleteTask,
   toggleTaskStatus,
   isCreating,
+  isCurrentlyStressed,
 }: TasksProps) => {
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'overdue' | 'completed'>('upcoming');
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'overdue' | 'completed' | 'priority'>('upcoming');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const tabs = [
-    {
-      key: 'upcoming' as const,
-      label: 'Upcoming',
-      count: taskStats.pending,
-      tasks: upcomingTasks,
-      color: 'blue',
-    },
-    {
-      key: 'overdue' as const,
-      label: 'Overdue',
-      count: taskStats.overdue,
-      tasks: overdueTasks,
-      color: 'red',
-    },
-    {
-      key: 'completed' as const,
-      label: 'Completed',
-      count: taskStats.completed,
-      tasks: completedTasks,
-      color: 'green',
-    },
-  ];
+
+  const tabs = getTabsForMode(upcomingTasks, overdueTasks, completedTasks, taskStats, isCurrentlyStressed);
+
+  // Reset active tab if it doesn't exist in current mode
+  const validTab = tabs.find((tab) => tab.key === activeTab);
+  if (!validTab && tabs.length > 0) {
+    setActiveTab(tabs[0].key);
+  }
 
   if (isLoading) {
     return (
@@ -80,30 +67,56 @@ const Tasks = ({
       h="100%"
     >
       {/* Tab Navigation */}
-      <HStack
-        gap={2}
+      <VStack
+        gap={3}
         mb={4}
       >
-        {tabs.map((tab) => (
-          <Button
-            key={tab.key}
-            size="sm"
-            variant={activeTab === tab.key ? 'solid' : 'outline'}
-            colorScheme={tab.color}
-            onClick={() => setActiveTab(tab.key)}
+        {/* Stress Mode Helper Text */}
+        {isCurrentlyStressed && (
+          <Box
+            p={3}
+            bg="orange.50"
+            borderRadius="md"
+            border="1px solid"
+            borderColor="orange.200"
+            w="100%"
           >
-            {tab.label} ({tab.count})
-          </Button>
-        ))}
-        <Button
-          colorScheme="blue"
-          size="sm"
-          ml="auto"
-          onClick={() => setIsModalOpen(true)}
+            <Text
+              fontSize="sm"
+              color="orange.700"
+              textAlign="center"
+            >
+              🧘‍♀️ Focus Mode: Showing overdue tasks + high-priority upcoming tasks only
+            </Text>
+          </Box>
+        )}
+
+        <HStack
+          gap={2}
+          w="100%"
         >
-          + New Task
-        </Button>
-      </HStack>
+          {tabs.map((tab) => (
+            <Button
+              key={tab.key}
+              size="sm"
+              variant={activeTab === tab.key ? 'solid' : 'outline'}
+              colorScheme={tab.color}
+              onClick={() => setActiveTab(tab.key)}
+              title={tab.description}
+            >
+              {tab.label} ({tab.count})
+            </Button>
+          ))}
+          <Button
+            colorScheme="blue"
+            size="sm"
+            ml="auto"
+            onClick={() => setIsModalOpen(true)}
+          >
+            + New Task
+          </Button>
+        </HStack>
+      </VStack>
 
       {/* Task List */}
       <Box>
@@ -116,7 +129,11 @@ const Tasks = ({
               textAlign="center"
               py={8}
             >
-              <Text color="gray.500">No {currentTab.label.toLowerCase()} tasks</Text>
+              {isCurrentlyStressed ? (
+                <Text color="green.600">🎉 No priority tasks right now - you're doing great!</Text>
+              ) : (
+                <Text color="gray.500">No {currentTab.label.toLowerCase()} tasks</Text>
+              )}
             </Box>
           ) : (
             currentTab.tasks.map((task) => (
