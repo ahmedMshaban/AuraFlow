@@ -9,7 +9,7 @@ import Greeting from './components/Greeting';
 import Filters from './components/Filters';
 import useFilters from './infrastructure/hooks/useFilters';
 import Emails from './components/emails/Emails';
-import Tasks from './components/Tasks';
+import Tasks from './components/tasks/Tasks';
 import { getEmailDescription, getTaskDescription } from './infrastructure/helpers/getWorkAreaDescription';
 
 const Home = () => {
