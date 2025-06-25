@@ -1,11 +1,45 @@
-import { Box, Button, Input, Textarea, VStack, Text, HStack } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import { Box, Button, Input, Textarea, VStack, Text, HStack, Field } from '@chakra-ui/react';
 
-import type { TaskFormProps } from '@/shared/types/task.types';
-import useTaskForm from '../../infrastructure/hooks/useTaskForm';
+import type { TaskFormProps, TaskFormData, CreateTaskData } from '@/shared/types/task.types';
 import getTomorrowDate from '../../infrastructure/helpers/getTomorrowDate';
 
 const TaskForm = ({ isOpen, onClose, onSubmit, isLoading = false }: TaskFormProps) => {
-  const { formData, errors, handleInputChange, handleSubmit, handleClose } = useTaskForm(onSubmit, onClose);
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<TaskFormData>({
+    defaultValues: {
+      title: '',
+      description: '',
+      dueDate: '',
+      priority: 'medium',
+    },
+  });
+
+  const onFormSubmit = async (data: TaskFormData) => {
+    try {
+      const taskData: CreateTaskData = {
+        title: data.title.trim(),
+        description: data.description?.trim() || '',
+        dueDate: new Date(data.dueDate),
+        priority: data.priority,
+      };
+
+      await onSubmit(taskData);
+      reset();
+      onClose();
+    } catch (error) {
+      console.error('Failed to create task:', error);
+    }
+  };
+
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -32,7 +66,7 @@ const TaskForm = ({ isOpen, onClose, onSubmit, isLoading = false }: TaskFormProp
         maxHeight="90vh"
         overflow="auto"
       >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onFormSubmit)}>
           <Text
             fontSize="xl"
             fontWeight="bold"
@@ -41,99 +75,83 @@ const TaskForm = ({ isOpen, onClose, onSubmit, isLoading = false }: TaskFormProp
             Create New Task
           </Text>
 
-          {errors.length > 0 && (
-            <Box
-              mb={4}
-              p={3}
-              bg="red.50"
-              borderRadius="md"
-              border="1px solid"
-              borderColor="red.200"
-            >
-              {errors.map((error, index) => (
-                <Text
-                  key={index}
-                  color="red.600"
-                  fontSize="sm"
-                >
-                  {error}
-                </Text>
-              ))}
-            </Box>
-          )}
-
           <VStack
             gap={4}
             align="stretch"
+            mb={6}
           >
-            <Box>
-              <Text
-                mb={2}
-                fontWeight="medium"
-              >
-                Title *
-              </Text>
+            <Field.Root
+              invalid={!!errors.title}
+              required
+            >
+              <Field.Label htmlFor="title">Title</Field.Label>
               <Input
+                id="title"
                 placeholder="Enter task title"
-                value={formData.title}
-                onChange={handleInputChange('title')}
                 autoFocus
+                {...register('title', {
+                  required: 'Task title is required',
+                  minLength: {
+                    value: 3,
+                    message: 'Title must be at least 3 characters long',
+                  },
+                })}
               />
-            </Box>
+              <Field.ErrorText>{errors.title?.message?.toString()}</Field.ErrorText>
+            </Field.Root>
 
-            <Box>
-              <Text
-                mb={2}
-                fontWeight="medium"
-              >
-                Description
-              </Text>
+            <Field.Root invalid={!!errors.description}>
+              <Field.Label htmlFor="description">Description</Field.Label>
               <Textarea
+                id="description"
                 placeholder="Enter task description (optional)"
-                value={formData.description}
-                onChange={handleInputChange('description')}
                 rows={3}
+                {...register('description')}
               />
-            </Box>
+              <Field.ErrorText>{errors.description?.message?.toString()}</Field.ErrorText>
+            </Field.Root>
 
-            <Box>
-              <Text
-                mb={2}
-                fontWeight="medium"
-              >
-                Due Date *
-              </Text>
+            <Field.Root
+              invalid={!!errors.dueDate}
+              required
+            >
+              <Field.Label htmlFor="dueDate">Due Date</Field.Label>
               <Input
+                id="dueDate"
                 type="date"
-                value={formData.dueDate}
-                onChange={handleInputChange('dueDate')}
                 min={getTomorrowDate()}
+                {...register('dueDate', {
+                  required: 'Due date is required',
+                })}
               />
-            </Box>
+              <Field.ErrorText>{errors.dueDate?.message?.toString()}</Field.ErrorText>
+            </Field.Root>
 
-            <Box>
-              <Text
-                mb={2}
-                fontWeight="medium"
-              >
-                Priority *
-              </Text>
+            <Field.Root
+              invalid={!!errors.priority}
+              required
+            >
+              <Field.Label htmlFor="priority">Priority</Field.Label>
               <select
-                value={formData.priority}
-                onChange={handleInputChange('priority')}
+                id="priority"
                 style={{
                   width: '100%',
                   padding: '8px 12px',
                   border: '1px solid #E2E8F0',
                   borderRadius: '6px',
                   fontSize: '16px',
+                  backgroundColor: 'white',
                 }}
+                {...register('priority', {
+                  required: 'Priority is required',
+                })}
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
               </select>
-            </Box>
+              <Field.ErrorText>{errors.priority?.message?.toString()}</Field.ErrorText>
+            </Field.Root>
           </VStack>
 
           <HStack
@@ -150,9 +168,9 @@ const TaskForm = ({ isOpen, onClose, onSubmit, isLoading = false }: TaskFormProp
             <Button
               type="submit"
               colorScheme="blue"
-              loading={isLoading}
+              disabled={isLoading || isSubmitting}
             >
-              {isLoading ? 'Creating...' : 'Create Task'}
+              {isLoading || isSubmitting ? 'Creating...' : 'Create Task'}
             </Button>
           </HStack>
         </form>

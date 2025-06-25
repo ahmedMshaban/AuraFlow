@@ -46,11 +46,6 @@ label {
   color: white;
 }
 
-input {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
 .form-error {
   color: var(--chakra-colors-fg-error);
   font-size: var(--chakra-font-sizes-xs);
