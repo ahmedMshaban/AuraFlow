@@ -66,6 +66,8 @@ const Home = () => {
               numOfFocusedEmails={focusedEmails.length}
               numOfOtherEmails={otherEmails.length}
               isLoadingEmails={isLoadingEmails}
+              taskStats={taskStats}
+              isLoadingTasks={isTasksLoading}
             />
             <div className={styles.workAreas}>
               <div

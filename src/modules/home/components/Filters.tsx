@@ -1,9 +1,10 @@
-import { FaCheck } from 'react-icons/fa6';
 import { Portal, Select, Box, createListCollection, Skeleton } from '@chakra-ui/react';
 
 import styles from '../infrastructure/styles/home.module.css';
 import type { FiltersProps, ViewType } from '../infrastructure/types/home.types';
 import getFilterOptions from '../infrastructure/helpers/getFilterOptions';
+import getWellbeingTaskDisplay from '../infrastructure/helpers/getWellbeingTaskDisplay';
+import getWellbeingEmailDisplay from '../infrastructure/helpers/getWellbeingEmailDisplay';
 
 const Filters = ({
   selectedView,
@@ -12,12 +13,18 @@ const Filters = ({
   numOfFocusedEmails,
   numOfOtherEmails,
   isLoadingEmails,
+  taskStats,
+  isLoadingTasks,
 }: FiltersProps) => {
   const filterViewsCollection = createListCollection({
     items: getFilterOptions(isCurrentlyStressed),
   });
 
-  const totalEmails = (numOfFocusedEmails ?? 0) + (numOfOtherEmails ?? 0);
+  // Calculate wellbeing-focused task display
+  const taskDisplay = getWellbeingTaskDisplay(taskStats, selectedView, isCurrentlyStressed);
+
+  // Calculate wellbeing-focused email display
+  const emailDisplay = getWellbeingEmailDisplay(numOfFocusedEmails, numOfOtherEmails, isCurrentlyStressed);
 
   return (
     <div className={styles.filterContainer}>
@@ -56,18 +63,26 @@ const Filters = ({
           </Portal>
         </Select.Root>
       </div>
-      <div className={styles.filterItem}>
-        <FaCheck /> 0 {isCurrentlyStressed ? 'tasks to go' : 'tasks completed'}
-      </div>
+      <Box className={styles.filterItem}>
+        <Skeleton
+          height="6"
+          loading={isLoadingTasks}
+          className={styles.filterItem}
+        >
+          <span>{taskDisplay.icon}</span>
+          {taskDisplay.count && `${taskDisplay.count} `}
+          {taskDisplay.label}
+        </Skeleton>
+      </Box>
       <Box className={styles.filterItem}>
         <Skeleton
           height="6"
           loading={isLoadingEmails}
           className={styles.filterItem}
         >
-          <FaCheck />
-          {isCurrentlyStressed ? numOfFocusedEmails : totalEmails}{' '}
-          {isCurrentlyStressed ? 'important emails' : 'unread emails'}
+          <span>{emailDisplay.icon}</span>
+          {emailDisplay.count && `${emailDisplay.count} `}
+          {emailDisplay.label}
         </Skeleton>
       </Box>
     </div>

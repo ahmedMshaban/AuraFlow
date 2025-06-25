@@ -7,4 +7,16 @@ export interface FiltersProps {
   numOfFocusedEmails: number | undefined;
   numOfOtherEmails: number | undefined;
   isLoadingEmails: boolean;
+  taskStats:
+    | {
+        total: number;
+        pending: number;
+        completed: number;
+        overdue: number;
+        todayDue: number;
+        thisWeekDue: number;
+        thisMonthDue: number;
+      }
+    | undefined;
+  isLoadingTasks: boolean;
 }
