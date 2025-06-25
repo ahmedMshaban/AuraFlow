@@ -307,7 +307,9 @@ class GmailService {
 
     if (!response.success) {
       return response as GmailApiResponse<GmailListResponse>;
-    } // Get detailed information for each message
+    }
+
+    // Get detailed information for each message
     const messages: GmailMessage[] = [];
     const maxResults = (queryParams.maxResults as number) || 5;
     if (response.data.messages) {
@@ -319,8 +321,15 @@ class GmailService {
       }
     }
 
+    // Sort messages by date (newest first) to ensure consistent ordering
+    const sortedMessages = messages.sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      return dateB - dateA; // Newest first (descending order)
+    });
+
     const listResponse: GmailListResponse = {
-      messages,
+      messages: sortedMessages,
       nextPageToken: response.data.nextPageToken,
       resultSizeEstimate: response.data.resultSizeEstimate || 0,
     };
@@ -453,53 +462,74 @@ class GmailService {
         ]);
 
       // === FOCUSED EMAILS (High Priority) ===
-      const focusedEmailsSet = new Set<string>();
-      const focusedEmails: GmailMessage[] = [];
+      const focusedEmailsMap = new Map<string, GmailMessage>();
+      const allFocusedCandidates: Array<{ email: GmailMessage; priority: number }> = [];
 
-      // 1. Add starred emails first (highest priority)
+      // 1. Collect starred emails (highest priority)
       if (starredEmails.success) {
         starredEmails.data.forEach((email: GmailMessage) => {
-          if (focusedEmails.length < focusedCount) {
-            focusedEmailsSet.add(email.id);
-            focusedEmails.push(email);
-          }
+          allFocusedCandidates.push({ email, priority: 1 }); // Highest priority
         });
       }
 
-      // 2. Add unread important emails from personal category (excluding promotional)
-      if (personalEmails.success && focusedEmails.length < focusedCount) {
+      // 2. Collect unread important emails from personal category
+      if (personalEmails.success) {
         personalEmails.data.forEach((email: GmailMessage) => {
           if (
-            !focusedEmailsSet.has(email.id) &&
-            focusedEmails.length < focusedCount &&
             !email.read &&
             email.important &&
             !email.labels.includes('CATEGORY_PROMOTIONS') &&
             !email.labels.includes('CATEGORY_SOCIAL')
           ) {
-            focusedEmailsSet.add(email.id);
-            focusedEmails.push(email);
+            allFocusedCandidates.push({ email, priority: 2 });
           }
         });
       }
 
-      // 3. Add recent unread emails (last 24 hours) from personal category
-      if (personalEmails.success && focusedEmails.length < focusedCount) {
+      // 3. Collect important emails from updates category
+      if (updatesEmails.success) {
+        updatesEmails.data.forEach((email: GmailMessage) => {
+          if (!email.read && email.important && email.labels.includes('CATEGORY_UPDATES')) {
+            allFocusedCandidates.push({ email, priority: 2 });
+          }
+        });
+      }
+
+      // 4. Collect recent unread emails from personal category
+      if (personalEmails.success) {
         const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
         personalEmails.data.forEach((email: GmailMessage) => {
           if (
-            !focusedEmailsSet.has(email.id) &&
-            focusedEmails.length < focusedCount &&
             !email.read &&
             new Date(email.date).getTime() > oneDayAgo &&
             !email.labels.includes('CATEGORY_PROMOTIONS') &&
             !email.labels.includes('CATEGORY_SOCIAL')
           ) {
-            focusedEmailsSet.add(email.id);
-            focusedEmails.push(email);
+            allFocusedCandidates.push({ email, priority: 3 });
           }
         });
       }
+
+      // Sort all focused candidates by priority first, then by date (newest first)
+      allFocusedCandidates.sort((a, b) => {
+        // First sort by priority (lower number = higher priority)
+        if (a.priority !== b.priority) {
+          return a.priority - b.priority;
+        }
+        // Then by date (newest first)
+        const dateA = new Date(a.email.date).getTime();
+        const dateB = new Date(b.email.date).getTime();
+        return dateB - dateA;
+      });
+
+      // Select top emails without duplicates, maintaining date order
+      const focusedEmails: GmailMessage[] = [];
+      allFocusedCandidates.forEach(({ email }) => {
+        if (!focusedEmailsMap.has(email.id) && focusedEmails.length < focusedCount) {
+          focusedEmailsMap.set(email.id, email);
+          focusedEmails.push(email);
+        }
+      });
 
       // === OTHER EMAILS (Lower Priority) ===
       const otherEmails: GmailMessage[] = [];
@@ -518,8 +548,10 @@ class GmailService {
           emails.data.forEach((email: GmailMessage) => {
             if (
               !otherEmailsSet.has(email.id) &&
-              !focusedEmailsSet.has(email.id) && // Don't duplicate from focused
-              otherEmails.length < otherCount
+              !focusedEmailsMap.has(email.id) && // Don't duplicate from focused
+              otherEmails.length < otherCount &&
+              // Exclude important updates that should be in focused
+              !(email.important && email.labels.includes('CATEGORY_UPDATES') && !email.read)
             ) {
               otherEmailsSet.add(email.id);
               otherEmails.push(email);
@@ -528,10 +560,19 @@ class GmailService {
         }
       });
 
+      // Sort emails by date (newest first) to ensure consistent ordering
+      const sortEmailsByDate = (emails: GmailMessage[]): GmailMessage[] => {
+        return emails.sort((a, b) => {
+          const dateA = new Date(a.date).getTime();
+          const dateB = new Date(b.date).getTime();
+          return dateB - dateA; // Newest first (descending order)
+        });
+      };
+
       return {
         data: {
-          focused: focusedEmails,
-          others: otherEmails,
+          focused: sortEmailsByDate(focusedEmails),
+          others: sortEmailsByDate(otherEmails),
         },
         success: true,
       };
