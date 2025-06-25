@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/shared/hooks/useAuth';
 import { taskService } from '@/shared/services/taskService';
-import type { ViewType } from '../types/home.types';
-import type { Task, CreateTaskData, UpdateTaskData, TaskStats, TaskFilters } from '../types/task.types';
+import type { Task, CreateTaskData, UpdateTaskData, TaskStats, TaskFilters } from '@/shared/types/task.types';
+
+import type { ViewType } from '@/modules/home/infrastructure/types/home.types';
 
 export const useTasks = (selectedView?: ViewType) => {
   const authContext = useAuth();
@@ -35,7 +36,7 @@ export const useTasks = (selectedView?: ViewType) => {
 
         // Apply view-based filtering
         if (selectedView && ['my-day', 'my-week', 'my-month'].includes(selectedView)) {
-          allTasks = taskService.getTasksByDateRange(allTasks, selectedView as 'my-day' | 'my-week' | 'my-month');
+          allTasks = taskService.getTasksByDateRange(allTasks, selectedView as ViewType);
         }
 
         setTasks(allTasks);

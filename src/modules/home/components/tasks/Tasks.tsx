@@ -1,50 +1,47 @@
-import React, { useState } from 'react';
-import { Box, Button, Badge, VStack, HStack, Text, Spinner } from '@chakra-ui/react';
+import { useState } from 'react';
+import { Box, Button, VStack, HStack, Text, Spinner } from '@chakra-ui/react';
 
-import { useAuth } from '@/shared/hooks/useAuth';
-import { useTasks } from '../../infrastructure/hooks/useTasks';
+import type { TasksProps } from '@/shared/types/task.types';
 import TaskForm from './TaskForm';
 import TaskItem from './TaskItem';
-import type { ViewType } from '../../infrastructure/types/home.types';
 
-interface TasksProps {
-  selectedView?: ViewType;
-}
-
-const Tasks: React.FC<TasksProps> = ({ selectedView }) => {
-  const authContext = useAuth();
-  const currentUser = authContext?.currentUser;
+const Tasks = ({
+  upcomingTasks,
+  overdueTasks,
+  completedTasks,
+  taskStats,
+  isLoading,
+  error,
+  createTask,
+  deleteTask,
+  toggleTaskStatus,
+  isCreating,
+}: TasksProps) => {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'overdue' | 'completed'>('upcoming');
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const {
-    upcomingTasks,
-    overdueTasks,
-    completedTasks,
-    taskStats,
-    isLoading,
-    error,
-    createTask,
-    deleteTask,
-    toggleTaskStatus,
-    isCreating,
-  } = useTasks(selectedView);
-
-  if (!currentUser) {
-    return (
-      <VStack
-        gap={4}
-        py={8}
-      >
-        <Text
-          color="gray.500"
-          textAlign="center"
-        >
-          Please sign in to manage your tasks
-        </Text>
-      </VStack>
-    );
-  }
+  const tabs = [
+    {
+      key: 'upcoming' as const,
+      label: 'Upcoming',
+      count: taskStats.pending,
+      tasks: upcomingTasks,
+      color: 'blue',
+    },
+    {
+      key: 'overdue' as const,
+      label: 'Overdue',
+      count: taskStats.overdue,
+      tasks: overdueTasks,
+      color: 'red',
+    },
+    {
+      key: 'completed' as const,
+      label: 'Completed',
+      count: taskStats.completed,
+      tasks: completedTasks,
+      color: 'green',
+    },
+  ];
 
   if (isLoading) {
     return (
@@ -75,30 +72,6 @@ const Tasks: React.FC<TasksProps> = ({ selectedView }) => {
     );
   }
 
-  const tabs = [
-    {
-      key: 'upcoming' as const,
-      label: 'Upcoming',
-      count: taskStats.pending,
-      tasks: upcomingTasks,
-      color: 'blue',
-    },
-    {
-      key: 'overdue' as const,
-      label: 'Overdue',
-      count: taskStats.overdue,
-      tasks: overdueTasks,
-      color: 'red',
-    },
-    {
-      key: 'completed' as const,
-      label: 'Completed',
-      count: taskStats.completed,
-      tasks: completedTasks,
-      color: 'green',
-    },
-  ];
-
   const currentTab = tabs.find((tab) => tab.key === activeTab) || tabs[0];
 
   return (
@@ -106,61 +79,6 @@ const Tasks: React.FC<TasksProps> = ({ selectedView }) => {
       w="100%"
       h="100%"
     >
-      {/* Header with Create Task Button */}
-      <HStack
-        justify="space-between"
-        mb={4}
-      >
-        <Text
-          fontSize="lg"
-          fontWeight="semibold"
-          color="gray.700"
-        >
-          Task Management
-        </Text>
-        <Button
-          colorScheme="blue"
-          size="sm"
-          onClick={() => setIsModalOpen(true)}
-        >
-          + New Task
-        </Button>
-      </HStack>
-
-      {/* Task Stats Summary */}
-      <HStack
-        gap={4}
-        mb={6}
-      >
-        <Badge
-          colorScheme="blue"
-          p={2}
-          borderRadius="md"
-        >
-          <Text fontSize="xs">
-            <strong>{taskStats.todayDue}</strong> due today
-          </Text>
-        </Badge>
-        <Badge
-          colorScheme="orange"
-          p={2}
-          borderRadius="md"
-        >
-          <Text fontSize="xs">
-            <strong>{taskStats.thisWeekDue}</strong> this week
-          </Text>
-        </Badge>
-        <Badge
-          colorScheme="purple"
-          p={2}
-          borderRadius="md"
-        >
-          <Text fontSize="xs">
-            <strong>{taskStats.total}</strong> total tasks
-          </Text>
-        </Badge>
-      </HStack>
-
       {/* Tab Navigation */}
       <HStack
         gap={2}
@@ -177,6 +95,14 @@ const Tasks: React.FC<TasksProps> = ({ selectedView }) => {
             {tab.label} ({tab.count})
           </Button>
         ))}
+        <Button
+          colorScheme="blue"
+          size="sm"
+          ml="auto"
+          onClick={() => setIsModalOpen(true)}
+        >
+          + New Task
+        </Button>
       </HStack>
 
       {/* Task List */}

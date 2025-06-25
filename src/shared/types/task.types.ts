@@ -55,3 +55,29 @@ export interface TaskFormData {
   dueDate: string; // For form handling
   priority: TaskPriority;
 }
+
+export interface TasksProps {
+  upcomingTasks: Task[];
+  overdueTasks: Task[];
+  completedTasks: Task[];
+  taskStats: TaskStats;
+  isLoading: boolean;
+  error: string | null;
+  createTask: (task: CreateTaskData) => Promise<void>;
+  deleteTask: (taskId: string) => Promise<void>;
+  toggleTaskStatus: (taskId: string, currentStatus: string) => Promise<void>;
+  isCreating: boolean;
+}
+
+export interface TaskFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: CreateTaskData) => Promise<void>;
+  isLoading?: boolean;
+}
+
+export interface TaskItemProps {
+  task: Task;
+  onToggleStatus: (taskId: string, currentStatus: string) => void;
+  onDelete: (taskId: string) => void;
+}

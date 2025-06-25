@@ -1,48 +1,11 @@
-import React from 'react';
 import { Box, Text, Button, HStack, VStack, Badge } from '@chakra-ui/react';
-import type { Task } from '../../infrastructure/types/task.types';
 
-interface TaskItemProps {
-  task: Task;
-  onToggleStatus: (taskId: string, currentStatus: string) => void;
-  onDelete: (taskId: string) => void;
-}
+import type { TaskItemProps } from '@/shared/types/task.types';
+import getStatusColor from '../../infrastructure/helpers/getStatusColor';
+import getPriorityColor from '../../infrastructure/helpers/getPriorityColor';
+import formatTasksDate from '../../infrastructure/helpers/formatTasksDate';
 
-const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleStatus, onDelete }) => {
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }).format(date);
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return 'red';
-      case 'medium':
-        return 'yellow';
-      case 'low':
-        return 'green';
-      default:
-        return 'gray';
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'green';
-      case 'overdue':
-        return 'red';
-      case 'pending':
-        return 'blue';
-      default:
-        return 'gray';
-    }
-  };
-
+const TaskItem = ({ task, onToggleStatus, onDelete }: TaskItemProps) => {
   return (
     <Box
       p={4}
@@ -102,7 +65,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleStatus, onDelete }) =
             fontSize="sm"
             color="gray.500"
           >
-            Due: {formatDate(task.dueDate)}
+            Due: {formatTasksDate(task.dueDate)}
           </Text>
 
           <HStack gap={2}>

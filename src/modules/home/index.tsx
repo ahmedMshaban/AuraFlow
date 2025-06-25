@@ -4,6 +4,8 @@ import { useStressAnalytics } from '@/shared/hooks/useStressAnalytics';
 import Sidebar from '@/shared/modules/sidebar';
 import useSidebar from '@/shared/modules/sidebar/infrastructure/hooks/useSidebar';
 import { useGmail } from '@/shared/hooks/useGmail';
+import { useTasks } from '@/shared/hooks/useTasks';
+
 import styles from './infrastructure/styles/home.module.css';
 import Greeting from './components/Greeting';
 import Filters from './components/Filters';
@@ -29,6 +31,18 @@ const Home = () => {
     signOut,
     fetchEmailsByPriority,
   } = useGmail(selectedView);
+  const {
+    upcomingTasks,
+    overdueTasks,
+    completedTasks,
+    taskStats,
+    isLoading: isTasksLoading,
+    error: tasksError,
+    createTask,
+    deleteTask,
+    toggleTaskStatus,
+    isCreating,
+  } = useTasks(selectedView);
 
   return (
     <div className={styles.homePageContainer}>
@@ -84,7 +98,18 @@ const Home = () => {
                   <p className={styles.workAreaSubtitle}>{getTaskDescription(isCurrentlyStressed)}</p>
                 </div>
                 <div className={styles.workAreaContent}>
-                  <Tasks />
+                  <Tasks
+                    upcomingTasks={upcomingTasks}
+                    overdueTasks={overdueTasks}
+                    completedTasks={completedTasks}
+                    taskStats={taskStats}
+                    isLoading={isTasksLoading}
+                    error={tasksError}
+                    createTask={createTask}
+                    deleteTask={deleteTask}
+                    toggleTaskStatus={toggleTaskStatus}
+                    isCreating={isCreating}
+                  />
                 </div>
               </div>
             </div>

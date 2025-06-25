@@ -13,14 +13,7 @@ import {
 } from 'firebase/firestore';
 import type { User } from 'firebase/auth';
 import { app } from '@/shared/auth/firebase/firebase';
-import type {
-  Task,
-  CreateTaskData,
-  UpdateTaskData,
-  TaskStatus,
-  TaskFilters,
-  TaskStats,
-} from '../../modules/home/infrastructure/types/task.types';
+import type { Task, CreateTaskData, UpdateTaskData, TaskStatus, TaskFilters, TaskStats } from '../types/task.types';
 
 const db = getFirestore(app);
 const TASKS_COLLECTION = 'tasks';
