@@ -2,13 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/shared/hooks/useAuth';
 import { taskService } from '@/shared/services/taskService';
 import type { ViewType } from '../types/home.types';
-import type {
-  Task,
-  CreateTaskData,
-  UpdateTaskData,
-  TaskStats,
-  TaskFilters,
-} from '../types/task.types';
+import type { Task, CreateTaskData, UpdateTaskData, TaskStats, TaskFilters } from '../types/task.types';
 
 export const useTasks = (selectedView?: ViewType) => {
   const authContext = useAuth();
@@ -29,75 +23,87 @@ export const useTasks = (selectedView?: ViewType) => {
   const [error, setError] = useState<string | null>(null);
 
   // Fetch tasks
-  const fetchTasks = useCallback(async (filters?: TaskFilters) => {
-    if (!currentUser) return;
+  const fetchTasks = useCallback(
+    async (filters?: TaskFilters) => {
+      if (!currentUser) return;
 
-    setIsLoading(true);
-    setError(null);
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      let allTasks = await taskService.getUserTasks(currentUser, filters);
+      try {
+        let allTasks = await taskService.getUserTasks(currentUser, filters);
 
-      // Apply view-based filtering
-      if (selectedView && ['my-day', 'my-week', 'my-month'].includes(selectedView)) {
-        allTasks = taskService.getTasksByDateRange(
-          allTasks, 
-          selectedView as 'my-day' | 'my-week' | 'my-month'
-        );
+        // Apply view-based filtering
+        if (selectedView && ['my-day', 'my-week', 'my-month'].includes(selectedView)) {
+          allTasks = taskService.getTasksByDateRange(allTasks, selectedView as 'my-day' | 'my-week' | 'my-month');
+        }
+
+        setTasks(allTasks);
+        setTaskStats(taskService.getTaskStats(allTasks));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch tasks');
+        console.error('Error fetching tasks:', err);
+      } finally {
+        setIsLoading(false);
       }
-
-      setTasks(allTasks);
-      setTaskStats(taskService.getTaskStats(allTasks));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch tasks');
-      console.error('Error fetching tasks:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentUser, selectedView]);
+    },
+    [currentUser, selectedView],
+  );
 
   // Create task
-  const createTask = useCallback(async (taskData: CreateTaskData) => {
-    if (!currentUser) return;
+  const createTask = useCallback(
+    async (taskData: CreateTaskData) => {
+      if (!currentUser) return;
 
-    setIsCreating(true);
-    try {
-      await taskService.createTask(currentUser, taskData);
-      await fetchTasks(); // Refresh tasks
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create task');
-      throw err;
-    } finally {
-      setIsCreating(false);
-    }
-  }, [currentUser, fetchTasks]);
+      setIsCreating(true);
+      try {
+        await taskService.createTask(currentUser, taskData);
+        await fetchTasks(); // Refresh tasks
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to create task');
+        throw err;
+      } finally {
+        setIsCreating(false);
+      }
+    },
+    [currentUser, fetchTasks],
+  );
 
   // Update task
-  const updateTask = useCallback(async (taskId: string, updateData: UpdateTaskData) => {
-    try {
-      await taskService.updateTask(taskId, updateData);
-      await fetchTasks(); // Refresh tasks
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update task');
-      throw err;
-    }
-  }, [fetchTasks]);
+  const updateTask = useCallback(
+    async (taskId: string, updateData: UpdateTaskData) => {
+      try {
+        await taskService.updateTask(taskId, updateData);
+        await fetchTasks(); // Refresh tasks
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to update task');
+        throw err;
+      }
+    },
+    [fetchTasks],
+  );
 
   // Delete task
-  const deleteTask = useCallback(async (taskId: string) => {
-    try {
-      await taskService.deleteTask(taskId);
-      await fetchTasks(); // Refresh tasks
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete task');
-      throw err;
-    }
-  }, [fetchTasks]);
+  const deleteTask = useCallback(
+    async (taskId: string) => {
+      try {
+        await taskService.deleteTask(taskId);
+        await fetchTasks(); // Refresh tasks
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to delete task');
+        throw err;
+      }
+    },
+    [fetchTasks],
+  );
   // Toggle task status (complete/incomplete)
-  const toggleTaskStatus = useCallback(async (taskId: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'completed' ? 'pending' : 'completed';
-    await updateTask(taskId, { status: newStatus });
-  }, [updateTask]);
+  const toggleTaskStatus = useCallback(
+    async (taskId: string, currentStatus: string) => {
+      const newStatus = currentStatus === 'completed' ? 'pending' : 'completed';
+      await updateTask(taskId, { status: newStatus });
+    },
+    [updateTask],
+  );
 
   // Get categorized tasks
   const categorizedTasks = taskService.categorizeTasks(tasks);
