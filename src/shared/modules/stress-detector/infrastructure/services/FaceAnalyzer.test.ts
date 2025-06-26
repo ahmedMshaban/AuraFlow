@@ -1,7 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { FaceAnalyzer } from './FaceAnalyzer';
 import type { FaceExpressions } from '../types/FaceExpressions.types';

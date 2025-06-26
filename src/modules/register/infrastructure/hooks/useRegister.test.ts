@@ -1,7 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import type { UserCredential, User } from 'firebase/auth';
@@ -68,7 +64,7 @@ describe('useRegister', () => {
       expect(mockDoCreateUserWithEmailAndPassword).toHaveBeenCalledWith(
         validFormData.email,
         validFormData.password,
-        validFormData.name
+        validFormData.name,
       );
       expect(mockDoCreateUserWithEmailAndPassword).toHaveBeenCalledTimes(1);
       expect(result.current.error).toBeNull();
@@ -119,7 +115,7 @@ describe('useRegister', () => {
       expect(mockDoCreateUserWithEmailAndPassword).toHaveBeenCalledWith(
         validFormData.email,
         validFormData.password,
-        validFormData.name
+        validFormData.name,
       );
       expect(mockGetRegisterErrorMessage).toHaveBeenCalledWith(mockError);
       expect(result.current.error).toBe(expectedErrorMessage);
@@ -203,7 +199,7 @@ describe('useRegister', () => {
       expect(mockDoCreateUserWithEmailAndPassword).toHaveBeenCalledWith(
         alternativeFormData.email,
         alternativeFormData.password,
-        alternativeFormData.name
+        alternativeFormData.name,
       );
     });
 

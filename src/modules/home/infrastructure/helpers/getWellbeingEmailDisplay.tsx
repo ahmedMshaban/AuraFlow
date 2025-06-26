@@ -1,12 +1,32 @@
 /**
- * Get wellbeing-focused email display text and emoji
- * Promotes positive email management and reduces inbox anxiety
+ * Get wellbeing-focused email display text and emoji based on email counts and stress state
+ * Promotes positive email management and reduces inbox anxiety through adaptive messaging
+ * 
+ * @param numOfFocusedEmails - Number of high-priority/focused emails (undefined = loading/error state)
+ * @param numOfOtherEmails - Number of lower-priority emails (undefined = loading/error state) 
+ * @param isCurrentlyStressed - Whether the user is currently experiencing stress
+ * @returns Object containing count (number|string), label (string), and icon (string) for display
+ * 
+ * @example
+ * ```typescript
+ * // Normal state with emails
+ * getWellbeingEmailDisplay(3, 7, false)
+ * // Returns: { count: 10, label: 'emails to explore 📮', icon: '' }
+ * 
+ * // Stressed state - focuses only on important emails
+ * getWellbeingEmailDisplay(2, 5, true)
+ * // Returns: { count: 2, label: 'important emails 🎯', icon: '' }
+ * 
+ * // Empty inbox
+ * getWellbeingEmailDisplay(0, 0, false)
+ * // Returns: { count: '', label: 'inbox clear! 🌟', icon: '' }
+ * ```
  */
 const getWellbeingEmailDisplay = (
   numOfFocusedEmails: number | undefined,
   numOfOtherEmails: number | undefined,
   isCurrentlyStressed: boolean,
-) => {
+): { count: number | string; label: string; icon: string } => {
   const focusedCount = numOfFocusedEmails ?? 0;
   const otherCount = numOfOtherEmails ?? 0;
   const totalCount = focusedCount + otherCount;
@@ -79,7 +99,7 @@ const getWellbeingEmailDisplay = (
     } else {
       return {
         count: `${Math.floor(totalCount / 10) * 10}+`,
-        label: 'emails to organize �',
+        label: 'emails to organize 📫',
         icon: '',
       };
     }
