@@ -33,9 +33,7 @@ vi.mock('react-icons/fi', () => ({
 
 // Mock Chakra UI components
 vi.mock('@chakra-ui/react', () => ({
-  Box: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => (
-    <div {...props}>{children}</div>
-  ),
+  Box: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>,
   HStack: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => (
     <div
       data-testid="hstack"
@@ -44,12 +42,8 @@ vi.mock('@chakra-ui/react', () => ({
       {children}
     </div>
   ),
-  Text: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => (
-    <span {...props}>{children}</span>
-  ),
-  Heading: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => (
-    <h3 {...props}>{children}</h3>
-  ),
+  Text: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => <span {...props}>{children}</span>,
+  Heading: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => <h3 {...props}>{children}</h3>,
   Badge: ({
     children,
     colorScheme,
@@ -79,7 +73,7 @@ vi.mock('../../infrastructure/helpers/formatDate', () => ({
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    
+
     if (diffHours < 1) return 'Just now';
     if (diffHours < 24) return `${diffHours}h ago`;
     return date.toLocaleDateString();
@@ -90,11 +84,26 @@ vi.mock('../../infrastructure/helpers/getPriorityIcon', () => ({
   default: (priority: string) => {
     switch (priority) {
       case 'high':
-        return <svg data-testid="alert-triangle-icon" style={{ color: '#ff4757' }} />;
+        return (
+          <svg
+            data-testid="alert-triangle-icon"
+            style={{ color: '#ff4757' }}
+          />
+        );
       case 'medium':
-        return <svg data-testid="clock-icon" style={{ color: '#ffa502' }} />;
+        return (
+          <svg
+            data-testid="clock-icon"
+            style={{ color: '#ffa502' }}
+          />
+        );
       default:
-        return <svg data-testid="mail-icon" style={{ color: '#26de81' }} />;
+        return (
+          <svg
+            data-testid="mail-icon"
+            style={{ color: '#26de81' }}
+          />
+        );
     }
   },
 }));
@@ -281,14 +290,14 @@ describe('EmailItem', () => {
     const email = createMockEmail({
       date: new Date('2025-06-26T10:00:00Z'),
     });
-    
+
     // Mock current time to be 2 hours after the email date
     vi.setSystemTime(new Date('2025-06-26T12:00:00Z'));
-    
+
     render(<EmailItem email={email} />);
 
     expect(screen.getByText('2h ago')).toBeDefined();
-    
+
     vi.useRealTimers();
   });
 
@@ -297,13 +306,13 @@ describe('EmailItem', () => {
     const email = createMockEmail({
       date: new Date(now.getTime() - 30 * 60 * 1000), // 30 minutes ago
     });
-    
+
     vi.setSystemTime(now);
-    
+
     render(<EmailItem email={email} />);
 
     expect(screen.getByText('Just now')).toBeDefined();
-    
+
     vi.useRealTimers();
   });
 
@@ -330,14 +339,15 @@ describe('EmailItem', () => {
 
   it('renders snippet text correctly', () => {
     const email = createMockEmail({
-      snippet: 'This is a long email snippet that should be displayed in the email item component for testing purposes.',
+      snippet:
+        'This is a long email snippet that should be displayed in the email item component for testing purposes.',
     });
     render(<EmailItem email={email} />);
 
     expect(
       screen.getByText(
-        'This is a long email snippet that should be displayed in the email item component for testing purposes.'
-      )
+        'This is a long email snippet that should be displayed in the email item component for testing purposes.',
+      ),
     ).toBeDefined();
   });
 
@@ -365,12 +375,12 @@ describe('EmailItem', () => {
         priority: 'low',
       },
     });
-    
+
     render(<EmailItem email={email} />);
 
     // Verify that the priority icon is rendered (low priority = mail icon)
     expect(screen.getByTestId('mail-icon')).toBeDefined();
-    
+
     // Verify that the badge has correct color scheme
     const badge = screen.getByTestId('badge');
     expect(badge.getAttribute('data-colorscheme')).toBe('green');

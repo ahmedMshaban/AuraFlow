@@ -1,7 +1,6 @@
 .loginContainer {
   height: 100dvh;
-  background-color: rgb(13, 12, 17);
-  background-image: url('../../../../assets/images/blur_bg.png');
+  background-image: var(--bg-accent, none);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;

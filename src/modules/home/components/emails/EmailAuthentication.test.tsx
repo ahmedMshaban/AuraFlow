@@ -165,7 +165,7 @@ describe('EmailAuthentication', () => {
     // Check for the stress detection content using a more flexible approach
     expect(screen.getByText('Stress detected!')).toBeDefined();
     expect(screen.getByText(/Connecting your email can help us provide better recommendations/)).toBeDefined();
-    
+
     // Check that the stress warning container exists by looking for the combination of elements
     const stressWarning = screen.getByText('Stress detected!').closest('div');
     expect(stressWarning).toBeDefined();
