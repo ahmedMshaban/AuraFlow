@@ -5,7 +5,9 @@ import type { FiltersProps } from '../types/home.types';
 
 describe('getWellbeingTaskDisplay', () => {
   // Mock task stats for testing
-  const createTaskStats = (overrides: Partial<NonNullable<FiltersProps['taskStats']>> = {}): NonNullable<FiltersProps['taskStats']> => ({
+  const createTaskStats = (
+    overrides: Partial<NonNullable<FiltersProps['taskStats']>> = {},
+  ): NonNullable<FiltersProps['taskStats']> => ({
     total: 20,
     pending: 10,
     completed: 5,
@@ -19,7 +21,7 @@ describe('getWellbeingTaskDisplay', () => {
   describe('Undefined/null task stats handling', () => {
     it('should return default values when taskStats is undefined', () => {
       const result = getWellbeingTaskDisplay(undefined, 'my-day', false);
-      
+
       expect(result).toEqual({
         count: 0,
         label: 'tasks',
@@ -29,7 +31,7 @@ describe('getWellbeingTaskDisplay', () => {
 
     it('should return default values when taskStats is null', () => {
       const result = getWellbeingTaskDisplay(undefined, 'my-week', true);
-      
+
       expect(result).toEqual({
         count: 0,
         label: 'tasks',
@@ -45,7 +47,7 @@ describe('getWellbeingTaskDisplay', () => {
       it('should show celebration when all today tasks done', () => {
         const taskStats = createTaskStats({ todayDue: 0 });
         const result = getWellbeingTaskDisplay(taskStats, 'my-day', isStressed);
-        
+
         expect(result).toEqual({
           count: '',
           label: 'all done today! 🎉',
@@ -65,7 +67,7 @@ describe('getWellbeingTaskDisplay', () => {
         testCases.forEach(({ todayDue, expectedIcon }) => {
           const taskStats = createTaskStats({ todayDue });
           const result = getWellbeingTaskDisplay(taskStats, 'my-day', isStressed);
-          
+
           expect(result).toEqual({
             count: todayDue,
             label: 'tasks for today',
@@ -79,7 +81,7 @@ describe('getWellbeingTaskDisplay', () => {
       it('should show celebration when week completed', () => {
         const taskStats = createTaskStats({ thisWeekDue: 0 });
         const result = getWellbeingTaskDisplay(taskStats, 'my-week', isStressed);
-        
+
         expect(result).toEqual({
           count: '',
           label: 'week completed! 🌟',
@@ -98,7 +100,7 @@ describe('getWellbeingTaskDisplay', () => {
         testCases.forEach(({ thisWeekDue, expectedIcon }) => {
           const taskStats = createTaskStats({ thisWeekDue });
           const result = getWellbeingTaskDisplay(taskStats, 'my-week', isStressed);
-          
+
           expect(result).toEqual({
             count: thisWeekDue,
             label: 'tasks this week',
@@ -112,7 +114,7 @@ describe('getWellbeingTaskDisplay', () => {
       it('should show celebration when month achieved', () => {
         const taskStats = createTaskStats({ thisMonthDue: 0 });
         const result = getWellbeingTaskDisplay(taskStats, 'my-month', isStressed);
-        
+
         expect(result).toEqual({
           count: '',
           label: 'month achieved! 🏆',
@@ -131,7 +133,7 @@ describe('getWellbeingTaskDisplay', () => {
         testCases.forEach(({ thisMonthDue, expectedIcon }) => {
           const taskStats = createTaskStats({ thisMonthDue });
           const result = getWellbeingTaskDisplay(taskStats, 'my-month', isStressed);
-          
+
           expect(result).toEqual({
             count: thisMonthDue,
             label: 'tasks this month',
@@ -145,7 +147,7 @@ describe('getWellbeingTaskDisplay', () => {
       it('should show celebration when all caught up', () => {
         const taskStats = createTaskStats({ pending: 0 });
         const result = getWellbeingTaskDisplay(taskStats, 'unknown' as ViewType, isStressed);
-        
+
         expect(result).toEqual({
           count: '',
           label: 'all caught up! ✨',
@@ -164,7 +166,7 @@ describe('getWellbeingTaskDisplay', () => {
         testCases.forEach(({ pending, expectedIcon }) => {
           const taskStats = createTaskStats({ pending });
           const result = getWellbeingTaskDisplay(taskStats, 'unknown' as ViewType, isStressed);
-          
+
           expect(result).toEqual({
             count: pending,
             label: 'pending tasks',
@@ -181,10 +183,10 @@ describe('getWellbeingTaskDisplay', () => {
     it('should show motivation when no tasks completed', () => {
       const taskStats = createTaskStats({ completed: 0 });
       const views: Array<'my-day' | 'my-week' | 'my-month'> = ['my-day', 'my-week', 'my-month'];
-      
-      views.forEach(view => {
+
+      views.forEach((view) => {
         const result = getWellbeingTaskDisplay(taskStats, view, isStressed);
-        
+
         expect(result).toEqual({
           count: 0,
           label: ' start achieving!',
@@ -196,10 +198,10 @@ describe('getWellbeingTaskDisplay', () => {
     it('should show singular celebration for 1 completed task', () => {
       const taskStats = createTaskStats({ completed: 1 });
       const views: Array<'my-day' | 'my-week' | 'my-month'> = ['my-day', 'my-week', 'my-month'];
-      
-      views.forEach(view => {
+
+      views.forEach((view) => {
         const result = getWellbeingTaskDisplay(taskStats, view, isStressed);
-        
+
         expect(result).toEqual({
           count: 1,
           label: 'task completed!',
@@ -221,7 +223,7 @@ describe('getWellbeingTaskDisplay', () => {
       testCases.forEach(({ completed, expectedIcon, expectedLabel }) => {
         const taskStats = createTaskStats({ completed });
         const result = getWellbeingTaskDisplay(taskStats, 'my-day', isStressed);
-        
+
         expect(result).toEqual({
           count: completed,
           label: expectedLabel,
@@ -233,13 +235,11 @@ describe('getWellbeingTaskDisplay', () => {
     it('should be consistent across all view types in normal mode', () => {
       const taskStats = createTaskStats({ completed: 8 });
       const views: Array<'my-day' | 'my-week' | 'my-month'> = ['my-day', 'my-week', 'my-month'];
-      
-      const results = views.map(view => 
-        getWellbeingTaskDisplay(taskStats, view, isStressed)
-      );
-      
+
+      const results = views.map((view) => getWellbeingTaskDisplay(taskStats, view, isStressed));
+
       // All results should be identical in normal mode
-      results.forEach(result => {
+      results.forEach((result) => {
         expect(result).toEqual({
           count: 8,
           label: 'tasks completed',
@@ -298,22 +298,22 @@ describe('getWellbeingTaskDisplay', () => {
   describe('Icon progression logic', () => {
     it('should use 🌱 for manageable task counts (1-3) in stressed mode', () => {
       const testCases = [1, 2, 3];
-      
-      testCases.forEach(count => {
+
+      testCases.forEach((count) => {
         const taskStats = createTaskStats({ todayDue: count });
         const result = getWellbeingTaskDisplay(taskStats, 'my-day', true);
-        
+
         expect(result.icon).toBe('🌱');
       });
     });
 
     it('should use ⏰ for higher task counts (4+) in stressed mode', () => {
       const testCases = [4, 5, 10, 20];
-      
-      testCases.forEach(count => {
+
+      testCases.forEach((count) => {
         const taskStats = createTaskStats({ todayDue: count });
         const result = getWellbeingTaskDisplay(taskStats, 'my-day', true);
-        
+
         expect(result.icon).toBe('⏰');
       });
     });
@@ -332,7 +332,7 @@ describe('getWellbeingTaskDisplay', () => {
       iconProgression.forEach(({ completed, expectedIcon }) => {
         const taskStats = createTaskStats({ completed });
         const result = getWellbeingTaskDisplay(taskStats, 'my-day', false);
-        
+
         expect(result.icon).toBe(expectedIcon);
       });
     });
@@ -348,11 +348,11 @@ describe('getWellbeingTaskDisplay', () => {
 
       testCases.forEach(({ taskStats, view, stressed }) => {
         const result = getWellbeingTaskDisplay(taskStats, view, stressed);
-        
+
         expect(result).toHaveProperty('count');
         expect(result).toHaveProperty('label');
         expect(result).toHaveProperty('icon');
-        
+
         expect(typeof result.label).toBe('string');
         expect(typeof result.icon).toBe('string');
         expect(result.label.length).toBeGreaterThan(0);
@@ -366,10 +366,10 @@ describe('getWellbeingTaskDisplay', () => {
         createTaskStats({ pending: 10 }),
       ];
 
-      testCases.forEach(taskStats => {
+      testCases.forEach((taskStats) => {
         const result1 = getWellbeingTaskDisplay(taskStats, 'my-day', false);
         const result2 = getWellbeingTaskDisplay(taskStats, 'my-day', true);
-        
+
         expect(['number', 'string'].includes(typeof result1.count)).toBe(true);
         expect(['number', 'string'].includes(typeof result2.count)).toBe(true);
       });
@@ -377,18 +377,15 @@ describe('getWellbeingTaskDisplay', () => {
 
     it('should include emojis in labels or icons', () => {
       const taskStats = createTaskStats({ completed: 5, todayDue: 3 });
-      const emojiRegex = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u;
-      
+      const emojiRegex =
+        /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u;
+
       const normalResult = getWellbeingTaskDisplay(taskStats, 'my-day', false);
       const stressedResult = getWellbeingTaskDisplay(taskStats, 'my-day', true);
-      
-      expect(
-        emojiRegex.test(normalResult.label) || emojiRegex.test(normalResult.icon)
-      ).toBe(true);
-      
-      expect(
-        emojiRegex.test(stressedResult.label) || emojiRegex.test(stressedResult.icon)
-      ).toBe(true);
+
+      expect(emojiRegex.test(normalResult.label) || emojiRegex.test(normalResult.icon)).toBe(true);
+
+      expect(emojiRegex.test(stressedResult.label) || emojiRegex.test(stressedResult.icon)).toBe(true);
     });
   });
 
@@ -396,37 +393,33 @@ describe('getWellbeingTaskDisplay', () => {
     it('should use achievement language in normal mode', () => {
       const taskStats = createTaskStats({ completed: 5 });
       const result = getWellbeingTaskDisplay(taskStats, 'my-day', false);
-      
+
       const achievementWords = ['completed', 'achieving', 'task'];
-      const hasAchievementWord = achievementWords.some(word => 
-        result.label.toLowerCase().includes(word)
-      );
-      
+      const hasAchievementWord = achievementWords.some((word) => result.label.toLowerCase().includes(word));
+
       expect(hasAchievementWord).toBe(true);
     });
 
     it('should use calming/focused language in stressed mode', () => {
       const taskStats = createTaskStats({ todayDue: 3 });
       const result = getWellbeingTaskDisplay(taskStats, 'my-day', true);
-      
+
       const stressWords = ['urgent', 'deadline', 'overdue', 'behind'];
-      const hasStressWords = stressWords.some(word =>
-        result.label.toLowerCase().includes(word)
-      );
-      
+      const hasStressWords = stressWords.some((word) => result.label.toLowerCase().includes(word));
+
       // Should not use stress-inducing language
       expect(hasStressWords).toBe(false);
-      
+
       // Should use neutral, focused language
       expect(result.label).toContain('tasks for today');
     });
 
     it('should celebrate completions in both modes', () => {
       const completedTaskStats = createTaskStats({ todayDue: 0, completed: 0 });
-      
+
       const normalResult = getWellbeingTaskDisplay(completedTaskStats, 'my-day', false);
       const stressedResult = getWellbeingTaskDisplay(completedTaskStats, 'my-day', true);
-      
+
       // Both should have celebratory language
       expect(normalResult.label.includes('!')).toBe(true);
       expect(stressedResult.label.includes('!')).toBe(true);
@@ -435,12 +428,12 @@ describe('getWellbeingTaskDisplay', () => {
     it('should provide motivation when no progress made', () => {
       const noProgressStats = createTaskStats({ completed: 0, todayDue: 5 });
       const normalResult = getWellbeingTaskDisplay(noProgressStats, 'my-day', false);
-      
+
       const motivationalWords = ['start', 'achieving', '🚀'];
-      const hasMotivation = motivationalWords.some(word => 
-        normalResult.label.includes(word) || normalResult.icon.includes(word)
+      const hasMotivation = motivationalWords.some(
+        (word) => normalResult.label.includes(word) || normalResult.icon.includes(word),
       );
-      
+
       expect(hasMotivation).toBe(true);
     });
   });
@@ -448,29 +441,29 @@ describe('getWellbeingTaskDisplay', () => {
   describe('Performance and consistency', () => {
     it('should return consistent results for same input', () => {
       const taskStats = createTaskStats({ completed: 5, todayDue: 3 });
-      
+
       const result1 = getWellbeingTaskDisplay(taskStats, 'my-day', false);
       const result2 = getWellbeingTaskDisplay(taskStats, 'my-day', false);
-      
+
       expect(result1).toEqual(result2);
     });
 
     it('should handle large numbers efficiently', () => {
       const start = performance.now();
-      
+
       // Test with large numbers
       for (let i = 0; i < 100; i++) {
-        const taskStats = createTaskStats({ 
-          completed: i * 10, 
-          todayDue: i * 5, 
-          pending: i * 15 
+        const taskStats = createTaskStats({
+          completed: i * 10,
+          todayDue: i * 5,
+          pending: i * 15,
         });
         getWellbeingTaskDisplay(taskStats, 'my-day', i % 2 === 0);
       }
-      
+
       const end = performance.now();
       const executionTime = end - start;
-      
+
       // Should complete in reasonable time
       expect(executionTime).toBeLessThan(50);
     });
@@ -483,15 +476,15 @@ describe('getWellbeingTaskDisplay', () => {
         todayDue: 1,
         pending: 5,
       });
-      
+
       const normalResult = getWellbeingTaskDisplay(productiveDay, 'my-day', false);
       const stressedResult = getWellbeingTaskDisplay(productiveDay, 'my-day', true);
-      
+
       // Normal mode celebrates completions
       expect(normalResult.count).toBe(8);
       expect(normalResult.label).toBe('tasks completed');
       expect(normalResult.icon).toBe('🌟');
-      
+
       // Stressed mode focuses on remaining
       expect(stressedResult.count).toBe(1);
       expect(stressedResult.label).toBe('tasks for today');
@@ -504,15 +497,15 @@ describe('getWellbeingTaskDisplay', () => {
         todayDue: 15,
         pending: 25,
       });
-      
+
       const normalResult = getWellbeingTaskDisplay(overwhelmingDay, 'my-day', false);
       const stressedResult = getWellbeingTaskDisplay(overwhelmingDay, 'my-day', true);
-      
+
       // Normal mode still celebrates what's done
       expect(normalResult.count).toBe(2);
       expect(normalResult.label).toBe('tasks completed');
       expect(normalResult.icon).toBe('✅');
-      
+
       // Stressed mode shows manageable focus
       expect(stressedResult.count).toBe(15);
       expect(stressedResult.label).toBe('tasks for today');
@@ -527,17 +520,17 @@ describe('getWellbeingTaskDisplay', () => {
         thisMonthDue: 0,
         pending: 0,
       });
-      
+
       const views: Array<'my-day' | 'my-week' | 'my-month'> = ['my-day', 'my-week', 'my-month'];
-      
-      views.forEach(view => {
+
+      views.forEach((view) => {
         const normalResult = getWellbeingTaskDisplay(perfectDay, view, false);
         const stressedResult = getWellbeingTaskDisplay(perfectDay, view, true);
-        
+
         // Normal mode celebrates achievements
         expect(normalResult.count).toBe(10);
         expect(normalResult.icon).toBe('🌟');
-        
+
         // Stressed mode celebrates completion
         expect(stressedResult.count).toBe('');
         expect(stressedResult.label).toContain('!');

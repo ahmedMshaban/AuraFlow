@@ -3,14 +3,14 @@ import type { TaskStats, Task } from '@/shared/types/task.types';
 /**
  * Get task tabs configuration based on stress mode and task data
  * Adapts the tab structure to reduce cognitive load when user is stressed
- * 
+ *
  * @param upcomingTasks - Array of upcoming/pending tasks
- * @param overdueTasks - Array of overdue tasks  
+ * @param overdueTasks - Array of overdue tasks
  * @param completedTasks - Array of completed tasks
  * @param taskStats - Task statistics object with counts
  * @param isCurrentlyStressed - Whether the user is currently experiencing stress
  * @returns Array of tab configuration objects with key, label, count, tasks, color, and description
- * 
+ *
  * @example
  * ```typescript
  * // Normal mode - full tab experience
@@ -20,7 +20,7 @@ import type { TaskStats, Task } from '@/shared/types/task.types';
  * //   { key: 'overdue', label: 'Overdue', count: 2, tasks: [...], color: 'red', description: 'Catch up on missed deadlines' },
  * //   { key: 'completed', label: 'Completed', count: 8, tasks: [...], color: 'green', description: 'Celebrate your achievements' }
  * // ]
- * 
+ *
  * // Stressed mode - simplified priority focus
  * getTabsForMode(upcoming, overdue, completed, stats, true)
  * // Returns: [

@@ -7,7 +7,7 @@ describe('getWellbeingEmailDisplay', () => {
 
     it('should show zen message when no focused emails', () => {
       const result = getWellbeingEmailDisplay(0, 5, isStressed);
-      
+
       expect(result).toEqual({
         count: '',
         label: 'inbox zen achieved! ✨',
@@ -17,7 +17,7 @@ describe('getWellbeingEmailDisplay', () => {
 
     it('should show singular message for 1 focused email', () => {
       const result = getWellbeingEmailDisplay(1, 10, isStressed);
-      
+
       expect(result).toEqual({
         count: '',
         label: '1 important email 🎯',
@@ -33,7 +33,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others }) => {
         const result = getWellbeingEmailDisplay(focused, others, isStressed);
-        
+
         expect(result).toEqual({
           count: focused,
           label: 'important emails 🎯',
@@ -50,7 +50,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others }) => {
         const result = getWellbeingEmailDisplay(focused, others, isStressed);
-        
+
         expect(result).toEqual({
           count: focused,
           label: 'priority emails 📧',
@@ -68,7 +68,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others }) => {
         const result = getWellbeingEmailDisplay(focused, others, isStressed);
-        
+
         expect(result).toEqual({
           count: focused,
           label: 'emails need attention ⚡',
@@ -86,7 +86,7 @@ describe('getWellbeingEmailDisplay', () => {
         getWellbeingEmailDisplay(3, undefined, isStressed),
       ];
 
-      varyingOthersResults.forEach(result => {
+      varyingOthersResults.forEach((result) => {
         expect(result).toEqual(baseResult);
       });
     });
@@ -97,7 +97,7 @@ describe('getWellbeingEmailDisplay', () => {
 
     it('should show clear message when no emails', () => {
       const result = getWellbeingEmailDisplay(0, 0, isStressed);
-      
+
       expect(result).toEqual({
         count: '',
         label: 'inbox clear! 🌟',
@@ -113,7 +113,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others }) => {
         const result = getWellbeingEmailDisplay(focused, others, isStressed);
-        
+
         expect(result).toEqual({
           count: '',
           label: '1 email to read 📬',
@@ -131,7 +131,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others, total }) => {
         const result = getWellbeingEmailDisplay(focused, others, isStressed);
-        
+
         expect(result).toEqual({
           count: total,
           label: 'emails to explore 📮',
@@ -149,7 +149,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others, total }) => {
         const result = getWellbeingEmailDisplay(focused, others, isStressed);
-        
+
         expect(result).toEqual({
           count: total,
           label: 'emails waiting 📪',
@@ -167,7 +167,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others, total }) => {
         const result = getWellbeingEmailDisplay(focused, others, isStressed);
-        
+
         expect(result).toEqual({
           count: total,
           label: 'emails in inbox 📬',
@@ -186,7 +186,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others, expected }) => {
         const result = getWellbeingEmailDisplay(focused, others, isStressed);
-        
+
         expect(result).toEqual({
           count: expected,
           label: 'emails to organize 📫',
@@ -205,7 +205,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ stressed, others }) => {
         const result = getWellbeingEmailDisplay(undefined, others, stressed);
-        
+
         if (stressed) {
           // Should show zen message in stressed mode
           expect(result.label).toBe('inbox zen achieved! ✨');
@@ -225,7 +225,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ stressed, focused }) => {
         const result = getWellbeingEmailDisplay(focused, undefined, stressed);
-        
+
         if (stressed) {
           // Should only consider focused emails
           expect(result.count).toBe(focused);
@@ -239,14 +239,11 @@ describe('getWellbeingEmailDisplay', () => {
     });
 
     it('should handle both undefined counts', () => {
-      const testCases = [
-        { stressed: true },
-        { stressed: false },
-      ];
+      const testCases = [{ stressed: true }, { stressed: false }];
 
       testCases.forEach(({ stressed }) => {
         const result = getWellbeingEmailDisplay(undefined, undefined, stressed);
-        
+
         if (stressed) {
           expect(result.label).toBe('inbox zen achieved! ✨');
         } else {
@@ -259,7 +256,7 @@ describe('getWellbeingEmailDisplay', () => {
     it('should handle zero values explicitly', () => {
       const result1 = getWellbeingEmailDisplay(0, 0, true);
       const result2 = getWellbeingEmailDisplay(0, 0, false);
-      
+
       expect(result1.label).toBe('inbox zen achieved! ✨');
       expect(result2.label).toBe('inbox clear! 🌟');
     });
@@ -276,11 +273,11 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others, stressed }) => {
         const result = getWellbeingEmailDisplay(focused, others, stressed);
-        
+
         expect(result).toHaveProperty('count');
         expect(result).toHaveProperty('label');
         expect(result).toHaveProperty('icon');
-        
+
         expect(typeof result.label).toBe('string');
         expect(typeof result.icon).toBe('string');
         expect(result.label.length).toBeGreaterThan(0);
@@ -296,7 +293,7 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others, stressed }) => {
         const result = getWellbeingEmailDisplay(focused, others, stressed);
-        
+
         // Count should be either number, string, or empty string
         expect(['number', 'string'].includes(typeof result.count)).toBe(true);
       });
@@ -311,9 +308,10 @@ describe('getWellbeingEmailDisplay', () => {
 
       testCases.forEach(({ focused, others, stressed }) => {
         const result = getWellbeingEmailDisplay(focused, others, stressed);
-        
+
         // Labels should contain emojis for visual appeal
-        const emojiRegex = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u;
+        const emojiRegex =
+          /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u;
         expect(emojiRegex.test(result.label)).toBe(true);
       });
     });
@@ -327,11 +325,9 @@ describe('getWellbeingEmailDisplay', () => {
         getWellbeingEmailDisplay(7, 8, false), // 'emails waiting 📪'
       ];
 
-      normalModeResults.forEach(result => {
+      normalModeResults.forEach((result) => {
         const positiveWords = ['clear', 'explore', 'waiting'];
-        const hasPositiveWord = positiveWords.some(word => 
-          result.label.toLowerCase().includes(word)
-        );
+        const hasPositiveWord = positiveWords.some((word) => result.label.toLowerCase().includes(word));
         expect(hasPositiveWord || result.label.includes('!')).toBe(true);
       });
     });
@@ -343,19 +339,17 @@ describe('getWellbeingEmailDisplay', () => {
         getWellbeingEmailDisplay(5, 30, true),
       ];
 
-      stressedModeResults.forEach(result => {
+      stressedModeResults.forEach((result) => {
         const calmingWords = ['zen', 'important', 'priority'];
-        const hasStressWords = ['overwhelm', 'urgent', 'crisis'].some(word =>
-          result.label.toLowerCase().includes(word)
+        const hasStressWords = ['overwhelm', 'urgent', 'crisis'].some((word) =>
+          result.label.toLowerCase().includes(word),
         );
-        
+
         // Should not use stress-inducing language
         expect(hasStressWords).toBe(false);
-        
+
         // Should use calming or focusing language
-        const hasCalmingWord = calmingWords.some(word => 
-          result.label.toLowerCase().includes(word)
-        );
+        const hasCalmingWord = calmingWords.some((word) => result.label.toLowerCase().includes(word));
         expect(hasCalmingWord || result.label.includes('✨')).toBe(true);
       });
     });
@@ -364,13 +358,13 @@ describe('getWellbeingEmailDisplay', () => {
       // In stressed mode, should only show focused emails, not total
       const focusedEmails = 3;
       const otherEmails = 20;
-      
+
       const stressedResult = getWellbeingEmailDisplay(focusedEmails, otherEmails, true);
       const normalResult = getWellbeingEmailDisplay(focusedEmails, otherEmails, false);
-      
+
       // Stressed mode should show only focused count
       expect(stressedResult.count).toBe(focusedEmails);
-      
+
       // Normal mode should show total count
       expect(normalResult.count).toBe(focusedEmails + otherEmails);
     });
@@ -387,22 +381,22 @@ describe('getWellbeingEmailDisplay', () => {
       testParams.forEach(([focused, others, stressed]) => {
         const result1 = getWellbeingEmailDisplay(focused, others, stressed);
         const result2 = getWellbeingEmailDisplay(focused, others, stressed);
-        
+
         expect(result1).toEqual(result2);
       });
     });
 
     it('should handle large numbers efficiently', () => {
       const start = performance.now();
-      
+
       // Test with large numbers
       for (let i = 0; i < 100; i++) {
         getWellbeingEmailDisplay(i * 10, i * 20, i % 2 === 0);
       }
-      
+
       const end = performance.now();
       const executionTime = end - start;
-      
+
       // Should complete in reasonable time
       expect(executionTime).toBeLessThan(50);
     });
@@ -419,12 +413,12 @@ describe('getWellbeingEmailDisplay', () => {
 
       typicalScenarios.forEach(({ focused, others, stressed }) => {
         const result = getWellbeingEmailDisplay(focused, others, stressed);
-        
+
         expect(result).toHaveProperty('count');
         expect(result).toHaveProperty('label');
         expect(result).toHaveProperty('icon');
         expect(result.label.length).toBeGreaterThan(0);
-        
+
         // Should provide meaningful feedback for each scenario
         expect(result.label).not.toBe('');
       });
@@ -434,15 +428,15 @@ describe('getWellbeingEmailDisplay', () => {
       // High focused, low others vs low focused, high others
       const highFocusedResult = getWellbeingEmailDisplay(10, 5, false);
       const lowFocusedResult = getWellbeingEmailDisplay(2, 20, false);
-      
+
       // Both should show total count in normal mode
       expect(typeof highFocusedResult.count).toBe('number');
       expect(typeof lowFocusedResult.count).toBe('number');
-      
+
       // But stressed mode should focus differently
       const highFocusedStressed = getWellbeingEmailDisplay(10, 5, true);
       const lowFocusedStressed = getWellbeingEmailDisplay(2, 20, true);
-      
+
       expect(highFocusedStressed.count).toBe(10);
       expect(lowFocusedStressed.count).toBe(2);
     });

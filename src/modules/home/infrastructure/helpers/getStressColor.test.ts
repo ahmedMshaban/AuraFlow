@@ -55,8 +55,8 @@ describe('getStressColor', () => {
     it('should always return a string', () => {
       const validInputs = ['high', 'medium', 'low'];
       const invalidInputs = ['', 'invalid', '123'];
-      
-      [...validInputs, ...invalidInputs].forEach(input => {
+
+      [...validInputs, ...invalidInputs].forEach((input) => {
         const result = getStressColor(input);
         expect(typeof result).toBe('string');
         expect(result.length).toBeGreaterThan(0);
@@ -66,8 +66,8 @@ describe('getStressColor', () => {
     it('should return valid Chakra UI color format', () => {
       const validInputs = ['high', 'medium', 'low', 'invalid'];
       const expectedPattern = /^(red|orange|green|gray)\.300$/;
-      
-      validInputs.forEach(input => {
+
+      validInputs.forEach((input) => {
         const result = getStressColor(input);
         expect(result).toMatch(expectedPattern);
       });
@@ -77,8 +77,8 @@ describe('getStressColor', () => {
   describe('Performance and consistency', () => {
     it('should return consistent results for same input', () => {
       const priorities = ['high', 'medium', 'low', 'invalid'];
-      
-      priorities.forEach(priority => {
+
+      priorities.forEach((priority) => {
         const result1 = getStressColor(priority);
         const result2 = getStressColor(priority);
         expect(result1).toBe(result2);
@@ -87,7 +87,7 @@ describe('getStressColor', () => {
 
     it('should handle repeated calls efficiently', () => {
       const start = performance.now();
-      
+
       // Execute function many times
       for (let i = 0; i < 1000; i++) {
         getStressColor('high');
@@ -95,10 +95,10 @@ describe('getStressColor', () => {
         getStressColor('low');
         getStressColor('invalid');
       }
-      
+
       const end = performance.now();
       const executionTime = end - start;
-      
+
       // Should complete in reasonable time (less than 50ms for 4000 calls)
       expect(executionTime).toBeLessThan(50);
     });

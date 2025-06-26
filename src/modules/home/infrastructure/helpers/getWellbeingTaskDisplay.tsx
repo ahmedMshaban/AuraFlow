@@ -3,12 +3,12 @@ import type { FiltersProps, ViewType } from '../types/home.types';
 /**
  * Get wellbeing-focused task display text and emoji based on task statistics and stress state
  * Promotes positive reinforcement and reduces stress through adaptive messaging
- * 
+ *
  * @param taskStats - Task statistics object containing counts for different task states
  * @param selectedView - Current view type ('my-day', 'my-week', 'my-month')
  * @param isCurrentlyStressed - Whether the user is currently experiencing stress
  * @returns Object containing count (number|string), label (string), and icon (string) for display
- * 
+ *
  * @example
  * ```typescript
  * // Normal mode - celebrates completed tasks
@@ -18,11 +18,11 @@ import type { FiltersProps, ViewType } from '../types/home.types';
  *   false
  * )
  * // Returns: { count: 5, label: 'tasks completed', icon: '🌟' }
- * 
+ *
  * // Stressed mode - focuses on remaining tasks for today
  * getWellbeingTaskDisplay(
  *   { completed: 2, pending: 8, todayDue: 2, thisWeekDue: 6, thisMonthDue: 12 },
- *   'my-day', 
+ *   'my-day',
  *   true
  * )
  * // Returns: { count: 2, label: 'tasks for today', icon: '🌱' }

@@ -65,8 +65,8 @@ describe('getPriorityColor', () => {
     it('should always return a string', () => {
       const validInputs = ['high', 'medium', 'low'];
       const invalidInputs = ['', 'invalid', '123', 'HIGH'];
-      
-      [...validInputs, ...invalidInputs].forEach(input => {
+
+      [...validInputs, ...invalidInputs].forEach((input) => {
         const result = getPriorityColor(input);
         expect(typeof result).toBe('string');
         expect(result.length).toBeGreaterThan(0);
@@ -76,8 +76,8 @@ describe('getPriorityColor', () => {
     it('should return valid Chakra UI color format', () => {
       const inputs = ['high', 'medium', 'low', 'invalid'];
       const validColors = ['red', 'yellow', 'green', 'gray'];
-      
-      inputs.forEach(input => {
+
+      inputs.forEach((input) => {
         const result = getPriorityColor(input);
         expect(validColors).toContain(result);
       });
@@ -102,18 +102,18 @@ describe('getPriorityColor', () => {
     it('should follow intuitive color mapping', () => {
       // High priority should be urgent/attention-grabbing (red)
       expect(getPriorityColor('high')).toBe('red');
-      
+
       // Medium priority should be cautionary (yellow)
       expect(getPriorityColor('medium')).toBe('yellow');
-      
+
       // Low priority should be calm/safe (green)
       expect(getPriorityColor('low')).toBe('green');
     });
 
     it('should provide consistent priority hierarchy', () => {
       const priorities = ['high', 'medium', 'low'];
-      const colors = priorities.map(priority => getPriorityColor(priority));
-      
+      const colors = priorities.map((priority) => getPriorityColor(priority));
+
       // Should have unique colors for each priority
       const uniqueColors = new Set(colors);
       expect(uniqueColors.size).toBe(priorities.length);
@@ -121,15 +121,9 @@ describe('getPriorityColor', () => {
 
     it('should handle priority system extensions gracefully', () => {
       // Future priority levels should default to gray
-      const futurePriorities = [
-        'urgent',
-        'critical',
-        'lowest',
-        'highest',
-        'normal',
-      ];
+      const futurePriorities = ['urgent', 'critical', 'lowest', 'highest', 'normal'];
 
-      futurePriorities.forEach(priority => {
+      futurePriorities.forEach((priority) => {
         const result = getPriorityColor(priority);
         expect(result).toBe('gray');
       });
@@ -139,8 +133,8 @@ describe('getPriorityColor', () => {
   describe('Performance and consistency', () => {
     it('should return consistent results for same input', () => {
       const priorities = ['high', 'medium', 'low', 'invalid'];
-      
-      priorities.forEach(priority => {
+
+      priorities.forEach((priority) => {
         const result1 = getPriorityColor(priority);
         const result2 = getPriorityColor(priority);
         expect(result1).toBe(result2);
@@ -149,7 +143,7 @@ describe('getPriorityColor', () => {
 
     it('should handle repeated calls efficiently', () => {
       const start = performance.now();
-      
+
       // Execute function many times
       for (let i = 0; i < 1000; i++) {
         getPriorityColor('high');
@@ -157,10 +151,10 @@ describe('getPriorityColor', () => {
         getPriorityColor('low');
         getPriorityColor('invalid');
       }
-      
+
       const end = performance.now();
       const executionTime = end - start;
-      
+
       // Should complete in reasonable time (less than 50ms for 4000 calls)
       expect(executionTime).toBeLessThan(50);
     });
@@ -171,11 +165,11 @@ describe('getPriorityColor', () => {
       // Typical task creation workflow
       const newTaskPriority = 'medium';
       expect(getPriorityColor(newTaskPriority)).toBe('yellow');
-      
+
       // Escalated task
       const escalatedPriority = 'high';
       expect(getPriorityColor(escalatedPriority)).toBe('red');
-      
+
       // Routine task
       const routinePriority = 'low';
       expect(getPriorityColor(routinePriority)).toBe('green');
@@ -183,8 +177,8 @@ describe('getPriorityColor', () => {
 
     it('should provide visual distinction for different priorities', () => {
       const priorities = ['high', 'medium', 'low'];
-      const colors = priorities.map(priority => getPriorityColor(priority));
-      
+      const colors = priorities.map((priority) => getPriorityColor(priority));
+
       // All colors should be different
       expect(colors[0]).not.toBe(colors[1]);
       expect(colors[1]).not.toBe(colors[2]);

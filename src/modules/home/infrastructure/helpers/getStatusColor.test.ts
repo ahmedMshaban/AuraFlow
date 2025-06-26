@@ -65,8 +65,8 @@ describe('getStatusColor', () => {
     it('should always return a string', () => {
       const validInputs = ['completed', 'overdue', 'pending'];
       const invalidInputs = ['', 'invalid', '123', 'COMPLETED'];
-      
-      [...validInputs, ...invalidInputs].forEach(input => {
+
+      [...validInputs, ...invalidInputs].forEach((input) => {
         const result = getStatusColor(input);
         expect(typeof result).toBe('string');
         expect(result.length).toBeGreaterThan(0);
@@ -76,8 +76,8 @@ describe('getStatusColor', () => {
     it('should return valid Chakra UI color format', () => {
       const inputs = ['completed', 'overdue', 'pending', 'invalid'];
       const validColors = ['green', 'red', 'blue', 'gray'];
-      
-      inputs.forEach(input => {
+
+      inputs.forEach((input) => {
         const result = getStatusColor(input);
         expect(validColors).toContain(result);
       });
@@ -101,8 +101,8 @@ describe('getStatusColor', () => {
   describe('Performance and consistency', () => {
     it('should return consistent results for same input', () => {
       const statuses = ['completed', 'overdue', 'pending', 'invalid'];
-      
-      statuses.forEach(status => {
+
+      statuses.forEach((status) => {
         const result1 = getStatusColor(status);
         const result2 = getStatusColor(status);
         expect(result1).toBe(result2);
@@ -111,7 +111,7 @@ describe('getStatusColor', () => {
 
     it('should handle repeated calls efficiently', () => {
       const start = performance.now();
-      
+
       // Execute function many times
       for (let i = 0; i < 1000; i++) {
         getStatusColor('completed');
@@ -119,10 +119,10 @@ describe('getStatusColor', () => {
         getStatusColor('pending');
         getStatusColor('invalid');
       }
-      
+
       const end = performance.now();
       const executionTime = end - start;
-      
+
       // Should complete in reasonable time (less than 50ms for 4000 calls)
       expect(executionTime).toBeLessThan(50);
     });
@@ -137,15 +137,9 @@ describe('getStatusColor', () => {
     });
 
     it('should provide fallback for unexpected statuses', () => {
-      const unexpectedStatuses = [
-        'in-progress',
-        'cancelled',
-        'draft',
-        'archived',
-        'paused',
-      ];
+      const unexpectedStatuses = ['in-progress', 'cancelled', 'draft', 'archived', 'paused'];
 
-      unexpectedStatuses.forEach(status => {
+      unexpectedStatuses.forEach((status) => {
         const result = getStatusColor(status);
         expect(result).toBe('gray');
       });

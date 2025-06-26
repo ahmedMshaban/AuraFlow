@@ -4,10 +4,10 @@ import type { ReactElement } from 'react';
 /**
  * Get React icon component for task/email priority visualization
  * Returns appropriate icon and color based on priority level
- * 
+ *
  * @param priority - The priority level ('high', 'medium', 'low', or any other string)
  * @returns JSX element with appropriate icon and color for the priority
- * 
+ *
  * @example
  * ```typescript
  * getPriorityIcon('high')    // <FiAlertTriangle color="#ff4757" />

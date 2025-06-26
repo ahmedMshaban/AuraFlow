@@ -1,9 +1,9 @@
 /**
  * Get Chakra UI color scheme for stress visualization based on priority level
- * 
+ *
  * @param priority - The priority level ('high', 'medium', 'low', or any other string)
  * @returns Chakra UI color string corresponding to the priority level
- * 
+ *
  * @example
  * ```typescript
  * getStressColor('high') // returns 'red.300'

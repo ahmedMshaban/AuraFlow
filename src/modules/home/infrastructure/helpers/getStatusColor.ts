@@ -1,9 +1,9 @@
 /**
  * Get Chakra UI color scheme for task status visualization
- * 
+ *
  * @param status - The task status ('completed', 'overdue', 'pending', or any other string)
  * @returns Chakra UI color string corresponding to the task status
- * 
+ *
  * @example
  * ```typescript
  * getStatusColor('completed') // returns 'green'

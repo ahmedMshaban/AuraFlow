@@ -16,28 +16,28 @@ describe('formatTasksDate', () => {
     it('should format date in US locale format', () => {
       const date = new Date('2023-12-25');
       const result = formatTasksDate(date);
-      
+
       expect(result).toBe('Dec 25, 2023');
     });
 
     it('should format date with short month name', () => {
       const date = new Date('2023-01-01');
       const result = formatTasksDate(date);
-      
+
       expect(result).toBe('Jan 1, 2023');
     });
 
     it('should format date with numeric day without leading zero', () => {
       const date = new Date('2023-03-05');
       const result = formatTasksDate(date);
-      
+
       expect(result).toBe('Mar 5, 2023');
     });
 
     it('should format date with full year', () => {
       const date = new Date('2023-07-15');
       const result = formatTasksDate(date);
-      
+
       expect(result).toBe('Jul 15, 2023');
     });
   });
@@ -46,21 +46,21 @@ describe('formatTasksDate', () => {
     it('should handle leap year dates', () => {
       const date = new Date('2024-02-29');
       const result = formatTasksDate(date);
-      
+
       expect(result).toBe('Feb 29, 2024');
     });
 
-    it('should handle New Year\'s Day', () => {
+    it("should handle New Year's Day", () => {
       const date = new Date('2024-01-01');
       const result = formatTasksDate(date);
-      
+
       expect(result).toBe('Jan 1, 2024');
     });
 
-    it('should handle New Year\'s Eve', () => {
+    it("should handle New Year's Eve", () => {
       const date = new Date('2023-12-31');
       const result = formatTasksDate(date);
-      
+
       expect(result).toBe('Dec 31, 2023');
     });
 
@@ -110,8 +110,8 @@ describe('formatTasksDate', () => {
         new Date(2023, 5, 15, 23, 59, 59), // End of day local time
       ];
 
-      const results = dates.map(date => formatTasksDate(date));
-      
+      const results = dates.map((date) => formatTasksDate(date));
+
       // All should format to the same date string regardless of time
       const uniqueResults = new Set(results);
       expect(uniqueResults.size).toBe(1);
@@ -121,7 +121,7 @@ describe('formatTasksDate', () => {
     it('should handle midnight correctly', () => {
       const date = new Date('2023-06-15T00:00:00Z');
       const result = formatTasksDate(date);
-      
+
       expect(typeof result).toBe('string');
       expect(result).toMatch(/\w{3} \d{1,2}, \d{4}/); // Month Day, Year pattern
     });
@@ -129,14 +129,9 @@ describe('formatTasksDate', () => {
 
   describe('Type safety and validation', () => {
     it('should always return a string', () => {
-      const testDates = [
-        new Date('2023-01-01'),
-        new Date('2023-12-31'),
-        new Date('2024-02-29'),
-        new Date(),
-      ];
+      const testDates = [new Date('2023-01-01'), new Date('2023-12-31'), new Date('2024-02-29'), new Date()];
 
-      testDates.forEach(date => {
+      testDates.forEach((date) => {
         const result = formatTasksDate(date);
         expect(typeof result).toBe('string');
         expect(result.length).toBeGreaterThan(0);
@@ -146,7 +141,7 @@ describe('formatTasksDate', () => {
     it('should return properly formatted string pattern', () => {
       const date = new Date('2023-06-15');
       const result = formatTasksDate(date);
-      
+
       // Should match pattern: "Month Day, Year"
       const pattern = /^[A-Z][a-z]{2} \d{1,2}, \d{4}$/;
       expect(result).toMatch(pattern);
@@ -155,7 +150,7 @@ describe('formatTasksDate', () => {
     it('should handle current date', () => {
       const now = new Date();
       const result = formatTasksDate(now);
-      
+
       expect(typeof result).toBe('string');
       expect(result).toMatch(/\w{3} \d{1,2}, \d{4}/);
     });
@@ -168,7 +163,7 @@ describe('formatTasksDate', () => {
         new Date(1686844800000), // Timestamp
       ];
 
-      dates.forEach(date => {
+      dates.forEach((date) => {
         const result = formatTasksDate(date);
         expect(typeof result).toBe('string');
         expect(result.length).toBeGreaterThan(0);
@@ -180,7 +175,7 @@ describe('formatTasksDate', () => {
     it('should always use US locale format', () => {
       const date = new Date('2023-06-15');
       const result = formatTasksDate(date);
-      
+
       // Should use US format regardless of system locale
       expect(result).toBe('Jun 15, 2023');
     });
@@ -188,7 +183,7 @@ describe('formatTasksDate', () => {
     it('should use abbreviated month names', () => {
       const longMonthDate = new Date('2023-09-15'); // September -> Sep
       const result = formatTasksDate(longMonthDate);
-      
+
       expect(result).toBe('Sep 15, 2023');
       expect(result).not.toContain('September');
     });
@@ -196,7 +191,7 @@ describe('formatTasksDate', () => {
     it('should not include day of week', () => {
       const date = new Date('2023-06-15'); // Thursday
       const result = formatTasksDate(date);
-      
+
       expect(result).not.toContain('Thursday');
       expect(result).not.toContain('Thu');
     });
@@ -205,25 +200,25 @@ describe('formatTasksDate', () => {
   describe('Performance and consistency', () => {
     it('should return consistent results for same input', () => {
       const date = new Date('2023-06-15');
-      
+
       const result1 = formatTasksDate(date);
       const result2 = formatTasksDate(date);
-      
+
       expect(result1).toBe(result2);
     });
 
     it('should handle repeated calls efficiently', () => {
       const date = new Date('2023-06-15');
       const start = performance.now();
-      
+
       // Execute function many times
       for (let i = 0; i < 1000; i++) {
         formatTasksDate(date);
       }
-      
+
       const end = performance.now();
       const executionTime = end - start;
-      
+
       // Should complete in reasonable time (less than 50ms for 1000 calls)
       expect(executionTime).toBeLessThan(50);
     });
@@ -231,9 +226,9 @@ describe('formatTasksDate', () => {
     it('should not mutate input date', () => {
       const originalDate = new Date('2023-06-15');
       const originalTime = originalDate.getTime();
-      
+
       formatTasksDate(originalDate);
-      
+
       expect(originalDate.getTime()).toBe(originalTime);
     });
   });
@@ -242,28 +237,24 @@ describe('formatTasksDate', () => {
     it('should work with task due dates', () => {
       const taskDueDate = new Date('2023-06-30');
       const result = formatTasksDate(taskDueDate);
-      
+
       expect(result).toBe('Jun 30, 2023');
     });
 
     it('should work with task creation dates', () => {
       const taskCreatedDate = new Date('2023-06-01');
       const result = formatTasksDate(taskCreatedDate);
-      
+
       expect(result).toBe('Jun 1, 2023');
     });
 
     it('should provide sorting-friendly format', () => {
-      const dates = [
-        new Date('2023-01-15'),
-        new Date('2023-06-15'),
-        new Date('2023-12-15'),
-      ];
+      const dates = [new Date('2023-01-15'), new Date('2023-06-15'), new Date('2023-12-15')];
 
-      const formattedDates = dates.map(date => formatTasksDate(date));
-      
+      const formattedDates = dates.map((date) => formatTasksDate(date));
+
       // All should be from same year, allowing for chronological sorting
-      formattedDates.forEach(formatted => {
+      formattedDates.forEach((formatted) => {
         expect(formatted).toContain('2023');
       });
     });

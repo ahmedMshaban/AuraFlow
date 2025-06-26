@@ -37,9 +37,7 @@ describe('getTabsForMode', () => {
         createMockTask({ id: '1', status: 'pending' }),
         createMockTask({ id: '2', status: 'pending' }),
       ];
-      const overdueTasks = [
-        createMockTask({ id: '3', status: 'overdue' }),
-      ];
+      const overdueTasks = [createMockTask({ id: '3', status: 'overdue' })];
       const completedTasks = [
         createMockTask({ id: '4', status: 'completed' }),
         createMockTask({ id: '5', status: 'completed' }),
@@ -54,7 +52,7 @@ describe('getTabsForMode', () => {
       const result = getTabsForMode(upcomingTasks, overdueTasks, completedTasks, taskStats, isStressed);
 
       expect(result).toHaveLength(3);
-      expect(result.map(tab => tab.key)).toEqual(['upcoming', 'overdue', 'completed']);
+      expect(result.map((tab) => tab.key)).toEqual(['upcoming', 'overdue', 'completed']);
     });
 
     it('should configure upcoming tab correctly', () => {
@@ -65,7 +63,7 @@ describe('getTabsForMode', () => {
       const taskStats = createMockTaskStats({ pending: 2 });
 
       const result = getTabsForMode(upcomingTasks, [], [], taskStats, isStressed);
-      const upcomingTab = result.find(tab => tab.key === 'upcoming');
+      const upcomingTab = result.find((tab) => tab.key === 'upcoming');
 
       expect(upcomingTab).toEqual({
         key: 'upcoming',
@@ -78,13 +76,11 @@ describe('getTabsForMode', () => {
     });
 
     it('should configure overdue tab correctly', () => {
-      const overdueTasks = [
-        createMockTask({ id: '1', status: 'overdue' }),
-      ];
+      const overdueTasks = [createMockTask({ id: '1', status: 'overdue' })];
       const taskStats = createMockTaskStats({ overdue: 1 });
 
       const result = getTabsForMode([], overdueTasks, [], taskStats, isStressed);
-      const overdueTab = result.find(tab => tab.key === 'overdue');
+      const overdueTab = result.find((tab) => tab.key === 'overdue');
 
       expect(overdueTab).toEqual({
         key: 'overdue',
@@ -105,7 +101,7 @@ describe('getTabsForMode', () => {
       const taskStats = createMockTaskStats({ completed: 3 });
 
       const result = getTabsForMode([], [], completedTasks, taskStats, isStressed);
-      const completedTab = result.find(tab => tab.key === 'completed');
+      const completedTab = result.find((tab) => tab.key === 'completed');
 
       expect(completedTab).toEqual({
         key: 'completed',
@@ -126,9 +122,9 @@ describe('getTabsForMode', () => {
 
       const result = getTabsForMode([], [], [], taskStats, isStressed);
 
-      expect(result.find(tab => tab.key === 'upcoming')?.count).toBe(10);
-      expect(result.find(tab => tab.key === 'overdue')?.count).toBe(5);
-      expect(result.find(tab => tab.key === 'completed')?.count).toBe(15);
+      expect(result.find((tab) => tab.key === 'upcoming')?.count).toBe(10);
+      expect(result.find((tab) => tab.key === 'overdue')?.count).toBe(5);
+      expect(result.find((tab) => tab.key === 'completed')?.count).toBe(15);
     });
   });
 
@@ -141,9 +137,7 @@ describe('getTabsForMode', () => {
         createMockTask({ id: '2', priority: 'medium' }),
         createMockTask({ id: '3', priority: 'low' }),
       ];
-      const overdueTasks = [
-        createMockTask({ id: '4', priority: 'medium' }),
-      ];
+      const overdueTasks = [createMockTask({ id: '4', priority: 'medium' })];
       const taskStats = createMockTaskStats();
 
       const result = getTabsForMode(upcomingTasks, overdueTasks, [], taskStats, isStressed);
@@ -176,12 +170,8 @@ describe('getTabsForMode', () => {
     });
 
     it('should configure priority tab correctly', () => {
-      const upcomingTasks = [
-        createMockTask({ id: '1', priority: 'high' }),
-      ];
-      const overdueTasks = [
-        createMockTask({ id: '2', priority: 'medium' }),
-      ];
+      const upcomingTasks = [createMockTask({ id: '1', priority: 'high' })];
+      const overdueTasks = [createMockTask({ id: '2', priority: 'medium' })];
       const taskStats = createMockTaskStats();
 
       const result = getTabsForMode(upcomingTasks, overdueTasks, [], taskStats, isStressed);
@@ -190,20 +180,14 @@ describe('getTabsForMode', () => {
         key: 'priority',
         label: 'Priority',
         count: 2, // 1 overdue + 1 high priority upcoming
-        tasks: expect.arrayContaining([
-          expect.objectContaining({ id: '1' }),
-          expect.objectContaining({ id: '2' }),
-        ]),
+        tasks: expect.arrayContaining([expect.objectContaining({ id: '1' }), expect.objectContaining({ id: '2' })]),
         color: 'orange',
         description: 'Focus on what matters most',
       });
     });
 
     it('should handle empty priority tasks', () => {
-      const upcomingTasks = [
-        createMockTask({ priority: 'medium' }),
-        createMockTask({ priority: 'low' }),
-      ];
+      const upcomingTasks = [createMockTask({ priority: 'medium' }), createMockTask({ priority: 'low' })];
       const overdueTasks: Task[] = [];
       const taskStats = createMockTaskStats();
 
@@ -245,7 +229,7 @@ describe('getTabsForMode', () => {
       const priorityTasks = result[0].tasks;
 
       expect(priorityTasks).toHaveLength(2);
-      expect(priorityTasks.every(task => task.priority === 'high')).toBe(true);
+      expect(priorityTasks.every((task) => task.priority === 'high')).toBe(true);
     });
 
     it('should handle case-sensitive priority matching', () => {
@@ -264,10 +248,7 @@ describe('getTabsForMode', () => {
     });
 
     it('should preserve task order in priority tab', () => {
-      const overdueTasks = [
-        createMockTask({ id: 'overdue1' }),
-        createMockTask({ id: 'overdue2' }),
-      ];
+      const overdueTasks = [createMockTask({ id: 'overdue1' }), createMockTask({ id: 'overdue2' })];
       const upcomingTasks = [
         createMockTask({ id: 'high1', priority: 'high' }),
         createMockTask({ id: 'medium1', priority: 'medium' }),
@@ -292,7 +273,7 @@ describe('getTabsForMode', () => {
       const taskStats = createMockTaskStats();
       const result = getTabsForMode([], [], [], taskStats, false);
 
-      result.forEach(tab => {
+      result.forEach((tab) => {
         expect(tab).toHaveProperty('key');
         expect(tab).toHaveProperty('label');
         expect(tab).toHaveProperty('count');
@@ -328,9 +309,9 @@ describe('getTabsForMode', () => {
       const taskStats = createMockTaskStats();
       const normalTabs = getTabsForMode([], [], [], taskStats, false);
 
-      expect(normalTabs.find(tab => tab.key === 'upcoming')?.color).toBe('blue');
-      expect(normalTabs.find(tab => tab.key === 'overdue')?.color).toBe('red');
-      expect(normalTabs.find(tab => tab.key === 'completed')?.color).toBe('green');
+      expect(normalTabs.find((tab) => tab.key === 'upcoming')?.color).toBe('blue');
+      expect(normalTabs.find((tab) => tab.key === 'overdue')?.color).toBe('red');
+      expect(normalTabs.find((tab) => tab.key === 'completed')?.color).toBe('green');
 
       const stressedTabs = getTabsForMode([], [], [], taskStats, true);
       expect(stressedTabs[0].color).toBe('orange');
@@ -340,7 +321,7 @@ describe('getTabsForMode', () => {
       const taskStats = createMockTaskStats();
       const normalTabs = getTabsForMode([], [], [], taskStats, false);
 
-      normalTabs.forEach(tab => {
+      normalTabs.forEach((tab) => {
         expect(tab.description.length).toBeGreaterThan(10);
         expect(tab.description).not.toBe('');
       });
@@ -360,7 +341,7 @@ describe('getTabsForMode', () => {
       expect(normalResult).toHaveLength(3);
       expect(stressedResult).toHaveLength(1);
 
-      normalResult.forEach(tab => {
+      normalResult.forEach((tab) => {
         expect(tab.tasks).toHaveLength(0);
       });
 
@@ -372,7 +353,7 @@ describe('getTabsForMode', () => {
       const taskStats = createMockTaskStats({ pending: 10 }); // Different count
 
       const result = getTabsForMode(upcomingTasks, [], [], taskStats, false);
-      const upcomingTab = result.find(tab => tab.key === 'upcoming');
+      const upcomingTab = result.find((tab) => tab.key === 'upcoming');
 
       // Should use stats count, not array length
       expect(upcomingTab?.count).toBe(10);
@@ -382,7 +363,7 @@ describe('getTabsForMode', () => {
     it('should handle tasks with missing or invalid priority', () => {
       const upcomingTasks = [
         createMockTask({ priority: 'medium' }), // Invalid for test
-        createMockTask({ priority: 'low' }), // Invalid for test  
+        createMockTask({ priority: 'low' }), // Invalid for test
         createMockTask({ priority: 'unknown' as 'high' }), // Invalid for test
         createMockTask({ priority: 'high' }),
       ];
@@ -410,12 +391,10 @@ describe('getTabsForMode', () => {
     });
 
     it('should handle large task arrays efficiently', () => {
-      const largeUpcomingArray = Array.from({ length: 1000 }, (_, i) => 
-        createMockTask({ id: `upcoming-${i}`, priority: i % 3 === 0 ? 'high' : 'medium' })
+      const largeUpcomingArray = Array.from({ length: 1000 }, (_, i) =>
+        createMockTask({ id: `upcoming-${i}`, priority: i % 3 === 0 ? 'high' : 'medium' }),
       );
-      const largeOverdueArray = Array.from({ length: 500 }, (_, i) => 
-        createMockTask({ id: `overdue-${i}` })
-      );
+      const largeOverdueArray = Array.from({ length: 500 }, (_, i) => createMockTask({ id: `overdue-${i}` }));
       const taskStats = createMockTaskStats();
 
       const start = performance.now();
@@ -468,17 +447,12 @@ describe('getTabsForMode', () => {
 
     it('should maintain positive messaging in descriptions', () => {
       const taskStats = createMockTaskStats();
-      const allTabs = [
-        ...getTabsForMode([], [], [], taskStats, false),
-        ...getTabsForMode([], [], [], taskStats, true),
-      ];
+      const allTabs = [...getTabsForMode([], [], [], taskStats, false), ...getTabsForMode([], [], [], taskStats, true)];
 
-      allTabs.forEach(tab => {
+      allTabs.forEach((tab) => {
         // Should not contain negative or stressful language
         const negativeWords = ['stress', 'overwhelm', 'crisis', 'panic', 'urgent'];
-        const hasNegativeWords = negativeWords.some(word => 
-          tab.description.toLowerCase().includes(word)
-        );
+        const hasNegativeWords = negativeWords.some((word) => tab.description.toLowerCase().includes(word));
         expect(hasNegativeWords).toBe(false);
       });
     });
