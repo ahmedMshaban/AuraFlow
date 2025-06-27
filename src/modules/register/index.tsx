@@ -29,10 +29,7 @@ const Register = () => {
         />
         <div className={styles.loginContainer}>
           <p> Already have an account? </p>
-          <Button
-            asChild
-            variant="outline"
-          >
+          <Button asChild>
             <Link to={'/login'}>Sign in</Link>
           </Button>
         </div>

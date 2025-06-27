@@ -1,7 +1,7 @@
 .registerContainer {
   height: 100dvh;
-  background-color: rgb(13, 12, 17);
-  background-image: url('../../../../assets/images/blur_bg.png');
+  background-color: var(--bg-primary, #f0f8ff);
+  background-image: var(--bg-accent, linear-gradient(135deg, #a8edea 0%, #fed6e3 100%));
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -36,7 +36,7 @@
 
 .title {
   font-size: 2rem;
-  color: rgb(255, 255, 255);
+  color: var(--text-primary, #2c5282);
   font-weight: bold;
   margin-bottom: 0.5rem;
   text-align: center;
@@ -44,7 +44,7 @@
 
 .subtitle {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-primary, #2c5282);
   text-align: center;
 }
 
@@ -65,17 +65,17 @@
 }
 
 .loginContainer p {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-primary, #2c5282);
 }
 
 .registerForm {
-  backdrop-filter: blur(10px);
-  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.01));
+  backdrop-filter: blur(20px);
+  background: var(--card-bg, rgba(250, 252, 255, 0.95));
   border-radius: 1.5rem;
   padding: 2rem;
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 4px 0px;
+  border: 1px solid var(--border-light, rgba(190, 227, 248, 0.4));
+  box-shadow: var(--shadow-lg, 0 8px 32px rgba(99, 179, 237, 0.15));
   max-width: 545px;
   width: 100%;
   margin: 0 auto;
@@ -84,7 +84,7 @@
 .registerForm h1 {
   font-family: var(--font-roboto-bold);
   font-size: 2rem;
-  color: rgb(255, 255, 255);
+  color: var(--text-primary, #2c5282);
   margin-bottom: 1.5rem;
   text-align: center;
 }

@@ -1,6 +1,7 @@
 .loginContainer {
   height: 100dvh;
-  background-image: var(--bg-accent, none);
+  background-color: var(--bg-primary, #f0f8ff);
+  background-image: var(--bg-accent, linear-gradient(135deg, #a8edea 0%, #fed6e3 100%));
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -27,17 +28,17 @@
 }
 
 .registerContainer p {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-primary, #2c5282);
 }
 
 .loginForm {
-  backdrop-filter: blur(10px);
-  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.01));
+  backdrop-filter: blur(20px);
+  background: var(--card-bg, rgba(250, 252, 255, 0.95));
   border-radius: 1.5rem;
   padding: 2rem;
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 4px 0px;
+  border: 1px solid var(--border-light, rgba(190, 227, 248, 0.4));
+  box-shadow: var(--shadow-lg, 0 8px 32px rgba(99, 179, 237, 0.15));
   max-width: 545px;
   width: 100%;
   margin: 0 auto;
@@ -46,7 +47,7 @@
 .loginForm h1 {
   font-family: var(--font-roboto-bold);
   font-size: 2rem;
-  color: rgb(255, 255, 255);
+  color: var(--text-primary, #2c5282);
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -57,14 +58,14 @@
 }
 
 .orContainer {
-  color: rgb(255, 255, 255);
+  color: var(--text-primary, #2c5282);
   align-items: center;
   display: flex;
   margin-bottom: 1.5rem;
 
   hr {
-    color: rgb(255, 255, 255);
-    opacity: 0.2;
+    color: var(--border-medium, #90cdf4);
+    opacity: 0.6;
     width: 100%;
   }
 
@@ -80,15 +81,16 @@
 
 .googleButton {
   width: 100%;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--accent-primary, rgba(99, 179, 237, 0.2));
   transition:
     background 0.2s ease-in-out,
     color 0.15s ease-in-out;
   border: none;
+  color: var(--text-primary, #2c5282);
 }
 
 .googleButton:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--accent-secondary, rgba(65, 153, 225, 0.3));
 }
 
 .googleIcon {

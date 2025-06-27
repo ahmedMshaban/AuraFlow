@@ -42,9 +42,6 @@ h6 {
 }
 
 /* Form */
-label {
-  color: white;
-}
 
 .form-error {
   color: var(--chakra-colors-fg-error);
