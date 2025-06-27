@@ -1,6 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/shared/hooks/useAuth';
-import { taskService } from '@/shared/services/taskService';
+import {
+  createTask as createTaskInDb,
+  getUserTasksFromDb,
+  updateTask as updateTaskInDb,
+  deleteTask as deleteTaskFromDb,
+} from '@/shared/services/task/operations/crud';
+import { getTaskStats, categorizeTasks } from '@/shared/services/task/business/analytics';
+import { getTasksByDateRange } from '@/shared/services/task/business/views';
+import { applyFilters } from '@/shared/services/task/utils/filterUtils';
 import type { Task, CreateTaskData, UpdateTaskData, TaskStats, TaskFilters } from '@/shared/types/task.types';
 
 import type { ViewType } from '@/modules/home/infrastructure/types/home.types';
@@ -32,15 +40,20 @@ export const useTasks = (selectedView?: ViewType) => {
       setError(null);
 
       try {
-        let allTasks = await taskService.getUserTasks(currentUser, filters);
+        let allTasks = await getUserTasksFromDb(currentUser);
+
+        // Apply filters if provided
+        if (filters) {
+          allTasks = applyFilters(allTasks, filters);
+        }
 
         // Apply view-based filtering
         if (selectedView && ['my-day', 'my-week', 'my-month'].includes(selectedView)) {
-          allTasks = taskService.getTasksByDateRange(allTasks, selectedView as ViewType);
+          allTasks = getTasksByDateRange(allTasks, selectedView as ViewType);
         }
 
         setTasks(allTasks);
-        setTaskStats(taskService.getTaskStats(allTasks));
+        setTaskStats(getTaskStats(allTasks));
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch tasks');
         console.error('Error fetching tasks:', err);
@@ -58,7 +71,7 @@ export const useTasks = (selectedView?: ViewType) => {
 
       setIsCreating(true);
       try {
-        await taskService.createTask(currentUser, taskData);
+        await createTaskInDb(currentUser, taskData);
         await fetchTasks(); // Refresh tasks
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to create task');
@@ -74,7 +87,7 @@ export const useTasks = (selectedView?: ViewType) => {
   const updateTask = useCallback(
     async (taskId: string, updateData: UpdateTaskData) => {
       try {
-        await taskService.updateTask(taskId, updateData);
+        await updateTaskInDb(taskId, updateData);
         await fetchTasks(); // Refresh tasks
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to update task');
@@ -88,7 +101,7 @@ export const useTasks = (selectedView?: ViewType) => {
   const deleteTask = useCallback(
     async (taskId: string) => {
       try {
-        await taskService.deleteTask(taskId);
+        await deleteTaskFromDb(taskId);
         await fetchTasks(); // Refresh tasks
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to delete task');
@@ -107,7 +120,7 @@ export const useTasks = (selectedView?: ViewType) => {
   );
 
   // Get categorized tasks
-  const categorizedTasks = taskService.categorizeTasks(tasks);
+  const categorizedTasks = categorizeTasks(tasks);
 
   // Effect to fetch tasks when dependencies change
   useEffect(() => {

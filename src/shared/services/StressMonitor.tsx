@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import FaceAnalysis from '../modules/stress-detector/FaceAnalysis';
@@ -9,7 +9,7 @@ import type { StressAnalysisResult } from '../modules/stress-detector/infrastruc
 /**
  * Component that wraps the FaceAnalysis component and handles stress monitoring
  */
-export const StressMonitor: React.FC = () => {
+export const StressMonitor = () => {
   const [showAnalysis, setShowAnalysis] = useState<boolean>(false);
   const dispatch = useDispatch();
 
@@ -28,6 +28,7 @@ export const StressMonitor: React.FC = () => {
       window.removeEventListener('triggerStressTest', handleTriggerStressTest);
     };
   }, []);
+
   // Handle analysis completion
   const handleAnalysisComplete = (result: StressAnalysisResult) => {
     console.log('Stress analysis completed with result:', result);
