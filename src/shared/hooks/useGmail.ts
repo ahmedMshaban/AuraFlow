@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 
-import { gmailService } from '../services/gmailService';
+// Import individual functions from email modules
+import { initializeAuth, isAuthenticated, authenticate, signOut } from '@/shared/services/email/auth/googleAuth';
+import { getProfile } from '@/shared/services/email/operations/api';
+import { getEmailsByPriority } from '@/shared/services/email/business/categorization';
+import { addPriorityToEmails } from '@/shared/services/email/business/priorityClassifier';
 import type { GmailAuthStatus, GmailMessageWithStress } from '../types/gmail.types';
 import type { ViewType } from '../../modules/home/infrastructure/types/home.types';
 
@@ -27,11 +31,11 @@ export const useGmail = (selectedView: ViewType) => {
       setAuthStatus((prev) => ({ ...prev, isLoading: true }));
 
       try {
-        await gmailService.initialize();
-        const isAuth = gmailService.isAuthenticated();
+        await initializeAuth();
+        const isAuth = isAuthenticated();
 
         if (isAuth) {
-          const profileResponse = await gmailService.getProfile();
+          const profileResponse = await getProfile();
           if (profileResponse.success) {
             setAuthStatus({
               isAuthenticated: true,
@@ -73,14 +77,14 @@ export const useGmail = (selectedView: ViewType) => {
   }, []);
 
   // Authenticate with Gmail
-  const authenticate = useCallback(async (): Promise<boolean> => {
+  const authenticateUser = useCallback(async (): Promise<boolean> => {
     setAuthStatus((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const authResponse = await gmailService.authenticate();
+      const authResponse = await authenticate();
 
       if (authResponse.success) {
-        const profileResponse = await gmailService.getProfile();
+        const profileResponse = await getProfile();
 
         if (profileResponse.success) {
           setAuthStatus({
@@ -125,9 +129,9 @@ export const useGmail = (selectedView: ViewType) => {
   }, []);
 
   // Sign out
-  const signOut = useCallback(async (): Promise<void> => {
+  const signOutUser = useCallback(async (): Promise<void> => {
     try {
-      await gmailService.signOut();
+      await signOut();
       setAuthStatus({
         isAuthenticated: false,
         isLoading: false,
@@ -156,16 +160,19 @@ export const useGmail = (selectedView: ViewType) => {
       setEmailsError(null);
 
       try {
-        const emailsResponse = await gmailService.getEmailsByPriority(
+        const emailsResponse = await getEmailsByPriority(
           focusedCount,
           otherCount,
           selectedView, // Pass the selectedView for date filtering
         );
 
         if (emailsResponse.success) {
-          // Set the separated emails
-          setFocusedEmails(emailsResponse.data.focused);
-          setOtherEmails(emailsResponse.data.others);
+          // Convert to emails with stress analysis
+          const focusedWithStress = addPriorityToEmails(emailsResponse.data.focused);
+          const othersWithStress = addPriorityToEmails(emailsResponse.data.others);
+
+          setFocusedEmails(focusedWithStress);
+          setOtherEmails(othersWithStress);
         } else {
           setEmailsError(emailsResponse.error || 'Failed to fetch emails by priority');
           setFocusedEmails([]);
@@ -197,8 +204,8 @@ export const useGmail = (selectedView: ViewType) => {
     emailsError,
 
     // Actions
-    authenticate,
-    signOut,
+    authenticate: authenticateUser,
+    signOut: signOutUser,
     fetchEmailsByPriority,
   };
 };
