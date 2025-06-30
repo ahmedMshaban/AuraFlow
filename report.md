@@ -165,3 +165,5 @@ Consistent UX:
 Same stress-mode pattern as emails
 Reduces cognitive load by focusing on what matters most
 Uses emojis and positive reinforcement
+
+
