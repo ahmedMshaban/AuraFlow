@@ -1,16 +1,48 @@
 import { useState } from 'react';
-import { Button, CloseButton, Dialog, Portal, ButtonGroup, Steps } from '@chakra-ui/react';
+import { Dialog, Portal } from '@chakra-ui/react';
 
 import StressDetector from './components/StressDetector';
 import type { StressAnalysisResult } from './infrastructure/types/FaceExpressions.types';
+import styles from './infrastructure/styles/FaceAnalysis.module.css';
 
 interface FaceAnalysisProps {
   onAnalysisComplete?: (result: StressAnalysisResult) => void;
+  onClose?: () => void;
 }
 
-const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ onAnalysisComplete }) => {
+const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ onAnalysisComplete, onClose }) => {
   const [open, setOpen] = useState(true);
   const [step, setStep] = useState(0);
+
+  const handleSkip = () => {
+    setOpen(false);
+    // Also notify the parent component to hide this component
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const handleNextStep = () => {
+    setStep((prevStep) => prevStep + 1);
+  };
+
+  const renderStepIndicator = (index: number) => {
+    const isCompleted = index < step;
+    const isCurrent = index === step;
+    const indicatorClass = `${styles.stepIndicator} ${isCompleted ? styles.completed : ''} ${isCurrent ? styles.current : ''}`;
+    const separatorClass = `${styles.stepSeparator} ${isCompleted ? styles.completed : ''}`;
+
+    return (
+      <div
+        key={index}
+        className={styles.stepItem}
+      >
+        <div className={indicatorClass}>{isCompleted ? '✓' : index + 1}</div>
+        <div className={styles.stepTitle}>Step {index + 1}</div>
+        {index < 1 && <div className={separatorClass} />}
+      </div>
+    );
+  };
 
   return (
     <Dialog.Root
@@ -20,115 +52,100 @@ const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ onAnalysisComplete }) => {
       size={'lg'}
     >
       <Portal>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content>
-            <Dialog.Header>
-              <Dialog.Title>
-                {step === 0 && 'Let’s Make AuraFlow Work Better for You!'}
+        <Dialog.Backdrop className={styles.modalBackdrop} />
+        <div className={styles.modalPositioner}>
+          <div className={styles.modalContent}>
+            <button
+              className={styles.closeButton}
+              onClick={handleSkip}
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+
+            <div className={styles.modalHeader}>
+              <h1 className={styles.modalTitle}>
+                {step === 0 && "Let's Make AuraFlow Work Better for You!"}
                 {step === 1 && '3 seconds to calibrate!'}
-              </Dialog.Title>
-            </Dialog.Header>
-            <Dialog.Body>
-              <Steps.Root
-                step={step}
-                onStepChange={(e) => setStep(e.step)}
-                count={3}
-              >
-                <Steps.List>
-                  {[0, 1].map((index) => (
-                    <Steps.Item
-                      key={index}
-                      index={index}
-                      title={`Step ${index + 1}`}
-                    >
-                      <Steps.Indicator />
-                      <Steps.Title>step {index}</Steps.Title>
-                      <Steps.Separator />
-                    </Steps.Item>
-                  ))}
-                </Steps.List>
+                {step === 2 && 'All Set!'}
+              </h1>
+            </div>
 
-                {[0, 1, 2].map((index) => (
-                  <Steps.Content
-                    key={index}
-                    index={index}
-                  >
-                    {/* Introduction Step */}
-                    {index === 0 && (
-                      <div>
-                        <p>To help you stay focused and calm, AuraFlow can adapt to your needs. Here’s how:</p>
-                        <br />
-                        <br />
-                        <ol>
-                          <li>
-                            <span>Quick Calibration (5 sec):</span>We’ll take a short video to understand your emotion
-                            state
-                            <br />
-                            <br />
-                          </li>
-                          <li>
-                            <span>Gentle Check-ins:</span>Every 30 minutes, we’ll briefly check in (no camera always
-                            on!).
-                            <br />
-                            <br />
-                          </li>
-                          <li>
-                            <span>Adapt Just for You:</span> If we sense stress, we’ll simplify tasks or suggest breaks.
-                            <br />
-                            <br />
-                          </li>
-                        </ol>
-                        <p>We never store your video or track what you type. You can adjust settings anytime.</p>
-                        <br />
-                        <br />
-                        <p>Ready to try it?</p>
+            <div className={styles.modalBody}>
+              <div className={styles.stepsContainer}>
+                <div className={styles.stepsList}>{[0, 1].map((index) => renderStepIndicator(index))}</div>
 
-                        <ButtonGroup
-                          size="sm"
-                          variant="outline"
+                <div className={styles.stepContent}>
+                  {step === 0 && (
+                    <div className={styles.introContent}>
+                      <p>To help you stay focused and calm, AuraFlow can adapt to your needs. Here's how:</p>
+                      <ol>
+                        <li>
+                          <span>Quick Calibration (3 sec):</span> We'll take a short video to understand your emotion
+                          state
+                        </li>
+                        <li>
+                          <span>Gentle Check-ins:</span> We'll briefly check in (no camera always on!).
+                        </li>
+                        <li>
+                          <span>Adapt Just for You:</span> If we sense stress, we'll simplify tasks or suggest breaks.
+                        </li>
+                      </ol>
+                      <p>We never store your video or track what you type. You can adjust settings anytime.</p>
+
+                      <p>Ready to try it?</p>
+
+                      <div className={styles.buttonGroup}>
+                        <button
+                          className={`${styles.button} ${styles.outline}`}
+                          onClick={handleSkip}
                         >
-                          <Dialog.ActionTrigger asChild>
-                            <Button>Skip for now</Button>
-                          </Dialog.ActionTrigger>
-                          <Steps.NextTrigger asChild>
-                            <Button>Yes, let’s calibrate!</Button>
-                          </Steps.NextTrigger>
-                        </ButtonGroup>
+                          Skip for now
+                        </button>
+                        <button
+                          className={`${styles.button} ${styles.solid}`}
+                          onClick={handleNextStep}
+                        >
+                          Yes, let's calibrate!
+                        </button>
                       </div>
-                    )}
+                    </div>
+                  )}
 
-                    {index === 1 && (
-                      <>
-                        <p>Stay still — we’re snapping your calm vibe! </p>{' '}
-                        <StressDetector
-                          onAnalysisComplete={(result) => {
-                            console.log('Analysis complete:', result);
-                            // Call the parent callback if provided
-                            if (onAnalysisComplete) {
-                              onAnalysisComplete(result);
-                            }
-                            setStep(2);
-                          }}
-                          currentStep={step}
-                        />
-                      </>
-                    )}
+                  {step === 1 && (
+                    <div className={styles.detectorContainer}>
+                      <p>Stay still — we're snapping your calm vibe!</p>
+                      <StressDetector
+                        onAnalysisComplete={(result) => {
+                          console.log('Analysis complete:', result);
+                          if (onAnalysisComplete) {
+                            onAnalysisComplete(result);
+                          }
+                          setStep(2);
+                        }}
+                        currentStep={step}
+                      />
+                    </div>
+                  )}
 
-                    {index === 2 && (
-                      <div>
-                        <p>All set! Your workspace will now adapt to keep you in the zone.</p>
+                  {step === 2 && (
+                    <div className={styles.finalContent}>
+                      <p>All set! Your workspace will now adapt to keep you in the zone.</p>
+                      <div className={styles.buttonGroup}>
+                        <button
+                          className={`${styles.button} ${styles.solid}`}
+                          onClick={handleSkip}
+                        >
+                          Get Started
+                        </button>
                       </div>
-                    )}
-                  </Steps.Content>
-                ))}
-              </Steps.Root>
-            </Dialog.Body>
-            <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" />
-            </Dialog.CloseTrigger>
-          </Dialog.Content>
-        </Dialog.Positioner>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </Portal>
     </Dialog.Root>
   );

@@ -1,4 +1,5 @@
 import styles from './infrastructure/styles/sidebar.module.css';
+import StressMonitoringPanel from '@/shared/components/StressMonitoringPanel';
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   return (
@@ -8,7 +9,9 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
       }}
       className={styles.sidebarContainer}
     >
-      <div className={styles.sidebarContent}>Hello from sidebar</div>
+      <div className={styles.sidebarContent}>
+        <StressMonitoringPanel />
+      </div>
     </div>
   );
 };

@@ -59,7 +59,20 @@ export const StressMonitor = () => {
     setShowAnalysis(false);
   };
 
-  return <>{showAnalysis && <FaceAnalysis onAnalysisComplete={handleAnalysisComplete} />}</>;
+  const handleClose = () => {
+    setShowAnalysis(false);
+  };
+
+  return (
+    <>
+      {showAnalysis && (
+        <FaceAnalysis
+          onAnalysisComplete={handleAnalysisComplete}
+          onClose={handleClose}
+        />
+      )}
+    </>
+  );
 };
 
 export default StressMonitor;
