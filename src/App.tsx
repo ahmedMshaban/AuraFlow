@@ -1,4 +1,5 @@
 import { useRoutes } from 'react-router';
+import { Toaster } from 'react-hot-toast';
 
 import { AuthProvider } from './shared/contexts/authContext';
 import StoreProvider from './shared/services/StoreProvider';
@@ -8,6 +9,7 @@ import { RouteGuard, NotFound } from './shared/components';
 import Login from './modules/login';
 import Register from './modules/register';
 import Home from './modules/home';
+import Activities from './modules/activities';
 import './shared/adaptations/themes.css';
 import './App.css';
 
@@ -46,6 +48,14 @@ function App() {
       ),
     },
     {
+      path: '/activities',
+      element: (
+        <RouteGuard>
+          <Activities />
+        </RouteGuard>
+      ),
+    },
+    {
       path: '*',
       element: <NotFound />,
     },
@@ -58,6 +68,16 @@ function App() {
       <AuthProvider>
         <main className="app">{routesElement}</main>
         <AuthenticatedStressMonitoring />
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              borderRadius: '100px',
+              background: '#fff',
+              color: '#333',
+            },
+          }}
+        />
       </AuthProvider>
     </StoreProvider>
   );
