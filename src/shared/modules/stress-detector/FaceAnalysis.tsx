@@ -1,48 +1,19 @@
-import { useState } from 'react';
 import { Dialog, Portal } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
 
 import StressDetector from './components/StressDetector';
-import type { StressAnalysisResult } from './infrastructure/types/FaceExpressions.types';
+import type { FaceAnalysisProps } from './infrastructure/types/FaceAnalysis.types';
+import { selectStressHistory } from '../../store/slices/stressMonitoringSlice';
+import RenderStepIndicator from './components/RenderStepIndicator';
+import useFaceAnalysisModal from './infrastructure/hooks/useFaceAnalysisModal';
 import styles from './infrastructure/styles/FaceAnalysis.module.css';
 
-interface FaceAnalysisProps {
-  onAnalysisComplete?: (result: StressAnalysisResult) => void;
-  onClose?: () => void;
-}
+const FaceAnalysis = ({ onAnalysisComplete, onClose }: FaceAnalysisProps) => {
+  const stressHistory = useSelector(selectStressHistory);
+  const { open, setOpen, step, setStep, handleSkip, handleNextStep } = useFaceAnalysisModal(onClose || (() => {}));
 
-const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ onAnalysisComplete, onClose }) => {
-  const [open, setOpen] = useState(true);
-  const [step, setStep] = useState(0);
-
-  const handleSkip = () => {
-    setOpen(false);
-    // Also notify the parent component to hide this component
-    if (onClose) {
-      onClose();
-    }
-  };
-
-  const handleNextStep = () => {
-    setStep((prevStep) => prevStep + 1);
-  };
-
-  const renderStepIndicator = (index: number) => {
-    const isCompleted = index < step;
-    const isCurrent = index === step;
-    const indicatorClass = `${styles.stepIndicator} ${isCompleted ? styles.completed : ''} ${isCurrent ? styles.current : ''}`;
-    const separatorClass = `${styles.stepSeparator} ${isCompleted ? styles.completed : ''}`;
-
-    return (
-      <div
-        key={index}
-        className={styles.stepItem}
-      >
-        <div className={indicatorClass}>{isCompleted ? '✓' : index + 1}</div>
-        <div className={styles.stepTitle}>Step {index + 1}</div>
-        {index < 1 && <div className={separatorClass} />}
-      </div>
-    );
-  };
+  // Check if user has previous check-in history
+  const hasHistory = stressHistory && stressHistory.length > 0;
 
   return (
     <Dialog.Root
@@ -65,35 +36,64 @@ const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ onAnalysisComplete, onClose
 
             <div className={styles.modalHeader}>
               <h1 className={styles.modalTitle}>
-                {step === 0 && "Let's Make AuraFlow Work Better for You!"}
-                {step === 1 && '3 seconds to calibrate!'}
+                {step === 0 && (hasHistory ? 'Quick Wellness Check-In' : "Let's Make AuraFlow Work Better for You!")}
+                {step === 1 && (hasHistory ? 'Checking your current state...' : '3 seconds to calibrate!')}
                 {step === 2 && 'All Set!'}
               </h1>
             </div>
 
             <div className={styles.modalBody}>
               <div className={styles.stepsContainer}>
-                <div className={styles.stepsList}>{[0, 1].map((index) => renderStepIndicator(index))}</div>
+                <div className={styles.stepsList}>
+                  {[0, 1].map((index) => (
+                    <div key={index}>{RenderStepIndicator(index, step)}</div>
+                  ))}
+                </div>
 
                 <div className={styles.stepContent}>
                   {step === 0 && (
                     <div className={styles.introContent}>
-                      <p>To help you stay focused and calm, AuraFlow can adapt to your needs. Here's how:</p>
-                      <ol>
-                        <li>
-                          <span>Quick Calibration (3 sec):</span> We'll take a short video to understand your emotion
-                          state
-                        </li>
-                        <li>
-                          <span>Gentle Check-ins:</span> We'll briefly check in (no camera always on!).
-                        </li>
-                        <li>
-                          <span>Adapt Just for You:</span> If we sense stress, we'll simplify tasks or suggest breaks.
-                        </li>
-                      </ol>
-                      <p>We never store your video or track what you type. You can adjust settings anytime.</p>
-
-                      <p>Ready to try it?</p>
+                      {hasHistory ? (
+                        // Text for returning users
+                        <>
+                          <p>Welcome back! Time for another quick wellness check-in.</p>
+                          <ol>
+                            <li>
+                              <span>Quick Re-calibration (3 sec):</span> Let's refresh your emotional baseline to keep
+                              AuraFlow working perfectly for you.
+                            </li>
+                            <li>
+                              <span>Continuous Care:</span> Your workspace will continue adapting based on your current
+                              state.
+                            </li>
+                            <li>
+                              <span>Privacy First:</span> As always, nothing is stored and your privacy remains
+                              protected.
+                            </li>
+                          </ol>
+                          <p>Ready for a quick check-in?</p>
+                        </>
+                      ) : (
+                        // Text for first-time users
+                        <>
+                          <p>To help you stay focused and calm, AuraFlow can adapt to your needs. Here's how:</p>
+                          <ol>
+                            <li>
+                              <span>Quick Calibration (3 sec):</span> We'll take a short video to understand your
+                              emotion state
+                            </li>
+                            <li>
+                              <span>Gentle Check-ins:</span> We'll briefly check in (no camera always on!).
+                            </li>
+                            <li>
+                              <span>Adapt Just for You:</span> If we sense stress, we'll simplify tasks or suggest
+                              breaks.
+                            </li>
+                          </ol>
+                          <p>We never store your video or track what you type. You can adjust settings anytime.</p>
+                          <p>Ready to try it?</p>
+                        </>
+                      )}
 
                       <div className={styles.buttonGroup}>
                         <button
@@ -106,7 +106,7 @@ const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ onAnalysisComplete, onClose
                           className={`${styles.button} ${styles.solid}`}
                           onClick={handleNextStep}
                         >
-                          Yes, let's calibrate!
+                          {hasHistory ? "Yes, let's check in!" : "Yes, let's calibrate!"}
                         </button>
                       </div>
                     </div>
@@ -114,7 +114,11 @@ const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ onAnalysisComplete, onClose
 
                   {step === 1 && (
                     <div className={styles.detectorContainer}>
-                      <p>Stay still — we're snapping your calm vibe!</p>
+                      <p>
+                        {hasHistory
+                          ? "Just a moment while we check how you're feeling..."
+                          : "Stay still — we're snapping your calm vibe!"}
+                      </p>
                       <StressDetector
                         onAnalysisComplete={(result) => {
                           console.log('Analysis complete:', result);

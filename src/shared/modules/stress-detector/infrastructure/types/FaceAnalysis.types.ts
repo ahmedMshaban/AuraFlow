@@ -16,3 +16,8 @@ export interface UseFaceAnalysisResult {
 export interface UseStressAnalysisUtilsResult {
   getStressLevelText: (level: number) => string;
 }
+
+export interface FaceAnalysisProps {
+  onAnalysisComplete?: (result: StressAnalysisResult) => void;
+  onClose?: () => void;
+}
