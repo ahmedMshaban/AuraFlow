@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Dialog, Portal } from '@chakra-ui/react';
 import { FaTimes } from 'react-icons/fa';
 import styles from './Modal.module.css';
 
@@ -11,51 +11,36 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 'medium' }) => {
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
   return (
-    <div
-      className={styles.modalOverlay}
-      onClick={handleBackdropClick}
+    <Dialog.Root
+      lazyMount
+      open={isOpen}
+      onOpenChange={(details) => {
+        if (!details.open) {
+          onClose();
+        }
+      }}
     >
-      <div className={`${styles.modalContent} ${styles[size]}`}>
-        <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>{title}</h2>
-          <button
-            className={styles.closeButton}
-            onClick={onClose}
-            aria-label="Close modal"
-          >
-            <FaTimes />
-          </button>
-        </div>
-        <div className={styles.modalBody}>{children}</div>
-      </div>
-    </div>
+      <Portal>
+        <Dialog.Backdrop className={styles.modalBackdrop} />
+        <Dialog.Positioner className={styles.modalPositioner}>
+          <Dialog.Content className={`${styles.modalContent} ${styles[size]}`}>
+            <div className={styles.modalHeader}>
+              <Dialog.Title className={styles.modalTitle}>{title}</Dialog.Title>
+              <Dialog.CloseTrigger asChild>
+                <button
+                  className={styles.closeButton}
+                  aria-label="Close modal"
+                >
+                  <FaTimes />
+                </button>
+              </Dialog.CloseTrigger>
+            </div>
+            <div className={styles.modalBody}>{children}</div>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
   );
 };
 
