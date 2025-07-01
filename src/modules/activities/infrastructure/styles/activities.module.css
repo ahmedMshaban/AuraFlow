@@ -89,12 +89,10 @@
 }
 
 .activitiesContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
   flex: 1;
-  padding: 1rem;
-  overflow: hidden;
+  padding: 0 1rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
 }
 
 .placeholderComponents {
