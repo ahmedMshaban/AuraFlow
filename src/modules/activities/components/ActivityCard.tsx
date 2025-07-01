@@ -1,5 +1,6 @@
 import { FaPlay } from 'react-icons/fa';
-import styles from './ActivityCard.module.css';
+import { getDifficultyColor } from '../infrastructure/helpers/activityHelpers';
+import styles from '../infrastructure/styles/ActivityCard.module.css';
 
 interface ActivityCardProps {
   title: string;
@@ -20,19 +21,6 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   category,
   onClick,
 }) => {
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Easy':
-        return '#50c878';
-      case 'Medium':
-        return '#ffc107';
-      case 'Hard':
-        return '#dc3545';
-      default:
-        return '#50c878';
-    }
-  };
-
   return (
     <div
       className={styles.activityCard}

@@ -1,89 +1,23 @@
-import { useState, useEffect, useRef } from 'react';
 import { FaPlay, FaPause, FaStop } from 'react-icons/fa';
-import styles from './BreathBox.module.css';
+import { useBreathBox } from '../infrastructure/hooks/useBreathBox';
+import styles from '../infrastructure/styles/BreathBox.module.css';
 
 interface BreathBoxProps {
   className?: string;
 }
 
-type BreathPhase = 'inhale' | 'hold1' | 'exhale' | 'hold2';
-
-const PHASE_DURATION = 4000; // 4 seconds
-const PHASE_LABELS = {
-  inhale: 'Breathe In',
-  hold1: 'Hold',
-  exhale: 'Breathe Out',
-  hold2: 'Hold',
-};
-
 const BreathBox: React.FC<BreathBoxProps> = ({ className }) => {
-  const [isActive, setIsActive] = useState(false);
-  const [currentPhase, setCurrentPhase] = useState<BreathPhase>('inhale');
-  const [progress, setProgress] = useState(0);
-  const [cycleCount, setCycleCount] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(4);
-
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const phaseStartRef = useRef<number>(0);
-
-  const phases = useRef<BreathPhase[]>(['inhale', 'hold1', 'exhale', 'hold2']);
-
-  useEffect(() => {
-    if (isActive) {
-      phaseStartRef.current = Date.now();
-
-      intervalRef.current = setInterval(() => {
-        const elapsed = Date.now() - phaseStartRef.current;
-        const phaseProgress = (elapsed / PHASE_DURATION) * 100;
-        const timeLeft = Math.ceil((PHASE_DURATION - elapsed) / 1000);
-
-        setProgress(Math.min(phaseProgress, 100));
-        setTimeRemaining(Math.max(timeLeft, 0));
-
-        if (elapsed >= PHASE_DURATION) {
-          const currentIndex = phases.current.indexOf(currentPhase);
-          const nextIndex = (currentIndex + 1) % phases.current.length;
-          const nextPhase = phases.current[nextIndex];
-
-          setCurrentPhase(nextPhase);
-          setProgress(0);
-          setTimeRemaining(4);
-          phaseStartRef.current = Date.now();
-
-          if (nextPhase === 'inhale') {
-            setCycleCount((prev) => prev + 1);
-          }
-        }
-      }, 100);
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isActive, currentPhase]);
-
-  const handleStart = () => {
-    setIsActive(true);
-  };
-
-  const handlePause = () => {
-    setIsActive(false);
-  };
-
-  const handleStop = () => {
-    setIsActive(false);
-    setCurrentPhase('inhale');
-    setProgress(0);
-    setCycleCount(0);
-    setTimeRemaining(4);
-  };
+  const {
+    isActive,
+    currentPhase,
+    progress,
+    cycleCount,
+    timeRemaining,
+    handleStart,
+    handlePause,
+    handleStop,
+    getCurrentPhaseLabel,
+  } = useBreathBox();
 
   return (
     <div className={`${styles.breathBoxContainer} ${className || ''}`}>
@@ -95,7 +29,7 @@ const BreathBox: React.FC<BreathBoxProps> = ({ className }) => {
       <div className={styles.breathingArea}>
         <div className={`${styles.breathBox} ${styles[currentPhase]}`}>
           <div className={styles.innerBox}>
-            <div className={styles.phaseText}>{PHASE_LABELS[currentPhase]}</div>
+            <div className={styles.phaseText}>{getCurrentPhaseLabel()}</div>
             <div className={styles.timer}>{timeRemaining}</div>
           </div>
           <div

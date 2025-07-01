@@ -1,0 +1,167 @@
+.modalBackdrop {
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.modalPositioner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1001;
+}
+
+.modalContent {
+  background: var(--card-bg, white);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid var(--border-light, #e2e8f0);
+}
+
+.modalContent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent-primary, #667eea);
+  border-radius: 16px 16px 0 0;
+}
+
+.modalContent.small {
+  max-width: 400px;
+}
+
+.modalContent.medium {
+  max-width: 600px;
+}
+
+.modalContent.large {
+  max-width: 800px;
+}
+
+.modalHeader {
+  padding: 2rem 2rem 1rem 2rem;
+  position: relative;
+}
+
+.modalTitle {
+  font-family: var(--font-roboto, 'Roboto', sans-serif);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--text-primary, #2d3748);
+  text-align: center;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-secondary, #4a5568);
+  transition: all 0.2s ease;
+  z-index: 1002;
+}
+
+.closeButton:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-primary, #2d3748);
+}
+
+.modalBody {
+  padding: 0 2rem 2rem 2rem;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar for modal content */
+.modalContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modalContent::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+  background: var(--accent-primary, #667eea);
+  border-radius: 4px;
+  opacity: 0.3;
+}
+
+.modalContent::-webkit-scrollbar-thumb:hover {
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .modalPositioner {
+    padding: 0.5rem;
+  }
+
+  .modalContent {
+    max-height: 95vh;
+    border-radius: 12px;
+  }
+
+  .modalContent::before {
+    border-radius: 12px 12px 0 0;
+  }
+
+  .modalHeader {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+  }
+
+  .modalTitle {
+    font-size: 1.25rem;
+  }
+
+  .modalBody {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+  }
+
+  .closeButton {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+}

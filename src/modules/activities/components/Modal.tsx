@@ -1,6 +1,6 @@
 import { Dialog, Portal } from '@chakra-ui/react';
 import { FaTimes } from 'react-icons/fa';
-import styles from './Modal.module.css';
+import styles from '../infrastructure/styles/Modal.module.css';
 
 interface ModalProps {
   isOpen: boolean;

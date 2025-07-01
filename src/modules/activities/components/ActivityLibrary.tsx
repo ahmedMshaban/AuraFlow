@@ -1,64 +1,27 @@
-import { useState } from 'react';
-import { FaLungs, FaOm } from 'react-icons/fa';
+import { useActivityLibrary } from '../infrastructure/hooks/useActivityLibrary';
 import ActivityCard from './ActivityCard';
 import Modal from './Modal';
 import BreathBox from './BreathBox';
-import styles from './ActivityLibrary.module.css';
-
-interface Activity {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  duration?: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  category: string;
-  component: React.ReactNode;
-}
+import styles from '../infrastructure/styles/ActivityLibrary.module.css';
 
 const ActivityLibrary = () => {
-  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { activities, selectedActivity, isModalOpen, handleActivityClick, handleCloseModal } = useActivityLibrary();
 
-  const activities: Activity[] = [
-    {
-      id: 'breath-box',
-      title: 'Box Breathing',
-      description:
-        'A calming breathing technique used by Navy SEALs to reduce stress and improve focus. Follow the 4-4-4-4 pattern for optimal relaxation.',
-      icon: <FaLungs />,
-      duration: '5-10 min',
-      difficulty: 'Easy',
-      category: 'Breathing',
-      component: <BreathBox />,
-    },
-    {
-      id: 'meditation-placeholder',
-      title: 'Guided Meditation',
-      description:
-        'A peaceful meditation session to help you relax, focus your mind, and reduce anxiety. Perfect for beginners and experienced practitioners.',
-      icon: <FaOm />,
-      duration: '10-20 min',
-      difficulty: 'Easy',
-      category: 'Mindfulness',
-      component: (
-        <div className={styles.placeholderComponent}>
-          <div className={styles.placeholderIcon}>🧘‍♀️</div>
-          <h3>Guided Meditation</h3>
-          <p>This meditation component will be implemented next!</p>
-        </div>
-      ),
-    },
-  ];
-
-  const handleActivityClick = (activity: Activity) => {
-    setSelectedActivity(activity);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedActivity(null);
+  const getActivityComponent = (componentKey: string) => {
+    switch (componentKey) {
+      case 'BreathBox':
+        return <BreathBox />;
+      case 'MeditationPlaceholder':
+        return (
+          <div className={styles.placeholderComponent}>
+            <div className={styles.placeholderIcon}>🧘‍♀️</div>
+            <h3>Guided Meditation</h3>
+            <p>This meditation component will be implemented next!</p>
+          </div>
+        );
+      default:
+        return null;
+    }
   };
 
   return (
@@ -74,7 +37,7 @@ const ActivityLibrary = () => {
             key={activity.id}
             title={activity.title}
             description={activity.description}
-            icon={activity.icon}
+            icon={<activity.icon />}
             duration={activity.duration}
             difficulty={activity.difficulty}
             category={activity.category}
@@ -89,7 +52,7 @@ const ActivityLibrary = () => {
         title={selectedActivity?.title || ''}
         size="large"
       >
-        {selectedActivity?.component}
+        {selectedActivity?.componentKey && getActivityComponent(selectedActivity.componentKey)}
       </Modal>
     </div>
   );
