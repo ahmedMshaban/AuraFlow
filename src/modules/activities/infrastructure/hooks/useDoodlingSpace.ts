@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { DOODLING_COLORS, BRUSH_SIZES, CANVAS_SETTINGS } from '../constants/constants';
 import type { Point, DrawingStroke } from '../types/activities.types';
 
@@ -147,10 +147,7 @@ export const useDoodlingSpace = () => {
     if (strokes.length === 0) return;
 
     setStrokes((prev) => prev.slice(0, -1));
-
-    // Redraw canvas without the last stroke
-    setTimeout(redrawCanvas, 0);
-  }, [strokes, redrawCanvas]);
+  }, [strokes.length]);
 
   // Initialize canvas
   const initializeCanvas = useCallback(() => {
@@ -166,6 +163,11 @@ export const useDoodlingSpace = () => {
     ctx.fillStyle = CANVAS_SETTINGS.backgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }, []);
+
+  // Auto-redraw canvas when strokes change (for undo functionality)
+  useEffect(() => {
+    redrawCanvas();
+  }, [strokes, redrawCanvas]);
 
   return {
     // State
