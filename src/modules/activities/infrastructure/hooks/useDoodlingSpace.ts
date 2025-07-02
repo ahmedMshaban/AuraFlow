@@ -2,6 +2,87 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { DOODLING_COLORS, BRUSH_SIZES, CANVAS_SETTINGS } from '../constants/constants';
 import type { Point, DrawingStroke } from '../types/activities.types';
 
+/**
+ * Custom hook for managing a digital doodling/drawing canvas.
+ * Provides comprehensive drawing functionality including stroke management,
+ * color/brush selection, canvas operations, and undo capabilities.
+ *
+ * Features:
+ * - Real-time drawing with mouse events
+ * - Multiple colors and brush sizes
+ * - Stroke management and persistence
+ * - Undo functionality
+ * - Canvas scaling and coordinate transformation
+ * - Performance optimized rendering
+ *
+ * @returns {Object} Doodling space state and controls
+ * @returns {React.RefObject<HTMLCanvasElement>} canvasRef - Reference to the canvas element
+ * @returns {boolean} isDrawing - Whether user is currently drawing
+ * @returns {string} currentColor - Currently selected drawing color
+ * @returns {number} currentBrushSize - Currently selected brush size
+ * @returns {DrawingStroke[]} strokes - Array of completed drawing strokes
+ * @returns {Function} startDrawing - Start drawing handler for mouse down
+ * @returns {Function} draw - Continue drawing handler for mouse move
+ * @returns {Function} stopDrawing - Stop drawing handler for mouse up
+ * @returns {Function} clearCanvas - Clear all strokes and reset canvas
+ * @returns {Function} changeColor - Change the current drawing color
+ * @returns {Function} changeBrushSize - Change the current brush size
+ * @returns {Function} undo - Remove the last drawn stroke
+ * @returns {Function} initializeCanvas - Initialize canvas dimensions and background
+ * @returns {string[]} availableColors - Array of available drawing colors
+ * @returns {number[]} availableBrushSizes - Array of available brush sizes
+ * @returns {Object} canvasSettings - Canvas configuration settings
+ *
+ * @example
+ * ```typescript
+ * const {
+ *   canvasRef,
+ *   isDrawing,
+ *   currentColor,
+ *   currentBrushSize,
+ *   strokes,
+ *   startDrawing,
+ *   draw,
+ *   stopDrawing,
+ *   clearCanvas,
+ *   changeColor,
+ *   changeBrushSize,
+ *   undo,
+ *   initializeCanvas,
+ *   availableColors,
+ *   availableBrushSizes
+ * } = useDoodlingSpace();
+ *
+ * // Initialize canvas on mount
+ * useEffect(() => {
+ *   initializeCanvas();
+ * }, [initializeCanvas]);
+ *
+ * // Render canvas with event handlers
+ * <canvas
+ *   ref={canvasRef}
+ *   onMouseDown={startDrawing}
+ *   onMouseMove={draw}
+ *   onMouseUp={stopDrawing}
+ *   onMouseLeave={stopDrawing}
+ * />
+ *
+ * // Color picker
+ * {availableColors.map(color => (
+ *   <button
+ *     key={color}
+ *     onClick={() => changeColor(color)}
+ *     style={{ backgroundColor: color }}
+ *   />
+ * ))}
+ * ```
+ *
+ * @see {@link Point} For point coordinate structure
+ * @see {@link DrawingStroke} For stroke data structure
+ * @see {@link DOODLING_COLORS} For available color constants
+ * @see {@link BRUSH_SIZES} For available brush size constants
+ * @see {@link CANVAS_SETTINGS} For canvas configuration constants
+ */
 export const useDoodlingSpace = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
