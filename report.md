@@ -165,3 +165,201 @@ Consistent UX:
 Same stress-mode pattern as emails
 Reduces cognitive load by focusing on what matters most
 Uses emojis and positive reinforcement
+
+# Activities Module - Stress Relief & Wellness Features
+
+## 🧘‍♀️ Overview
+
+The Activities module provides a comprehensive wellness platform with interactive stress-relief activities designed to help users manage stress and improve mental wellbeing. The module features a modern, responsive interface with two core activities: Box Breathing and Digital Doodling Space.
+
+## 🎯 Core Activities
+
+### 1. Box Breathing Exercise
+
+Navy SEAL 4-4-4-4 Breathing Technique
+
+#### Features
+
+- **Guided Breathing Pattern**: 4 seconds inhale → 4 seconds hold → 4 seconds exhale → 4 seconds hold
+- **Visual Feedback**: Animated breath box with real-time progress indicators
+- **Phase Tracking**: Clear visual and text indicators for current breathing phase
+- **Session Management**: Start, pause, resume, and stop controls
+- **Progress Monitoring**: Cycle counting and time remaining display
+- **Accessibility**: Screen-reader friendly phase labels and controls
+
+#### Technical Implementation
+
+- **Real-time Timer**: 100ms precision intervals with fake timer support for testing
+- **State Management**: Comprehensive state tracking (active, phase, progress, cycles)
+- **Performance Optimized**: `useCallback` for stable function references
+- **Error Handling**: Graceful timer cleanup and edge case management
+
+#### Wellbeing Benefits
+
+- Reduces stress and anxiety through controlled breathing
+- Improves focus and mental clarity
+- Activates parasympathetic nervous system for relaxation
+- Evidence-based technique used by military professionals
+
+### 2. Digital Doodling Space
+
+Creative Expression & Art Therapy
+
+#### Digital Features
+
+- **Free-form Drawing**: HTML5 Canvas-based digital art creation
+- **Color Palette**: 12 predefined colors including primary, secondary, and neutral tones
+- **Brush Customization**: 6 brush sizes (2px to 30px) for varied expression
+- **Undo Functionality**: Step-by-step stroke reversal with history tracking
+- **Canvas Management**: Clear canvas and reset functionality
+- **Responsive Design**: Adapts to different screen sizes while maintaining aspect ratio
+
+#### Doodling Technical Implementation
+
+- **Canvas API Integration**: Direct HTML5 Canvas manipulation for smooth drawing
+- **Stroke Recording**: Complete drawing history with timestamps and properties
+- **Event Handling**: Mouse event tracking for precise drawing coordinates
+- **Memory Management**: Efficient stroke storage and canvas state management
+
+#### Creative Wellbeing Benefits
+
+- Provides creative outlet for emotional expression
+- Reduces stress through artistic engagement
+- Improves mindfulness and present-moment awareness
+- Supports non-verbal emotional processing
+
+## 🏗️ Architecture & Design
+
+### Component Structure
+
+```
+Activities/
+├── index.tsx (Main page component)
+├── components/
+│   ├── ActivityLibrary.tsx (Activity selection grid)
+│   ├── ActivityCard.tsx (Individual activity preview)
+│   ├── BreathBox.tsx (Breathing exercise interface)
+│   ├── DoodlingSpace.tsx (Digital art canvas)
+│   └── Modal.tsx (Activity modal container)
+├── infrastructure/
+│   ├── hooks/ (Custom React hooks)
+│   ├── helpers/ (Utility functions)
+│   ├── types/ (TypeScript definitions)
+│   ├── constants/ (Configuration & data)
+│   └── styles/ (CSS modules)
+```
+
+### Custom Hooks
+
+- **`useActivityLibrary`**: Manages activity selection and modal state
+- **`useBreathBox`**: Controls breathing exercise logic and timing
+- **`useDoodlingSpace`**: Handles canvas drawing and state management
+
+### Type Safety
+
+- Complete TypeScript coverage with 15+ interface definitions
+- Strict typing for activity data, state management, and event handling
+- Generic types for extensible activity system
+
+## 🎨 User Experience Features
+
+### Accessibility
+
+- **Keyboard Navigation**: Full keyboard support for all interactive elements
+- **Screen Reader Support**: ARIA labels and semantic HTML structure
+- **Visual Indicators**: Clear feedback for all user interactions
+- **Responsive Design**: Mobile-first approach with touch-friendly controls
+
+### Visual Design
+
+- **Modern Interface**: Clean, minimalist design with calming color palette
+- **Smooth Animations**: CSS transitions for engaging user interactions
+- **Progress Feedback**: Real-time visual indicators for activity progress
+- **Stress-Aware Colors**: Color coding for difficulty levels and stress states
+
+### Stress-Responsive Features
+
+- **Activity Recommendations**: Contextual guidance based on stress detection
+- **Calming Aesthetics**: Soothing color schemes and gentle animations
+- **Simplified UI**: Clean interface to reduce cognitive load during stress
+- **Positive Reinforcement**: Encouraging messaging and achievement recognition
+
+## 📊 Technical Specifications
+
+### Performance Optimizations
+
+- **Lazy Loading**: Components load only when needed
+- **Memoized Calculations**: Optimized re-renders with React optimization
+- **Efficient Timers**: Precise interval management with proper cleanup
+- **Canvas Optimization**: Smooth drawing with optimized event handling
+
+### Browser Compatibility
+
+- **Modern Browsers**: Full support for Chrome, Firefox, Safari, Edge
+- **Canvas API**: HTML5 Canvas with fallback support
+- **Touch Events**: Mobile and tablet touch gesture support
+- **Responsive Breakpoints**: Adaptive layout for all screen sizes
+
+### Testing Coverage
+
+- **Unit Tests**: 92+ comprehensive tests across all components and hooks
+- **Integration Tests**: End-to-end activity flow testing
+- **Edge Cases**: Robust error handling and boundary condition testing
+- **Performance Tests**: Timer accuracy and memory usage validation
+
+## 🔄 Integration Points
+
+### Stress Detection Integration
+
+- Receives stress state from parent components
+- Adapts activity recommendations based on stress levels
+- Provides stress-relief focused activity suggestions
+
+### Navigation Integration
+
+- Seamless integration with app navigation system
+- Sidebar toggle for enhanced user control
+- Modal system for focused activity engagement
+
+### Theme Integration
+
+- Consistent with app-wide design system
+- Adaptive color schemes based on user preferences
+- Responsive layout matching overall app aesthetics
+
+## 🚀 Future Enhancements
+
+### Planned Features
+
+- **Guided Meditation**: Audio-guided meditation sessions with timer
+- **Progress Tracking**: Long-term activity usage analytics
+- **Customization**: User-defined breathing patterns and canvas settings
+- **Social Features**: Shareable doodles and breathing achievements
+- **Biometric Integration**: Heart rate monitoring for breathing exercises
+
+### Scalability
+
+- **Plugin Architecture**: Extensible system for adding new activities
+- **Cloud Sync**: User preferences and progress synchronization
+- **Offline Support**: Local storage for offline activity access
+- **Multi-language**: Internationalization support for global users
+
+## 💡 Wellbeing Psychology Applied
+
+### Evidence-Based Design
+
+✅ **Breathing Techniques**: Research-backed Navy SEAL methodology
+✅ **Art Therapy**: Creative expression for emotional processing
+✅ **Mindfulness Integration**: Present-moment awareness through focused activities
+✅ **Stress Reduction**: Immediate relief tools for acute stress episodes
+✅ **Positive Psychology**: Achievement recognition and progress celebration
+
+### User-Centered Approach
+
+✅ **Accessibility First**: Inclusive design for all users
+✅ **Stress-Aware Interface**: Adaptive UI based on user state
+✅ **Gentle Guidance**: Non-pressured activity suggestions
+✅ **Immediate Relief**: Quick-access tools for stress management
+✅ **Personal Expression**: Creative outlets for individual needs
+
+This Activities module represents a comprehensive approach to digital wellness, combining evidence-based stress relief techniques with modern web technology to create an engaging, accessible, and effective mental health support tool. 🌟
