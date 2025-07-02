@@ -316,8 +316,17 @@ describe('useDoodlingSpace', () => {
 
       act(() => {
         result.current.startDrawing(startEvent);
+      });
+
+      act(() => {
         result.current.draw(moveEvent1);
+      });
+
+      act(() => {
         result.current.draw(moveEvent2);
+      });
+
+      act(() => {
         result.current.stopDrawing();
       });
 
@@ -340,8 +349,17 @@ describe('useDoodlingSpace', () => {
 
         act(() => {
           result.current.startDrawing(startEvent);
+        });
+
+        act(() => {
           result.current.draw(moveEvent1);
+        });
+
+        act(() => {
           result.current.draw(moveEvent2);
+        });
+
+        act(() => {
           result.current.stopDrawing();
         });
       }
@@ -380,8 +398,17 @@ describe('useDoodlingSpace', () => {
 
         act(() => {
           result.current.startDrawing(startEvent);
+        });
+
+        act(() => {
           result.current.draw(moveEvent1);
+        });
+
+        act(() => {
           result.current.draw(moveEvent2);
+        });
+
+        act(() => {
           result.current.stopDrawing();
         });
       }
@@ -416,7 +443,13 @@ describe('useDoodlingSpace', () => {
 
       act(() => {
         result.current.startDrawing(startEvent);
+      });
+
+      act(() => {
         result.current.draw(moveEvent1);
+      });
+
+      act(() => {
         result.current.draw(moveEvent2);
       });
 
@@ -526,8 +559,17 @@ describe('useDoodlingSpace', () => {
 
       act(() => {
         result.current.startDrawing(startEvent);
+      });
+
+      act(() => {
         result.current.draw(moveEvent1);
+      });
+
+      act(() => {
         result.current.draw(moveEvent2);
+      });
+
+      act(() => {
         result.current.stopDrawing();
       });
 
@@ -552,8 +594,17 @@ describe('useDoodlingSpace', () => {
 
         act(() => {
           result.current.startDrawing(startEvent);
+        });
+
+        act(() => {
           result.current.draw(moveEvent1);
+        });
+
+        act(() => {
           result.current.draw(moveEvent2);
+        });
+
+        act(() => {
           result.current.stopDrawing();
         });
       }

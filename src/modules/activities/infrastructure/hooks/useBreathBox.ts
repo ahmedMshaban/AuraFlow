@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { PHASE_DURATION, PHASE_LABELS } from '../constants/constants';
 import type { BreathPhase } from '../types/activities.types';
 
@@ -83,15 +83,16 @@ export const useBreathBox = () => {
   const [timeRemaining, setTimeRemaining] = useState(4);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const phaseStartRef = useRef<number>(0);
+  const elapsedTimeRef = useRef<number>(0);
   const phases = useRef<BreathPhase[]>(['inhale', 'hold1', 'exhale', 'hold2']);
 
   useEffect(() => {
     if (isActive) {
-      phaseStartRef.current = Date.now();
+      const intervalDuration = 100; // 100ms intervals
 
       intervalRef.current = setInterval(() => {
-        const elapsed = Date.now() - phaseStartRef.current;
+        elapsedTimeRef.current += intervalDuration;
+        const elapsed = elapsedTimeRef.current;
         const phaseProgress = (elapsed / PHASE_DURATION) * 100;
         const timeLeft = Math.ceil((PHASE_DURATION - elapsed) / 1000);
 
@@ -103,16 +104,17 @@ export const useBreathBox = () => {
           const nextIndex = (currentIndex + 1) % phases.current.length;
           const nextPhase = phases.current[nextIndex];
 
+          // Increment cycle count when completing a full cycle (from hold2 back to inhale)
+          if (currentPhase === 'hold2' && nextPhase === 'inhale') {
+            setCycleCount((prev) => prev + 1);
+          }
+
           setCurrentPhase(nextPhase);
           setProgress(0);
           setTimeRemaining(4);
-          phaseStartRef.current = Date.now();
-
-          if (nextPhase === 'inhale') {
-            setCycleCount((prev) => prev + 1);
-          }
+          elapsedTimeRef.current = 0;
         }
-      }, 100);
+      }, intervalDuration);
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -127,23 +129,24 @@ export const useBreathBox = () => {
     };
   }, [isActive, currentPhase]);
 
-  const handleStart = () => {
+  const handleStart = useCallback(() => {
     setIsActive(true);
-  };
+  }, []);
 
-  const handlePause = () => {
+  const handlePause = useCallback(() => {
     setIsActive(false);
-  };
+  }, []);
 
-  const handleStop = () => {
+  const handleStop = useCallback(() => {
     setIsActive(false);
     setCurrentPhase('inhale');
     setProgress(0);
     setCycleCount(0);
     setTimeRemaining(4);
-  };
+    elapsedTimeRef.current = 0;
+  }, []);
 
-  const getCurrentPhaseLabel = () => PHASE_LABELS[currentPhase];
+  const getCurrentPhaseLabel = useCallback(() => PHASE_LABELS[currentPhase], [currentPhase]);
 
   return {
     // State

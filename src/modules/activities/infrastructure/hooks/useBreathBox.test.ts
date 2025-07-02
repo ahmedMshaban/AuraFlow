@@ -180,20 +180,57 @@ describe('useBreathBox', () => {
       });
 
       expect(result.current.cycleCount).toBe(0);
-
-      // Complete one full cycle (16 seconds total)
-      act(() => {
-        vi.advanceTimersByTime(16000);
-      });
-
-      expect(result.current.cycleCount).toBe(1);
       expect(result.current.currentPhase).toBe('inhale');
 
-      // Complete another cycle
+      // Go through each phase and check
+      // Phase 1: inhale (0s) -> hold1 (4s)
       act(() => {
-        vi.advanceTimersByTime(16000);
+        vi.advanceTimersByTime(4000);
       });
+      expect(result.current.currentPhase).toBe('hold1');
+      expect(result.current.cycleCount).toBe(0);
 
+      // Phase 2: hold1 (4s) -> exhale (8s)
+      act(() => {
+        vi.advanceTimersByTime(4000);
+      });
+      expect(result.current.currentPhase).toBe('exhale');
+      expect(result.current.cycleCount).toBe(0);
+
+      // Phase 3: exhale (8s) -> hold2 (12s)
+      act(() => {
+        vi.advanceTimersByTime(4000);
+      });
+      expect(result.current.currentPhase).toBe('hold2');
+      expect(result.current.cycleCount).toBe(0);
+
+      // Phase 4: hold2 (12s) -> inhale (16s) - this should increment cycle count
+      act(() => {
+        vi.advanceTimersByTime(4000);
+      });
+      expect(result.current.currentPhase).toBe('inhale');
+      expect(result.current.cycleCount).toBe(1);
+
+      // Complete another cycle (4 phases of 4 seconds each)
+      act(() => {
+        vi.advanceTimersByTime(4000); // hold1
+      });
+      expect(result.current.currentPhase).toBe('hold1');
+
+      act(() => {
+        vi.advanceTimersByTime(4000); // exhale
+      });
+      expect(result.current.currentPhase).toBe('exhale');
+
+      act(() => {
+        vi.advanceTimersByTime(4000); // hold2
+      });
+      expect(result.current.currentPhase).toBe('hold2');
+
+      act(() => {
+        vi.advanceTimersByTime(4000); // back to inhale
+      });
+      expect(result.current.currentPhase).toBe('inhale');
       expect(result.current.cycleCount).toBe(2);
     });
 
@@ -447,11 +484,14 @@ describe('useBreathBox', () => {
         result.current.handleStart();
       });
 
-      // Complete multiple cycles
-      for (let i = 0; i < 5; i++) {
-        act(() => {
-          vi.advanceTimersByTime(16000); // One complete cycle
-        });
+      // Complete multiple cycles - need to advance time in individual phases
+      for (let cycle = 0; cycle < 5; cycle++) {
+        // Complete one full cycle (4 phases)
+        for (let phase = 0; phase < 4; phase++) {
+          act(() => {
+            vi.advanceTimersByTime(4000); // One phase (4 seconds)
+          });
+        }
       }
 
       expect(result.current.cycleCount).toBe(5);
@@ -466,10 +506,15 @@ describe('useBreathBox', () => {
         result.current.handleStart();
       });
 
-      // Run for 10 complete cycles (160 seconds)
-      act(() => {
-        vi.advanceTimersByTime(160000);
-      });
+      // Run for 10 complete cycles - need to advance time in phases
+      for (let cycle = 0; cycle < 10; cycle++) {
+        // Complete one full cycle (4 phases)
+        for (let phase = 0; phase < 4; phase++) {
+          act(() => {
+            vi.advanceTimersByTime(4000); // One phase (4 seconds)
+          });
+        }
+      }
 
       expect(result.current.cycleCount).toBe(10);
       expect(result.current.currentPhase).toBe('inhale');
@@ -537,17 +582,22 @@ describe('useBreathBox', () => {
       expect(result.current.isActive).toBe(true);
       expect(result.current.currentPhase).toBe('inhale');
 
-      // 2. Complete first cycle
-      act(() => {
-        vi.advanceTimersByTime(16000);
-      });
+      // 2. Complete first cycle (advance through all 4 phases)
+      for (let phase = 0; phase < 4; phase++) {
+        act(() => {
+          vi.advanceTimersByTime(4000);
+        });
+      }
 
       expect(result.current.cycleCount).toBe(1);
       expect(result.current.currentPhase).toBe('inhale');
 
-      // 3. Pause mid-second cycle
+      // 3. Pause mid-second cycle (advance through 2 phases to reach exhale)
       act(() => {
-        vi.advanceTimersByTime(8000); // Halfway through second cycle
+        vi.advanceTimersByTime(4000); // inhale -> hold1
+      });
+      act(() => {
+        vi.advanceTimersByTime(4000); // hold1 -> exhale
       });
 
       expect(result.current.currentPhase).toBe('exhale');
@@ -558,10 +608,17 @@ describe('useBreathBox', () => {
 
       expect(result.current.isActive).toBe(false);
 
-      // 4. Resume and complete session
+      // 4. Resume and complete second cycle
       act(() => {
         result.current.handleStart();
-        vi.advanceTimersByTime(8000); // Complete second cycle
+      });
+
+      // Complete remaining phases of second cycle (exhale -> hold2 -> inhale)
+      act(() => {
+        vi.advanceTimersByTime(4000); // exhale -> hold2
+      });
+      act(() => {
+        vi.advanceTimersByTime(4000); // hold2 -> inhale (completes cycle 2)
       });
 
       expect(result.current.cycleCount).toBe(2);
