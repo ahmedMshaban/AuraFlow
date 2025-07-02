@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ACTIVITIES_DATA, ACTIVITY_ICONS } from '../constants/activities.constants';
+import { ACTIVITIES_DATA, ACTIVITY_ICONS } from '../constants/constants';
 import type { ActivityData } from '../types/activities.types';
 
 export const useActivityLibrary = () => {

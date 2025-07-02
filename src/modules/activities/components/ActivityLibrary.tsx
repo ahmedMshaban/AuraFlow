@@ -2,6 +2,7 @@ import { useActivityLibrary } from '../infrastructure/hooks/useActivityLibrary';
 import ActivityCard from './ActivityCard';
 import Modal from './Modal';
 import BreathBox from './BreathBox';
+import DoodlingSpace from './DoodlingSpace';
 import styles from '../infrastructure/styles/ActivityLibrary.module.css';
 
 const ActivityLibrary = () => {
@@ -11,6 +12,8 @@ const ActivityLibrary = () => {
     switch (componentKey) {
       case 'BreathBox':
         return <BreathBox />;
+      case 'DoodlingSpace':
+        return <DoodlingSpace />;
       case 'MeditationPlaceholder':
         return (
           <div className={styles.placeholderComponent}>

@@ -1,6 +1,3 @@
-// Helper functions for activities module
-// This can be expanded based on future requirements
-
 export const getActivityDescription = (isStressed: boolean) => {
   return isStressed
     ? 'Focus on calming activities to reduce stress'
@@ -32,6 +29,8 @@ export const getCategoryColor = (category: string): string => {
       return '#764ba2';
     case 'exercise':
       return '#50c878';
+    case 'creative':
+      return '#ff6b6b';
     default:
       return '#667eea';
   }

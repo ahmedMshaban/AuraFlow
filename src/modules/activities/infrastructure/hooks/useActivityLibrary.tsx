@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import BreathBox from '../../components/BreathBox';
-import { ACTIVITIES, ACTIVITY_ICONS } from '../constants/activities';
+import { ACTIVITIES, ACTIVITY_ICONS } from '../constants/constants';
 import type { Activity, ActivityModalState } from '../types/activities.types';
 
 export const useActivityLibrary = () => {

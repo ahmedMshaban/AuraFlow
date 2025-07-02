@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { PHASE_DURATION, PHASE_LABELS } from '../constants/activities.constants';
+import { PHASE_DURATION, PHASE_LABELS } from '../constants/constants';
 import type { BreathPhase } from '../types/activities.types';
 
 export const useBreathBox = () => {
