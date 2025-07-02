@@ -35,8 +35,3 @@ export const getCategoryColor = (category: string): string => {
       return '#667eea';
   }
 };
-
-export const formatActivityData = (data: unknown) => {
-  // Add formatting logic when data structure is defined
-  return data;
-};
