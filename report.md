@@ -362,4 +362,4 @@ Activities/
 ✅ **Immediate Relief**: Quick-access tools for stress management
 ✅ **Personal Expression**: Creative outlets for individual needs
 
-This Activities module represents a comprehensive approach to digital wellness, combining evidence-based stress relief techniques with modern web technology to create an engaging, accessible, and effective mental health support tool. 🌟
+This Activities module represents a comprehensive approach to digital wellness, combining evidence-based stress relief techniques with modern web technology to create an engaging, accessible, and effective mental health support tool.
