@@ -94,6 +94,7 @@ describe('Register', () => {
         isGoogleUser: false,
         currentUser: null,
         setCurrentUser: vi.fn(),
+        loading: false,
       });
     });
 
@@ -203,6 +204,7 @@ describe('Register', () => {
         isGoogleUser: false,
         currentUser: { uid: '123', email: 'test@example.com' } as unknown as User,
         setCurrentUser: vi.fn(),
+        loading: false,
       });
     });
 
@@ -240,6 +242,7 @@ describe('Register', () => {
         isGoogleUser: false,
         currentUser: null,
         setCurrentUser: vi.fn(),
+        loading: false,
       });
     });
 
@@ -293,6 +296,7 @@ describe('Register', () => {
         isGoogleUser: false,
         currentUser: null,
         setCurrentUser: vi.fn(),
+        loading: false,
       });
 
       render(
@@ -312,6 +316,7 @@ describe('Register', () => {
         isGoogleUser: false,
         currentUser: null,
         setCurrentUser: vi.fn(),
+        loading: false,
       });
 
       const { rerender } = render(
@@ -329,6 +334,7 @@ describe('Register', () => {
         isGoogleUser: false,
         currentUser: { uid: '123', email: 'test@example.com' } as unknown as User,
         setCurrentUser: vi.fn(),
+        loading: false,
       });
 
       rerender(
@@ -349,6 +355,7 @@ describe('Register', () => {
         isGoogleUser: false,
         currentUser: null,
         setCurrentUser: vi.fn(),
+        loading: false,
       });
     });
 

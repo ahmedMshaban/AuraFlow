@@ -99,6 +99,7 @@ describe('Login', () => {
       isEmailUser: false,
       isGoogleUser: false,
       setCurrentUser: vi.fn(),
+      loading: false,
     });
 
     mockUseLogin.mockReturnValue({
@@ -146,6 +147,7 @@ describe('Login', () => {
       isEmailUser: false,
       isGoogleUser: false,
       setCurrentUser: vi.fn(),
+      loading: false,
     });
 
     renderWithRouter(<Login />);
