@@ -2,6 +2,7 @@ import type { TaskStatus } from '@/shared/types/task.types';
 
 /**
  * Calculate task status based on due date and current status
+ * Tasks due today are considered "pending" (upcoming) to be more encouraging
  */
 export function calculateTaskStatus(dueDate: Date, currentStatus: TaskStatus): TaskStatus {
   if (currentStatus === 'completed') {
@@ -9,10 +10,17 @@ export function calculateTaskStatus(dueDate: Date, currentStatus: TaskStatus): T
   }
 
   const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+  // Set to end of today - tasks due today should still be "pending"
+  const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
-  if (dueDate < today) {
-    return 'overdue';
+  if (dueDate <= endOfToday) {
+    // Check if the due date is actually before today (not including today)
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    if (dueDate < startOfToday) {
+      return 'overdue';
+    }
+    // Tasks due today remain pending
+    return 'pending';
   }
 
   return 'pending';

@@ -1,4 +1,5 @@
 import type { TaskStats, Task } from '@/shared/types/task.types';
+import limitTasks from './limitTasks';
 
 /**
  * Get task tabs configuration based on stress mode and task data
@@ -49,21 +50,10 @@ const getTabsForMode = (
   description: string;
   hasMore?: boolean; // Indicates if there are more tasks than the displayed limit
 }> => {
-  const TASK_LIMIT = 5;
-
-  // Helper function to limit tasks and add hasMore indicator
-  const limitTasks = (tasks: Task[]) => {
-    if (!isHomePage) return { limitedTasks: tasks, hasMore: false };
-    return {
-      limitedTasks: tasks.slice(0, TASK_LIMIT),
-      hasMore: tasks.length > TASK_LIMIT,
-    };
-  };
-
   if (isCurrentlyStressed) {
     // STRESS MODE: Simplified tabs focusing on immediate priorities
     const priorityTasks = [...overdueTasks, ...upcomingTasks.filter((task) => task.priority === 'high')];
-    const { limitedTasks, hasMore } = limitTasks(priorityTasks);
+    const { limitedTasks, hasMore } = limitTasks(priorityTasks, isHomePage);
 
     return [
       {
@@ -78,9 +68,9 @@ const getTabsForMode = (
     ];
   } else {
     // NORMAL MODE: Full tab experience
-    const { limitedTasks: limitedUpcoming, hasMore: upcomingHasMore } = limitTasks(upcomingTasks);
-    const { limitedTasks: limitedOverdue, hasMore: overdueHasMore } = limitTasks(overdueTasks);
-    const { limitedTasks: limitedCompleted, hasMore: completedHasMore } = limitTasks(completedTasks);
+    const { limitedTasks: limitedUpcoming, hasMore: upcomingHasMore } = limitTasks(upcomingTasks, isHomePage);
+    const { limitedTasks: limitedOverdue, hasMore: overdueHasMore } = limitTasks(overdueTasks, isHomePage);
+    const { limitedTasks: limitedCompleted, hasMore: completedHasMore } = limitTasks(completedTasks, isHomePage);
 
     return [
       {

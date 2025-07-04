@@ -695,15 +695,15 @@ describe('Tasks', () => {
     });
     it('shows "View All" link for priority tab in stress mode when there are many priority tasks', () => {
       // Create many high priority upcoming tasks to ensure we have more than 5 priority tasks total
-      const manyUpcomingHighPriorityTasks = Array.from({ length: 8 }, (_, index) => 
-        createMockTask({ 
-          id: `upcoming-${index + 1}`, 
+      const manyUpcomingHighPriorityTasks = Array.from({ length: 8 }, (_, index) =>
+        createMockTask({
+          id: `upcoming-${index + 1}`,
           title: `upcoming Task ${index + 1}`,
-          priority: 'high' // All high priority
-        })
+          priority: 'high', // All high priority
+        }),
       );
       const manyOverdueTasks = createManyTasks(2, 'overdue');
-      
+
       const propsWithManyPriority = {
         ...defaultProps,
         upcomingTasks: manyUpcomingHighPriorityTasks,
@@ -714,7 +714,7 @@ describe('Tasks', () => {
       };
 
       render(<Tasks {...propsWithManyPriority} />);
-      
+
       const totalPriorityTasks = 2 + 8; // 2 overdue + 8 high priority upcoming = 10 total
       expect(screen.getByText(`View All Priority Tasks (${totalPriorityTasks})`)).toBeDefined();
     });

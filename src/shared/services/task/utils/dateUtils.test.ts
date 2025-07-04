@@ -9,10 +9,24 @@ describe('dateUtils', () => {
       expect(result).toBe('completed');
     });
 
-    it('should return overdue status for pending tasks past due date', () => {
-      const pastDate = new Date('2024-01-01');
-      const result = calculateTaskStatus(pastDate, 'pending');
+    it('should return overdue status for pending tasks past due date (before today)', () => {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const result = calculateTaskStatus(yesterday, 'pending');
       expect(result).toBe('overdue');
+    });
+
+    it('should return pending status for tasks due today', () => {
+      const today = new Date();
+      const result = calculateTaskStatus(today, 'pending');
+      expect(result).toBe('pending');
+    });
+
+    it('should return pending status for tasks due later today', () => {
+      const laterToday = new Date();
+      laterToday.setHours(23, 59, 0, 0); // Later today
+      const result = calculateTaskStatus(laterToday, 'pending');
+      expect(result).toBe('pending');
     });
 
     it('should return pending status for pending tasks not yet due', () => {
@@ -20,6 +34,13 @@ describe('dateUtils', () => {
       futureDate.setDate(futureDate.getDate() + 1);
       const result = calculateTaskStatus(futureDate, 'pending');
       expect(result).toBe('pending');
+    });
+
+    it('should return overdue status for tasks that were due earlier this week', () => {
+      const earlierThisWeek = new Date();
+      earlierThisWeek.setDate(earlierThisWeek.getDate() - 3);
+      const result = calculateTaskStatus(earlierThisWeek, 'pending');
+      expect(result).toBe('overdue');
     });
   });
 

@@ -62,7 +62,7 @@ describe('getTabsForMode', () => {
       ];
       const taskStats = createMockTaskStats({ pending: 2 });
 
-      const result = getTabsForMode(upcomingTasks, [], [], taskStats, isStressed);
+      const result = getTabsForMode(upcomingTasks, [], [], taskStats, isStressed, false);
       const upcomingTab = result.find((tab) => tab.key === 'upcoming');
 
       expect(upcomingTab).toEqual({
@@ -72,6 +72,7 @@ describe('getTabsForMode', () => {
         tasks: upcomingTasks,
         color: 'blue',
         description: 'Plan your future tasks',
+        hasMore: false,
       });
     });
 
@@ -89,6 +90,7 @@ describe('getTabsForMode', () => {
         tasks: overdueTasks,
         color: 'red',
         description: 'Catch up on missed deadlines',
+        hasMore: false,
       });
     });
 
@@ -110,6 +112,7 @@ describe('getTabsForMode', () => {
         tasks: completedTasks,
         color: 'green',
         description: 'Celebrate your achievements',
+        hasMore: false,
       });
     });
 
@@ -183,6 +186,7 @@ describe('getTabsForMode', () => {
         tasks: expect.arrayContaining([expect.objectContaining({ id: '1' }), expect.objectContaining({ id: '2' })]),
         color: 'orange',
         description: 'Focus on what matters most',
+        hasMore: false,
       });
     });
 
@@ -225,7 +229,7 @@ describe('getTabsForMode', () => {
       ];
       const taskStats = createMockTaskStats();
 
-      const result = getTabsForMode(upcomingTasks, [], [], taskStats, isStressed);
+      const result = getTabsForMode(upcomingTasks, [], [], taskStats, isStressed, false);
       const priorityTasks = result[0].tasks;
 
       expect(priorityTasks).toHaveLength(2);
@@ -240,7 +244,7 @@ describe('getTabsForMode', () => {
       ];
       const taskStats = createMockTaskStats();
 
-      const result = getTabsForMode(upcomingTasks, [], [], taskStats, isStressed);
+      const result = getTabsForMode(upcomingTasks, [], [], taskStats, isStressed, false);
 
       // Only exact 'high' match should be included
       expect(result[0].tasks).toHaveLength(1);

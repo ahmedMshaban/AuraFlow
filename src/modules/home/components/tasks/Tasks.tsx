@@ -147,23 +147,20 @@ const Tasks = ({
                   onDelete={deleteTask}
                 />
               ))}
-              
+
               {/* Show "View All" link when on home page and there are more tasks */}
               {isHomePage && currentTab.hasMore && (
                 <Box
                   textAlign="center"
-                  pt={3}
+                  py={3}
                 >
                   <RouterLink to="/tasks">
-                    <Text
-                      as="span"
-                      color="blue.500"
-                      fontWeight="medium"
-                      cursor="pointer"
-                      _hover={{ textDecoration: 'underline' }}
+                    <Button
+                      colorScheme="blue"
+                      size="sm"
                     >
                       View All {currentTab.label} Tasks ({currentTab.count})
-                    </Text>
+                    </Button>
                   </RouterLink>
                 </Box>
               )}
