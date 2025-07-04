@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box, Button, VStack, HStack, Text, Spinner } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router';
 
 import type { TasksProps } from '@/shared/types/task.types';
 import TaskForm from './TaskForm';
@@ -18,11 +19,12 @@ const Tasks = ({
   toggleTaskStatus,
   isCreating,
   isCurrentlyStressed,
+  isHomePage = true, // Default to home page mode
 }: TasksProps) => {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'overdue' | 'completed' | 'priority'>('upcoming');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const tabs = getTabsForMode(upcomingTasks, overdueTasks, completedTasks, taskStats, isCurrentlyStressed);
+  const tabs = getTabsForMode(upcomingTasks, overdueTasks, completedTasks, taskStats, isCurrentlyStressed, isHomePage);
 
   // Reset active tab if it doesn't exist in current mode
   const validTab = tabs.find((tab) => tab.key === activeTab);
@@ -136,14 +138,36 @@ const Tasks = ({
               )}
             </Box>
           ) : (
-            currentTab.tasks.map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                onToggleStatus={toggleTaskStatus}
-                onDelete={deleteTask}
-              />
-            ))
+            <>
+              {currentTab.tasks.map((task) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  onToggleStatus={toggleTaskStatus}
+                  onDelete={deleteTask}
+                />
+              ))}
+              
+              {/* Show "View All" link when on home page and there are more tasks */}
+              {isHomePage && currentTab.hasMore && (
+                <Box
+                  textAlign="center"
+                  pt={3}
+                >
+                  <RouterLink to="/tasks">
+                    <Text
+                      as="span"
+                      color="blue.500"
+                      fontWeight="medium"
+                      cursor="pointer"
+                      _hover={{ textDecoration: 'underline' }}
+                    >
+                      View All {currentTab.label} Tasks ({currentTab.count})
+                    </Text>
+                  </RouterLink>
+                </Box>
+              )}
+            </>
           )}
         </VStack>
       </Box>

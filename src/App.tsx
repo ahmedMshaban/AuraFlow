@@ -10,6 +10,7 @@ import Login from './modules/login';
 import Register from './modules/register';
 import Home from './modules/home';
 import Activities from './modules/activities';
+import TasksPage from './modules/tasks';
 import './shared/adaptations/themes.css';
 import './App.css';
 
@@ -52,6 +53,14 @@ function App() {
       element: (
         <RouteGuard>
           <Activities />
+        </RouteGuard>
+      ),
+    },
+    {
+      path: '/tasks',
+      element: (
+        <RouteGuard>
+          <TasksPage />
         </RouteGuard>
       ),
     },

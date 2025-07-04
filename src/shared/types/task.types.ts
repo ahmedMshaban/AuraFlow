@@ -68,6 +68,7 @@ export interface TasksProps {
   toggleTaskStatus: (taskId: string, currentStatus: string) => Promise<void>;
   isCreating: boolean;
   isCurrentlyStressed: boolean;
+  isHomePage?: boolean; // Optional prop to determine if it's on the home page (with limits) or tasks page (full view)
 }
 
 export interface TaskFormProps {

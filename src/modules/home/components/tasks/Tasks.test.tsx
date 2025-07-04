@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import React, { type ReactNode } from 'react';
 import Tasks from './Tasks';
 import type { Task, TasksProps, TaskStats } from '@/shared/types/task.types';
-import type { ReactNode } from 'react';
 
 // Mock child components
 vi.mock('./TaskForm', () => ({
@@ -43,6 +43,18 @@ vi.mock('./TaskItem', () => ({
       <button onClick={() => onToggleStatus(task.id, task.status)}>Toggle Status</button>
       <button onClick={() => onDelete(task.id)}>Delete</button>
     </div>
+  ),
+}));
+
+// Mock react-router
+vi.mock('react-router', () => ({
+  Link: ({ to, children }: { to: string; children: ReactNode }) => (
+    <a
+      href={to}
+      data-testid="router-link"
+    >
+      {children}
+    </a>
   ),
 }));
 
@@ -96,13 +108,36 @@ vi.mock('@chakra-ui/react', () => ({
       {children}
     </div>
   ),
-  Text: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => <span {...props}>{children}</span>,
+  Text: ({ children, as, ...props }: { children: ReactNode; as?: string; [key: string]: unknown }) => {
+    const Component = as || 'span';
+    return React.createElement(Component, props, children);
+  },
   Spinner: ({ size, color }: { size?: string; color?: string }) => (
     <div
       data-testid="spinner"
       data-size={size}
       data-color={color}
     />
+  ),
+  Link: ({
+    children,
+    color,
+    fontWeight,
+    ...props
+  }: {
+    children: ReactNode;
+    color?: string;
+    fontWeight?: string;
+    [key: string]: unknown;
+  }) => (
+    <a
+      data-testid="chakra-link"
+      data-color={color}
+      data-fontweight={fontWeight}
+      {...props}
+    >
+      {children}
+    </a>
   ),
 }));
 
@@ -114,46 +149,68 @@ vi.mock('../../infrastructure/helpers/getTasksTabsForMode', () => ({
     completedTasks: Task[],
     taskStats: TaskStats,
     isCurrentlyStressed: boolean,
+    isHomePage: boolean = false,
   ) => {
+    const TASK_LIMIT = 5;
+
+    // Helper function to limit tasks and add hasMore indicator
+    const limitTasks = (tasks: Task[]) => {
+      if (!isHomePage) return { limitedTasks: tasks, hasMore: false };
+      return {
+        limitedTasks: tasks.slice(0, TASK_LIMIT),
+        hasMore: tasks.length > TASK_LIMIT,
+      };
+    };
+
     if (isCurrentlyStressed) {
       // Stress mode: only priority tab
       const priorityTasks = [...overdueTasks, ...upcomingTasks.filter((task) => task.priority === 'high')];
+      const { limitedTasks, hasMore } = limitTasks(priorityTasks);
+
       return [
         {
           key: 'priority',
           label: 'Priority',
           count: priorityTasks.length,
-          tasks: priorityTasks,
+          tasks: limitedTasks,
           color: 'orange',
           description: 'Focus on what matters most',
+          hasMore,
         },
       ];
     } else {
       // Normal mode: all tabs
+      const { limitedTasks: limitedUpcoming, hasMore: upcomingHasMore } = limitTasks(upcomingTasks);
+      const { limitedTasks: limitedOverdue, hasMore: overdueHasMore } = limitTasks(overdueTasks);
+      const { limitedTasks: limitedCompleted, hasMore: completedHasMore } = limitTasks(completedTasks);
+
       return [
         {
           key: 'upcoming',
           label: 'Upcoming',
           count: taskStats.pending,
-          tasks: upcomingTasks,
+          tasks: limitedUpcoming,
           color: 'blue',
           description: 'Plan your future tasks',
+          hasMore: upcomingHasMore,
         },
         {
           key: 'overdue',
           label: 'Overdue',
           count: taskStats.overdue,
-          tasks: overdueTasks,
+          tasks: limitedOverdue,
           color: 'red',
           description: 'Catch up on missed deadlines',
+          hasMore: overdueHasMore,
         },
         {
           key: 'completed',
           label: 'Completed',
           count: taskStats.completed,
-          tasks: completedTasks,
+          tasks: limitedCompleted,
           color: 'green',
           description: 'Celebrate your achievements',
+          hasMore: completedHasMore,
         },
       ];
     }
@@ -520,6 +577,163 @@ describe('Tasks', () => {
       };
 
       expect(() => render(<Tasks {...complexProps} />)).not.toThrow();
+    });
+  });
+
+  describe('Home Page Mode (Task Limiting)', () => {
+    const createManyTasks = (count: number, prefix: string) => {
+      return Array.from({ length: count }, (_, index) =>
+        createMockTask({
+          id: `${prefix}-${index + 1}`,
+          title: `${prefix} Task ${index + 1}`,
+          priority: index < 2 ? 'high' : 'medium', // First 2 are high priority for stress mode testing
+        }),
+      );
+    };
+
+    it('shows limited tasks on home page (normal mode)', () => {
+      const manyUpcomingTasks = createManyTasks(7, 'upcoming');
+      const propsWithManyTasks = {
+        ...defaultProps,
+        upcomingTasks: manyUpcomingTasks,
+        taskStats: createMockTaskStats({ pending: 7 }),
+        isHomePage: true,
+      };
+
+      render(<Tasks {...propsWithManyTasks} />);
+
+      // Should only show first 5 tasks
+      expect(screen.getByTestId('task-item-upcoming-1')).toBeDefined();
+      expect(screen.getByTestId('task-item-upcoming-5')).toBeDefined();
+      expect(screen.queryByTestId('task-item-upcoming-6')).toBeNull();
+      expect(screen.queryByTestId('task-item-upcoming-7')).toBeNull();
+    });
+
+    it('shows "View All" link when there are more than 5 tasks in home page mode', () => {
+      const manyUpcomingTasks = createManyTasks(7, 'upcoming');
+      const propsWithManyTasks = {
+        ...defaultProps,
+        upcomingTasks: manyUpcomingTasks,
+        taskStats: createMockTaskStats({ pending: 7 }),
+        isHomePage: true,
+      };
+
+      render(<Tasks {...propsWithManyTasks} />);
+
+      expect(screen.getByText('View All Upcoming Tasks (7)')).toBeDefined();
+      expect(screen.getByTestId('router-link')).toBeDefined();
+      expect(screen.getByTestId('router-link').getAttribute('href')).toBe('/tasks');
+    });
+
+    it('does not show "View All" link when there are 5 or fewer tasks', () => {
+      const fewUpcomingTasks = createManyTasks(3, 'upcoming');
+      const propsWithFewTasks = {
+        ...defaultProps,
+        upcomingTasks: fewUpcomingTasks,
+        taskStats: createMockTaskStats({ pending: 3 }),
+        isHomePage: true,
+      };
+
+      render(<Tasks {...propsWithFewTasks} />);
+
+      expect(screen.queryByText(/View All/)).toBeNull();
+      expect(screen.queryByTestId('router-link')).toBeNull();
+    });
+
+    it('does not show "View All" link on full tasks page (isHomePage=false)', () => {
+      const manyUpcomingTasks = createManyTasks(7, 'upcoming');
+      const propsWithManyTasks = {
+        ...defaultProps,
+        upcomingTasks: manyUpcomingTasks,
+        taskStats: createMockTaskStats({ pending: 7 }),
+        isHomePage: false,
+      };
+
+      render(<Tasks {...propsWithManyTasks} />);
+
+      // Should show all tasks
+      expect(screen.getByTestId('task-item-upcoming-1')).toBeDefined();
+      expect(screen.getByTestId('task-item-upcoming-7')).toBeDefined();
+      // Should not show "View All" link
+      expect(screen.queryByText(/View All/)).toBeNull();
+    });
+
+    it('shows "View All" link for overdue tab when there are many overdue tasks', () => {
+      const manyOverdueTasks = createManyTasks(6, 'overdue');
+      const propsWithManyOverdue = {
+        ...defaultProps,
+        overdueTasks: manyOverdueTasks,
+        taskStats: createMockTaskStats({ overdue: 6 }),
+        isHomePage: true,
+      };
+
+      render(<Tasks {...propsWithManyOverdue} />);
+
+      // Switch to overdue tab
+      const overdueTab = screen.getByText('Overdue (6)');
+      fireEvent.click(overdueTab);
+
+      expect(screen.getByText('View All Overdue Tasks (6)')).toBeDefined();
+    });
+
+    it('shows "View All" link for completed tab when there are many completed tasks', () => {
+      const manyCompletedTasks = createManyTasks(8, 'completed');
+      const propsWithManyCompleted = {
+        ...defaultProps,
+        completedTasks: manyCompletedTasks,
+        taskStats: createMockTaskStats({ completed: 8 }),
+        isHomePage: true,
+      };
+
+      render(<Tasks {...propsWithManyCompleted} />);
+
+      // Switch to completed tab
+      const completedTab = screen.getByText('Completed (8)');
+      fireEvent.click(completedTab);
+
+      expect(screen.getByText('View All Completed Tasks (8)')).toBeDefined();
+    });
+    it('shows "View All" link for priority tab in stress mode when there are many priority tasks', () => {
+      // Create many high priority upcoming tasks to ensure we have more than 5 priority tasks total
+      const manyUpcomingHighPriorityTasks = Array.from({ length: 8 }, (_, index) => 
+        createMockTask({ 
+          id: `upcoming-${index + 1}`, 
+          title: `upcoming Task ${index + 1}`,
+          priority: 'high' // All high priority
+        })
+      );
+      const manyOverdueTasks = createManyTasks(2, 'overdue');
+      
+      const propsWithManyPriority = {
+        ...defaultProps,
+        upcomingTasks: manyUpcomingHighPriorityTasks,
+        overdueTasks: manyOverdueTasks,
+        taskStats: createMockTaskStats({ pending: 8, overdue: 2 }),
+        isCurrentlyStressed: true,
+        isHomePage: true,
+      };
+
+      render(<Tasks {...propsWithManyPriority} />);
+      
+      const totalPriorityTasks = 2 + 8; // 2 overdue + 8 high priority upcoming = 10 total
+      expect(screen.getByText(`View All Priority Tasks (${totalPriorityTasks})`)).toBeDefined();
+    });
+
+    it('defaults to isHomePage=true when prop is not provided', () => {
+      const manyUpcomingTasks = createManyTasks(7, 'upcoming');
+      const propsWithoutHomePage = {
+        ...defaultProps,
+        upcomingTasks: manyUpcomingTasks,
+        taskStats: createMockTaskStats({ pending: 7 }),
+        // isHomePage prop omitted to test default behavior
+      };
+
+      render(<Tasks {...propsWithoutHomePage} />);
+
+      // Should still show limited tasks and "View All" link since default is true
+      expect(screen.getByTestId('task-item-upcoming-5')).toBeDefined();
+      expect(screen.queryByTestId('task-item-upcoming-6')).toBeNull();
+      expect(screen.getByText('View All Upcoming Tasks (7)')).toBeDefined();
     });
   });
 });
