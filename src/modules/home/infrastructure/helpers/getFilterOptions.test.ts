@@ -17,11 +17,12 @@ describe('getFilterOptions', () => {
     it('should return all options when user is not stressed', () => {
       const result = getFilterOptions(false);
 
-      expect(result).toHaveLength(3);
+      expect(result).toHaveLength(4);
       expect(result).toEqual([
         { label: 'My Day', value: 'my-day' },
         { label: 'My Week', value: 'my-week' },
         { label: 'My Month', value: 'my-month' },
+        { label: 'All Time', value: 'all-time' },
       ]);
     });
   });
@@ -44,7 +45,7 @@ describe('getFilterOptions', () => {
       const result = getFilterOptions(false);
 
       expect(Array.isArray(result)).toBe(true);
-      expect(result).toHaveLength(3);
+      expect(result).toHaveLength(4);
 
       result.forEach((option) => {
         expect(option).toHaveProperty('label');
@@ -55,7 +56,7 @@ describe('getFilterOptions', () => {
     });
 
     it('should have valid ViewType values', () => {
-      const validViewTypes: ViewType[] = ['my-day', 'my-week', 'my-month'];
+      const validViewTypes: ViewType[] = ['my-day', 'my-week', 'my-month', 'all-time'];
 
       const stressedResult = getFilterOptions(true);
       const normalResult = getFilterOptions(false);
@@ -115,6 +116,7 @@ describe('getFilterOptions', () => {
       expect(result1[0].value).toBe('my-day');
       expect(result1[1].value).toBe('my-week');
       expect(result1[2].value).toBe('my-month');
+      expect(result1[3].value).toBe('all-time');
     });
 
     it('should return consistent results for same stress state', () => {
@@ -130,7 +132,7 @@ describe('getFilterOptions', () => {
     it('should have meaningful and user-friendly labels', () => {
       const normalOptions = getFilterOptions(false);
 
-      const expectedLabels = ['My Day', 'My Week', 'My Month'];
+      const expectedLabels = ['My Day', 'My Week', 'My Month', 'All Time'];
       const actualLabels = normalOptions.map((opt) => opt.label);
 
       expect(actualLabels).toEqual(expectedLabels);
@@ -162,7 +164,7 @@ describe('getFilterOptions', () => {
       result1.push({ label: 'Test', value: 'my-day' });
 
       // Second result should be unaffected
-      expect(result2).toHaveLength(3);
+      expect(result2).toHaveLength(4);
       expect(result2).not.toEqual(result1);
     });
   });
@@ -170,7 +172,7 @@ describe('getFilterOptions', () => {
   describe('Edge cases and boolean handling', () => {
     it('should handle explicitly false stress state', () => {
       const result = getFilterOptions(false);
-      expect(result).toHaveLength(3);
+      expect(result).toHaveLength(4);
     });
 
     it('should handle explicitly true stress state', () => {
@@ -181,7 +183,7 @@ describe('getFilterOptions', () => {
     it('should treat falsy values as not stressed', () => {
       // TypeScript would prevent this, but testing runtime behavior
       const result = getFilterOptions(false);
-      expect(result).toHaveLength(3);
+      expect(result).toHaveLength(4);
     });
 
     it('should treat truthy values as stressed', () => {
@@ -198,9 +200,9 @@ describe('getFilterOptions', () => {
       const duringStress = getFilterOptions(true);
       const afterStress = getFilterOptions(false);
 
-      expect(beforeStress).toHaveLength(3);
+      expect(beforeStress).toHaveLength(4);
       expect(duringStress).toHaveLength(1);
-      expect(afterStress).toHaveLength(3);
+      expect(afterStress).toHaveLength(4);
       expect(beforeStress).toEqual(afterStress);
     });
 

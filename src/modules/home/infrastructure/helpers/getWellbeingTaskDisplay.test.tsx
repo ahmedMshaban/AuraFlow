@@ -293,6 +293,23 @@ describe('getWellbeingTaskDisplay', () => {
       expect(weekResult.label).toBe('tasks completed');
       expect(monthResult.label).toBe('tasks completed');
     });
+
+    it('should handle all-time view in normal mode - same as other views', () => {
+      const taskStats = createTaskStats({
+        completed: 7,
+        todayDue: 10,
+        thisWeekDue: 15,
+        thisMonthDue: 25,
+        pending: 30,
+      });
+
+      const allTimeResult = getWellbeingTaskDisplay(taskStats, 'all-time', false);
+
+      // Should show completed count regardless of view in normal mode
+      expect(allTimeResult.count).toBe(7);
+      expect(allTimeResult.label).toBe('tasks completed');
+      expect(allTimeResult.icon).toBe('🌟'); // Since 7 is between 6-10
+    });
   });
 
   describe('Icon progression logic', () => {

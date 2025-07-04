@@ -49,8 +49,9 @@ export const useTasks = (selectedView?: ViewType) => {
 
         // Apply view-based filtering
         if (selectedView && ['my-day', 'my-week', 'my-month'].includes(selectedView)) {
-          allTasks = getTasksByDateRange(allTasks, selectedView as ViewType);
+          allTasks = getTasksByDateRange(allTasks, selectedView as 'my-day' | 'my-week' | 'my-month');
         }
+        // For 'all-time', we don't apply any date filtering
 
         setTasks(allTasks);
         setTaskStats(getTaskStats(allTasks));

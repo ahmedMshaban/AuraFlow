@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export type ViewType = 'my-day' | 'my-week' | 'my-month';
+export type ViewType = 'my-day' | 'my-week' | 'my-month' | 'all-time';
 
 /**
  * Custom hook for managing view filter state across the application
