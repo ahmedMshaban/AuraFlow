@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import getTomorrowDate from './getTomorrowDate';
+import getTodayDate from './getTodayDate';
 
-describe('getTomorrowDate', () => {
+describe('getTodayDate', () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -11,44 +11,44 @@ describe('getTomorrowDate', () => {
   });
 
   describe('Date Calculation', () => {
-    it("returns tomorrow's date when called today", () => {
+    it("returns today's date when called", () => {
       // Set system time to June 26, 2025
       vi.setSystemTime(new Date('2025-06-26T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
-      expect(result).toBe('2025-06-27');
+      const result = getTodayDate();
+      expect(result).toBe('2025-06-26');
     });
 
     it('correctly handles month transitions', () => {
-      // Last day of June
-      vi.setSystemTime(new Date('2025-06-30T12:00:00.000Z'));
+      // First day of July
+      vi.setSystemTime(new Date('2025-07-01T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
+      const result = getTodayDate();
       expect(result).toBe('2025-07-01');
     });
 
     it('correctly handles year transitions', () => {
-      // Last day of the year
-      vi.setSystemTime(new Date('2025-12-31T12:00:00.000Z'));
+      // First day of the year
+      vi.setSystemTime(new Date('2025-01-01T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
-      expect(result).toBe('2026-01-01');
+      const result = getTodayDate();
+      expect(result).toBe('2025-01-01');
     });
 
     it('correctly handles leap year February', () => {
-      // February 28, 2024 (leap year)
-      vi.setSystemTime(new Date('2024-02-28T12:00:00.000Z'));
+      // February 29, 2024 (leap year)
+      vi.setSystemTime(new Date('2024-02-29T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
+      const result = getTodayDate();
       expect(result).toBe('2024-02-29');
     });
 
-    it('correctly handles non-leap year February', () => {
+    it('correctly handles non-leap year February end', () => {
       // February 28, 2025 (non-leap year)
       vi.setSystemTime(new Date('2025-02-28T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
-      expect(result).toBe('2025-03-01');
+      const result = getTodayDate();
+      expect(result).toBe('2025-02-28');
     });
 
     it('works consistently regardless of time of day', () => {
@@ -62,8 +62,8 @@ describe('getTomorrowDate', () => {
 
       testTimes.forEach((time) => {
         vi.setSystemTime(new Date(time));
-        const result = getTomorrowDate();
-        expect(result).toBe('2025-06-27');
+        const result = getTodayDate();
+        expect(result).toBe('2025-06-26');
       });
     });
   });
@@ -72,15 +72,15 @@ describe('getTomorrowDate', () => {
     it('returns date in ISO format (YYYY-MM-DD)', () => {
       vi.setSystemTime(new Date('2025-06-26T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
+      const result = getTodayDate();
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-      expect(result).toBe('2025-06-27');
+      expect(result).toBe('2025-06-26');
     });
 
     it('always returns a string', () => {
       vi.setSystemTime(new Date('2025-06-26T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
+      const result = getTodayDate();
       expect(typeof result).toBe('string');
     });
 
@@ -88,18 +88,18 @@ describe('getTomorrowDate', () => {
       // Single digit month and day
       vi.setSystemTime(new Date('2025-01-09T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
-      expect(result).toBe('2025-01-10');
+      const result = getTodayDate();
+      expect(result).toBe('2025-01-09');
     });
 
     it('pads single digits with zeros', () => {
       // Test month padding
-      vi.setSystemTime(new Date('2025-09-30T12:00:00.000Z'));
-      expect(getTomorrowDate()).toBe('2025-10-01');
+      vi.setSystemTime(new Date('2025-09-05T12:00:00.000Z'));
+      expect(getTodayDate()).toBe('2025-09-05');
 
       // Test day padding
       vi.setSystemTime(new Date('2025-06-09T12:00:00.000Z'));
-      expect(getTomorrowDate()).toBe('2025-06-10');
+      expect(getTodayDate()).toBe('2025-06-09');
     });
   });
 
@@ -108,22 +108,22 @@ describe('getTomorrowDate', () => {
       // The function should work with UTC time regardless of local timezone
       vi.setSystemTime(new Date('2025-06-26T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
-      expect(result).toBe('2025-06-27');
+      const result = getTodayDate();
+      expect(result).toBe('2025-06-26');
     });
 
     it('works with very far future dates', () => {
       vi.setSystemTime(new Date('2099-12-31T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
-      expect(result).toBe('2100-01-01');
+      const result = getTodayDate();
+      expect(result).toBe('2099-12-31');
     });
 
     it('works with very far past dates', () => {
       vi.setSystemTime(new Date('1900-01-01T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
-      expect(result).toBe('1900-01-02');
+      const result = getTodayDate();
+      expect(result).toBe('1900-01-01');
     });
   });
 
@@ -131,27 +131,27 @@ describe('getTomorrowDate', () => {
     it('provides valid minimum date for HTML date inputs', () => {
       vi.setSystemTime(new Date('2025-06-26T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
+      const result = getTodayDate();
 
       // Should be a valid date that can be used as min attribute in date input
       const dateObj = new Date(result);
       expect(dateObj).toBeInstanceOf(Date);
       expect(dateObj.getTime()).not.toBeNaN();
 
-      // Should be tomorrow
+      // Should be today
       const today = new Date('2025-06-26');
-      const tomorrow = new Date(result);
-      expect(tomorrow.getTime() - today.getTime()).toBe(24 * 60 * 60 * 1000);
+      const resultDate = new Date(result);
+      expect(resultDate.toDateString()).toBe(today.toDateString());
     });
 
-    it('prevents users from selecting past dates in forms', () => {
+    it('allows users to select today for task creation', () => {
       vi.setSystemTime(new Date('2025-06-26T12:00:00.000Z'));
 
-      const minDate = getTomorrowDate();
+      const minDate = getTodayDate();
       const today = new Date().toISOString().split('T')[0];
 
-      // Tomorrow should be greater than today
-      expect(minDate > today).toBe(true);
+      // Today should be equal to the minimum date (allows selecting today)
+      expect(minDate).toBe(today);
     });
   });
 
@@ -161,7 +161,7 @@ describe('getTomorrowDate', () => {
 
       const start = performance.now();
       for (let i = 0; i < 1000; i++) {
-        getTomorrowDate();
+        getTodayDate();
       }
       const end = performance.now();
 
@@ -172,54 +172,53 @@ describe('getTomorrowDate', () => {
     it('returns consistent results for same system time', () => {
       vi.setSystemTime(new Date('2025-06-26T12:00:00.000Z'));
 
-      const results = Array.from({ length: 10 }, () => getTomorrowDate());
+      const results = Array.from({ length: 10 }, () => getTodayDate());
       const uniqueResults = new Set(results);
 
       expect(uniqueResults.size).toBe(1);
-      expect(results[0]).toBe('2025-06-27');
+      expect(results[0]).toBe('2025-06-26');
     });
   });
 
   describe('Function Contract', () => {
-    it("never returns today's date", () => {
+    it('returns current date exactly', () => {
       const testDates = ['2025-01-01T00:00:00.000Z', '2025-06-15T12:00:00.000Z', '2025-12-31T23:59:59.999Z'];
 
       testDates.forEach((testDate) => {
         vi.setSystemTime(new Date(testDate));
 
-        const result = getTomorrowDate();
-        const today = new Date(testDate).toISOString().split('T')[0];
+        const result = getTodayDate();
+        const expected = new Date(testDate).toISOString().split('T')[0];
 
-        expect(result).not.toBe(today);
+        expect(result).toBe(expected);
       });
     });
 
-    it('always returns a date exactly one day in the future', () => {
+    it('always returns valid date format', () => {
       const testDates = ['2025-01-15T10:30:00.000Z', '2025-07-04T16:45:00.000Z', '2025-11-28T21:15:00.000Z'];
 
       testDates.forEach((testDate) => {
         vi.setSystemTime(new Date(testDate));
 
-        const result = getTomorrowDate();
-        const expectedDate = new Date(testDate);
-        expectedDate.setDate(expectedDate.getDate() + 1);
-        const expected = expectedDate.toISOString().split('T')[0];
+        const result = getTodayDate();
+        const dateFromResult = new Date(result);
 
-        expect(result).toBe(expected);
+        expect(dateFromResult).toBeInstanceOf(Date);
+        expect(dateFromResult.getTime()).not.toBeNaN();
       });
     });
 
     it('produces results compatible with Date constructor', () => {
       vi.setSystemTime(new Date('2025-06-26T12:00:00.000Z'));
 
-      const result = getTomorrowDate();
+      const result = getTodayDate();
       const dateFromResult = new Date(result);
 
       expect(dateFromResult).toBeInstanceOf(Date);
       expect(dateFromResult.getTime()).not.toBeNaN();
       expect(dateFromResult.getFullYear()).toBe(2025);
       expect(dateFromResult.getMonth()).toBe(5); // June is month 5 (0-indexed)
-      expect(dateFromResult.getDate()).toBe(27);
+      expect(dateFromResult.getDate()).toBe(26);
     });
   });
 });

@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { Box, Button, Input, Textarea, VStack, Text, HStack, Field } from '@chakra-ui/react';
 
 import type { TaskFormProps, TaskFormData, CreateTaskData } from '@/shared/types/task.types';
-import getTomorrowDate from '../../infrastructure/helpers/getTomorrowDate';
+import getTodayDate from '../../infrastructure/helpers/getTodayDate';
 
 const TaskForm = ({ isOpen, onClose, onSubmit, isLoading = false }: TaskFormProps) => {
   const {
@@ -119,7 +119,7 @@ const TaskForm = ({ isOpen, onClose, onSubmit, isLoading = false }: TaskFormProp
               <Input
                 id="dueDate"
                 type="date"
-                min={getTomorrowDate()}
+                min={getTodayDate()}
                 {...register('dueDate', {
                   required: 'Due date is required',
                 })}

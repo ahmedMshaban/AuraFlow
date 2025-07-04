@@ -92,8 +92,8 @@ vi.mock('@chakra-ui/react', () => ({
 }));
 
 // Mock the helper function
-vi.mock('../../infrastructure/helpers/getTomorrowDate', () => ({
-  default: () => '2025-06-27', // Mock tomorrow's date
+vi.mock('../../infrastructure/helpers/getTodayDate', () => ({
+  default: () => '2025-06-26', // Mock today's date
 }));
 
 describe('TaskForm', () => {
@@ -131,7 +131,7 @@ describe('TaskForm', () => {
       fn({
         title: 'Test Task',
         description: 'Test Description',
-        dueDate: '2025-06-27',
+        dueDate: '2025-06-26',
         priority: 'medium',
       });
     });
@@ -182,7 +182,7 @@ describe('TaskForm', () => {
     const dueDateInput = screen.getByLabelText('Due Date');
     expect(dueDateInput).toBeDefined();
     expect(dueDateInput.getAttribute('type')).toBe('date');
-    expect(dueDateInput.getAttribute('min')).toBe('2025-06-27');
+    expect(dueDateInput.getAttribute('min')).toBe('2025-06-26');
 
     // Priority field
     const prioritySelect = screen.getByLabelText('Priority');
@@ -248,7 +248,7 @@ describe('TaskForm', () => {
     const expectedData: CreateTaskData = {
       title: 'Test Task',
       description: 'Test Description',
-      dueDate: new Date('2025-06-27'),
+      dueDate: new Date('2025-06-26'),
       priority: 'medium',
     };
 
@@ -371,7 +371,7 @@ describe('TaskForm', () => {
       fn({
         title: '  Test Task  ',
         description: '  Test Description  ',
-        dueDate: '2025-06-27',
+        dueDate: '2025-06-26',
         priority: 'high',
       });
     });
@@ -396,7 +396,7 @@ describe('TaskForm', () => {
     const expectedData: CreateTaskData = {
       title: 'Test Task',
       description: 'Test Description',
-      dueDate: new Date('2025-06-27'),
+      dueDate: new Date('2025-06-26'),
       priority: 'high',
     };
 
@@ -412,7 +412,7 @@ describe('TaskForm', () => {
       fn({
         title: 'Test Task',
         description: '',
-        dueDate: '2025-06-27',
+        dueDate: '2025-06-26',
         priority: 'low',
       });
     });
@@ -437,7 +437,7 @@ describe('TaskForm', () => {
     const expectedData: CreateTaskData = {
       title: 'Test Task',
       description: '',
-      dueDate: new Date('2025-06-27'),
+      dueDate: new Date('2025-06-26'),
       priority: 'low',
     };
 
