@@ -6,7 +6,7 @@ import { getProfile } from '@/shared/services/email/operations/api';
 import { getEmailsByPriority } from '@/shared/services/email/business/categorization';
 import { addPriorityToEmails } from '@/shared/services/email/business/priorityClassifier';
 import type { GmailAuthStatus, GmailMessageWithStress } from '../types/gmail.types';
-import type { ViewType } from '../../modules/home/infrastructure/types/home.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 
 /**
  * Custom hook for Gmail integration with stress analysis

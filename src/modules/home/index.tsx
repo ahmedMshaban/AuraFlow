@@ -1,6 +1,7 @@
 import { FaColumns } from 'react-icons/fa';
 
 import { useStressAnalytics } from '@/shared/hooks/useStressAnalytics';
+import useFilters from '@/shared/hooks/useFilters';
 import Sidebar from '@/shared/modules/sidebar';
 import useSidebar from '@/shared/modules/sidebar/infrastructure/hooks/useSidebar';
 import { useGmail } from '@/shared/hooks/useGmail';
@@ -9,7 +10,6 @@ import { useTasks } from '@/shared/hooks/useTasks';
 import styles from './infrastructure/styles/home.module.css';
 import Greeting from './components/Greeting';
 import Filters from './components/Filters';
-import useFilters from './infrastructure/hooks/useFilters';
 import Emails from './components/emails/Emails';
 import Tasks from './components/tasks/Tasks';
 import { getEmailDescription, getTaskDescription } from './infrastructure/helpers/getWorkAreaDescription';
@@ -68,6 +68,8 @@ const Home = () => {
               isLoadingEmails={isLoadingEmails}
               taskStats={taskStats}
               isLoadingTasks={isTasksLoading}
+              showEmails={true}
+              showTasks={true}
             />
             <div className={styles.workAreas}>
               <div

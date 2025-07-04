@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import getWellbeingTaskDisplay from './getWellbeingTaskDisplay';
-import type { ViewType } from '../types/home.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 import type { FiltersProps } from '../types/home.types';
 
 describe('getWellbeingTaskDisplay', () => {

@@ -1,7 +1,8 @@
 import { Portal, Select, Box, createListCollection, Skeleton } from '@chakra-ui/react';
 
 import styles from '../infrastructure/styles/home.module.css';
-import type { FiltersProps, ViewType } from '../infrastructure/types/home.types';
+import type { FiltersProps } from '../infrastructure/types/home.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 import getFilterOptions from '../infrastructure/helpers/getFilterOptions';
 import getWellbeingTaskDisplay from '../infrastructure/helpers/getWellbeingTaskDisplay';
 import getWellbeingEmailDisplay from '../infrastructure/helpers/getWellbeingEmailDisplay';
@@ -12,9 +13,11 @@ const Filters = ({
   isCurrentlyStressed,
   numOfFocusedEmails,
   numOfOtherEmails,
-  isLoadingEmails,
+  isLoadingEmails = false,
   taskStats,
-  isLoadingTasks,
+  isLoadingTasks = false,
+  showEmails = true,
+  showTasks = true,
 }: FiltersProps) => {
   const filterViewsCollection = createListCollection({
     items: getFilterOptions(isCurrentlyStressed),
@@ -63,28 +66,32 @@ const Filters = ({
           </Portal>
         </Select.Root>
       </div>
-      <Box className={styles.filterItem}>
-        <Skeleton
-          height="6"
-          loading={isLoadingTasks}
-          className={styles.filterItem}
-        >
-          <span>{taskDisplay.icon}</span>
-          {taskDisplay.count && `${taskDisplay.count} `}
-          {taskDisplay.label}
-        </Skeleton>
-      </Box>
-      <Box className={styles.filterItem}>
-        <Skeleton
-          height="6"
-          loading={isLoadingEmails}
-          className={styles.filterItem}
-        >
-          <span>{emailDisplay.icon}</span>
-          {emailDisplay.count && `${emailDisplay.count} `}
-          {emailDisplay.label}
-        </Skeleton>
-      </Box>
+      {showTasks && (
+        <Box className={styles.filterItem}>
+          <Skeleton
+            height="6"
+            loading={isLoadingTasks}
+            className={styles.filterItem}
+          >
+            <span>{taskDisplay.icon}</span>
+            {taskDisplay.count && `${taskDisplay.count} `}
+            {taskDisplay.label}
+          </Skeleton>
+        </Box>
+      )}
+      {showEmails && (
+        <Box className={styles.filterItem}>
+          <Skeleton
+            height="6"
+            loading={isLoadingEmails}
+            className={styles.filterItem}
+          >
+            <span>{emailDisplay.icon}</span>
+            {emailDisplay.count && `${emailDisplay.count} `}
+            {emailDisplay.label}
+          </Skeleton>
+        </Box>
+      )}
     </div>
   );
 };

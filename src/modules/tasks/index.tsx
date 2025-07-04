@@ -1,15 +1,18 @@
 import { FaColumns } from 'react-icons/fa';
 
 import { useStressAnalytics } from '@/shared/hooks/useStressAnalytics';
+import useFilters from '@/shared/hooks/useFilters';
 import Sidebar from '@/shared/modules/sidebar';
 import useSidebar from '@/shared/modules/sidebar/infrastructure/hooks/useSidebar';
 import { useTasks } from '@/shared/hooks/useTasks';
 
 import styles from '../home/infrastructure/styles/home.module.css';
 import Tasks from '../home/components/tasks/Tasks';
+import Filters from '../home/components/Filters';
 
 const TasksPage = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const { selectedView, setSelectedView } = useFilters();
   const { isCurrentlyStressed } = useStressAnalytics();
   const {
     upcomingTasks,
@@ -22,7 +25,7 @@ const TasksPage = () => {
     deleteTask,
     toggleTaskStatus,
     isCreating,
-  } = useTasks();
+  } = useTasks(selectedView);
 
   return (
     <div className={styles.homePageContainer}>
@@ -38,13 +41,23 @@ const TasksPage = () => {
 
           <div className={styles.workAreasContainer}>
             <div className={styles.pageHeader}>
-              <h1 className={styles.pageTitle}>✅ Task Management</h1>
+              <h1 className={styles.pageTitle}>Task Management</h1>
               <p className={styles.pageSubtitle}>
                 {isCurrentlyStressed
                   ? 'Focus on your priority tasks to reduce stress'
                   : 'Organize and manage all your tasks effectively'}
               </p>
             </div>
+
+            <Filters
+              selectedView={selectedView}
+              setSelectedView={setSelectedView}
+              isCurrentlyStressed={isCurrentlyStressed}
+              taskStats={taskStats}
+              isLoadingTasks={isTasksLoading}
+              showEmails={false}
+              showTasks={true}
+            />
 
             <div className={styles.workAreas}>
               <div className={styles.workArea}>

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import type { ViewType } from '../types/home.types';
+
+export type ViewType = 'my-day' | 'my-week' | 'my-month';
 
 /**
- * Custom hook for managing view filter state in the home module
+ * Custom hook for managing view filter state across the application
  * Provides state management for switching between different time-based views
  *
  * @returns Object containing the current selected view and setter function

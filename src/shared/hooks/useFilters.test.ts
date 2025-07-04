@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import useFilters from './useFilters';
-import type { ViewType } from '../types/home.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 
 describe('useFilters', () => {
   describe('Initial state', () => {

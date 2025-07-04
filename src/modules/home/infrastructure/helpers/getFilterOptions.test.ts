@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import getFilterOptions from './getFilterOptions';
-import type { ViewType } from '../types/home.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 
 describe('getFilterOptions', () => {
   describe('Stress-aware behavior', () => {

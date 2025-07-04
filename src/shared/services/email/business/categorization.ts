@@ -1,5 +1,5 @@
 import type { GmailApiResponse, GmailMessage } from '@/shared/types/gmail.types';
-import type { ViewType } from '@/modules/home/infrastructure/types/home.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 import { getEmailsByCategoryWithDateFilter, getStarredEmailsWithDateFilter } from '../operations/emailFetcher';
 import { getDateQueryForView, sortEmailsByDate } from '../utils/dateUtils';
 

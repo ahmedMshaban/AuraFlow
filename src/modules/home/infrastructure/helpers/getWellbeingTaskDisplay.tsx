@@ -1,4 +1,5 @@
-import type { FiltersProps, ViewType } from '../types/home.types';
+import type { FiltersProps } from '../types/home.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 
 /**
  * Get wellbeing-focused task display text and emoji based on task statistics and stress state

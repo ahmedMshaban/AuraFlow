@@ -1,4 +1,4 @@
-import type { ViewType } from '../types/home.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 
 /**
  * Get filter options for task/email views based on user's stress state

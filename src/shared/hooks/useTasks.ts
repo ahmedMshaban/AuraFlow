@@ -11,7 +11,7 @@ import { getTasksByDateRange } from '@/shared/services/task/business/views';
 import { applyFilters } from '@/shared/services/task/utils/filterUtils';
 import type { Task, CreateTaskData, UpdateTaskData, TaskStats, TaskFilters } from '@/shared/types/task.types';
 
-import type { ViewType } from '@/modules/home/infrastructure/types/home.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 
 export const useTasks = (selectedView?: ViewType) => {
   const authContext = useAuth();

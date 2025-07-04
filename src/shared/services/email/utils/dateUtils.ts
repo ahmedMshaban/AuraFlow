@@ -1,5 +1,5 @@
 import type { GmailMessage } from '@/shared/types/gmail.types';
-import type { ViewType } from '@/modules/home/infrastructure/types/home.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 
 /**
  * Generate Gmail search query for date filtering based on view type
