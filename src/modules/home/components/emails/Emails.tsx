@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FiMail, FiAlertTriangle } from 'react-icons/fi';
 import { Box, Button, VStack, HStack, Text, Heading, Badge, Spinner } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router';
 
 import { useStressAnalytics } from '@/shared/hooks/useStressAnalytics';
 import type { EmailsProps } from '../../infrastructure/types/emails.types';
@@ -21,6 +22,7 @@ const Emails = ({
   authenticate,
   signOut,
   fetchEmailsByPriority,
+  isHomePage = true, // Default to home page mode
 }: EmailsProps) => {
   const [activeTab, setActiveTab] = useState<'focused' | 'others'>('focused');
 
@@ -262,12 +264,12 @@ const Emails = ({
             </Box>
           )}
 
-          {/* Refresh button */}
-          <Box
-            textAlign="center"
+          {/* Refresh button and View All link */}
+          <VStack
+            gap={3}
             mt={5}
+            textAlign="center"
           >
-            {' '}
             <Button
               onClick={() => fetchEmailsByPriority(maxEmails, maxEmails)}
               loading={isLoadingEmails}
@@ -276,7 +278,20 @@ const Emails = ({
             >
               Refresh Emails
             </Button>
-          </Box>
+
+            {/* Show "View All" link when on home page */}
+            {isHomePage && (focusedEmails.length > 0 || otherEmails.length > 0) && (
+              <RouterLink to="/emails">
+                <Button
+                  colorScheme="blue"
+                  size="sm"
+                  variant="outline"
+                >
+                  View All Emails ({focusedEmails.length + otherEmails.length})
+                </Button>
+              </RouterLink>
+            )}
+          </VStack>
         </Box>
       ) : !isLoadingEmails && !emailsError ? (
         <VStack

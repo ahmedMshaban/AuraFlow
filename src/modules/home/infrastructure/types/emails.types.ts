@@ -20,4 +20,5 @@ export interface EmailsProps {
   authenticate: () => Promise<boolean>; // Function to trigger authentication
   signOut: () => void; // Function to sign out
   fetchEmailsByPriority: (focusedCount: number, otherCount: number) => void; // Function to fetch emails by priority
+  isHomePage?: boolean; // Optional prop to determine if it's on the home page (with limits) or emails page (full view)
 }

@@ -11,6 +11,7 @@ import Register from './modules/register';
 import Home from './modules/home';
 import Activities from './modules/activities';
 import TasksPage from './modules/tasks';
+import EmailsPage from './modules/emails';
 import './shared/adaptations/themes.css';
 import './App.css';
 
@@ -61,6 +62,14 @@ function App() {
       element: (
         <RouteGuard>
           <TasksPage />
+        </RouteGuard>
+      ),
+    },
+    {
+      path: '/emails',
+      element: (
+        <RouteGuard>
+          <EmailsPage />
         </RouteGuard>
       ),
     },

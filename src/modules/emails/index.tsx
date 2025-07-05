@@ -5,16 +5,12 @@ import useFilters from '@/shared/hooks/useFilters';
 import Sidebar from '@/shared/modules/sidebar';
 import useSidebar from '@/shared/modules/sidebar/infrastructure/hooks/useSidebar';
 import { useGmail } from '@/shared/hooks/useGmail';
-import { useTasks } from '@/shared/hooks/useTasks';
 
-import styles from './infrastructure/styles/home.module.css';
-import Greeting from './components/Greeting';
-import Filters from './components/Filters';
-import Emails from './components/emails/Emails';
-import Tasks from './components/tasks/Tasks';
-import { getEmailDescription, getTaskDescription } from './infrastructure/helpers/getWorkAreaDescription';
+import styles from '../home/infrastructure/styles/home.module.css';
+import Emails from '../home/components/emails/Emails';
+import Filters from '../home/components/Filters';
 
-const Home = () => {
+const EmailsPage = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
   const { selectedView, setSelectedView } = useFilters();
   const { isCurrentlyStressed } = useStressAnalytics();
@@ -31,19 +27,6 @@ const Home = () => {
     signOut,
     fetchEmailsByPriority,
   } = useGmail(selectedView);
-  const {
-    upcomingTasks,
-    overdueTasks,
-    completedTasks,
-    taskStats,
-    isLoading: isTasksLoading,
-    error: tasksError,
-    createTask,
-    updateTask,
-    deleteTask,
-    toggleTaskStatus,
-    isCreating,
-  } = useTasks(selectedView);
 
   return (
     <div className={styles.homePageContainer}>
@@ -57,9 +40,16 @@ const Home = () => {
             <FaColumns size={32} />
           </div>
 
-          <Greeting />
-
           <div className={styles.workAreasContainer}>
+            <div className={styles.pageHeader}>
+              <h1 className={styles.pageTitle}>Email Management</h1>
+              <p className={styles.pageSubtitle}>
+                {isCurrentlyStressed
+                  ? 'Focus on your important emails to reduce stress'
+                  : 'Manage and organize all your emails with intelligent filtering'}
+              </p>
+            </div>
+
             <Filters
               selectedView={selectedView}
               setSelectedView={setSelectedView}
@@ -67,22 +57,15 @@ const Home = () => {
               numOfFocusedEmails={focusedEmails.length}
               numOfOtherEmails={otherEmails.length}
               isLoadingEmails={isLoadingEmails}
-              taskStats={taskStats}
-              isLoadingTasks={isTasksLoading}
               showEmails={true}
-              showTasks={true}
+              showTasks={false}
             />
+
             <div className={styles.workAreas}>
-              <div
-                className={styles.workArea}
-                data-status={isLoadingEmails ? 'loading' : emailsError ? 'error' : 'success'}
-              >
-                <div className={styles.workAreaHeader}>
-                  <h2 className={styles.workAreaTitle}>📧 Smart Email Management</h2>
-                  <p className={styles.workAreaSubtitle}>{getEmailDescription(isCurrentlyStressed)}</p>
-                </div>
+              <div className={styles.workArea}>
                 <div className={styles.workAreaContent}>
                   <Emails
+                    maxEmails={20} // Fetch more emails for the full emails page
                     isAuthenticated={isAuthenticated}
                     isLoading={isLoading}
                     error={error}
@@ -94,29 +77,7 @@ const Home = () => {
                     authenticate={authenticate}
                     signOut={signOut}
                     fetchEmailsByPriority={fetchEmailsByPriority}
-                    isHomePage={true} // This indicates it's on the home page (with limits)
-                  />
-                </div>
-              </div>
-              <div className={styles.workArea}>
-                <div className={styles.workAreaHeader}>
-                  <h2 className={styles.workAreaTitle}>✅ Mindful Task Management</h2>
-                  <p className={styles.workAreaSubtitle}>{getTaskDescription(isCurrentlyStressed)}</p>
-                </div>
-                <div className={styles.workAreaContent}>
-                  <Tasks
-                    upcomingTasks={upcomingTasks}
-                    overdueTasks={overdueTasks}
-                    completedTasks={completedTasks}
-                    taskStats={taskStats}
-                    isLoading={isTasksLoading}
-                    error={tasksError}
-                    createTask={createTask}
-                    updateTask={updateTask}
-                    deleteTask={deleteTask}
-                    toggleTaskStatus={toggleTaskStatus}
-                    isCreating={isCreating}
-                    isCurrentlyStressed={isCurrentlyStressed}
+                    isHomePage={false} // This indicates it's the full emails page
                   />
                 </div>
               </div>
@@ -129,4 +90,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default EmailsPage;
