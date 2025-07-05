@@ -64,6 +64,7 @@ export interface TasksProps {
   isLoading: boolean;
   error: string | null;
   createTask: (task: CreateTaskData) => Promise<void>;
+  updateTask: (taskId: string, updateData: UpdateTaskData) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
   toggleTaskStatus: (taskId: string, currentStatus: string) => Promise<void>;
   isCreating: boolean;
@@ -76,10 +77,13 @@ export interface TaskFormProps {
   onClose: () => void;
   onSubmit: (data: CreateTaskData) => Promise<void>;
   isLoading?: boolean;
+  editTask?: Task | null; // Optional task to edit
+  isEditing?: boolean; // Flag to determine if we're editing
 }
 
 export interface TaskItemProps {
   task: Task;
   onToggleStatus: (taskId: string, currentStatus: string) => void;
   onDelete: (taskId: string) => void;
+  onEdit: (task: Task) => void;
 }

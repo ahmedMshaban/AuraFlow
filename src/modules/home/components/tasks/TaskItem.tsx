@@ -5,7 +5,7 @@ import getStatusColor from '../../infrastructure/helpers/getStatusColor';
 import getPriorityColor from '../../infrastructure/helpers/getPriorityColor';
 import formatTasksDate from '../../infrastructure/helpers/formatTasksDate';
 
-const TaskItem = ({ task, onToggleStatus, onDelete }: TaskItemProps) => {
+const TaskItem = ({ task, onToggleStatus, onDelete, onEdit }: TaskItemProps) => {
   return (
     <Box
       p={4}
@@ -69,6 +69,14 @@ const TaskItem = ({ task, onToggleStatus, onDelete }: TaskItemProps) => {
           </Text>
 
           <HStack gap={2}>
+            <Button
+              size="sm"
+              colorScheme="blue"
+              variant="outline"
+              onClick={() => onEdit(task)}
+            >
+              Edit
+            </Button>
             <Button
               size="sm"
               colorScheme={task.status === 'completed' ? 'yellow' : 'green'}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, Button, VStack, HStack, Text, Spinner } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router';
 
-import type { TasksProps } from '@/shared/types/task.types';
+import type { TasksProps, Task, CreateTaskData } from '@/shared/types/task.types';
 import TaskForm from './TaskForm';
 import TaskItem from './TaskItem';
 import getTabsForMode from '../../infrastructure/helpers/getTasksTabsForMode';
@@ -15,6 +15,7 @@ const Tasks = ({
   isLoading,
   error,
   createTask,
+  updateTask,
   deleteTask,
   toggleTaskStatus,
   isCreating,
@@ -23,8 +24,36 @@ const Tasks = ({
 }: TasksProps) => {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'overdue' | 'completed' | 'priority'>('upcoming');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   const tabs = getTabsForMode(upcomingTasks, overdueTasks, completedTasks, taskStats, isCurrentlyStressed, isHomePage);
+
+  // Handler for opening edit modal
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task);
+    setIsEditing(true);
+    setIsModalOpen(true);
+  };
+
+  // Handler for closing modal and resetting edit state
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setIsEditing(false);
+    setEditingTask(null);
+  };
+
+  // Handler for submitting task (create or update)
+  const handleSubmitTask = async (data: CreateTaskData) => {
+    if (isEditing && editingTask) {
+      // Update existing task
+      await updateTask(editingTask.id, data);
+    } else {
+      // Create new task
+      await createTask(data);
+    }
+    handleCloseModal();
+  };
 
   // Reset active tab if it doesn't exist in current mode
   const validTab = tabs.find((tab) => tab.key === activeTab);
@@ -145,6 +174,7 @@ const Tasks = ({
                   task={task}
                   onToggleStatus={toggleTaskStatus}
                   onDelete={deleteTask}
+                  onEdit={handleEditTask} // Pass the handler to TaskItem
                 />
               ))}
 
@@ -169,12 +199,14 @@ const Tasks = ({
         </VStack>
       </Box>
 
-      {/* Create Task Modal */}
+      {/* Create/Edit Task Modal */}
       <TaskForm
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={createTask}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitTask}
         isLoading={isCreating}
+        editTask={editingTask}
+        isEditing={isEditing}
       />
     </Box>
   );

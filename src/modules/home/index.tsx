@@ -39,6 +39,7 @@ const Home = () => {
     isLoading: isTasksLoading,
     error: tasksError,
     createTask,
+    updateTask,
     deleteTask,
     toggleTaskStatus,
     isCreating,
@@ -110,6 +111,7 @@ const Home = () => {
                     isLoading={isTasksLoading}
                     error={tasksError}
                     createTask={createTask}
+                    updateTask={updateTask}
                     deleteTask={deleteTask}
                     toggleTaskStatus={toggleTaskStatus}
                     isCreating={isCreating}

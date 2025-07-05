@@ -1,15 +1,24 @@
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 import { Box, Button, Input, Textarea, VStack, Text, HStack, Field } from '@chakra-ui/react';
 
 import type { TaskFormProps, TaskFormData, CreateTaskData } from '@/shared/types/task.types';
 import getTodayDate from '../../infrastructure/helpers/getTodayDate';
 
-const TaskForm = ({ isOpen, onClose, onSubmit, isLoading = false }: TaskFormProps) => {
+const TaskForm = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  isLoading = false,
+  editTask = null,
+  isEditing = false,
+}: TaskFormProps) => {
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
     reset,
+    setValue,
   } = useForm<TaskFormData>({
     defaultValues: {
       title: '',
@@ -18,6 +27,18 @@ const TaskForm = ({ isOpen, onClose, onSubmit, isLoading = false }: TaskFormProp
       priority: 'medium',
     },
   });
+
+  // Effect to populate form when editing
+  useEffect(() => {
+    if (isEditing && editTask) {
+      setValue('title', editTask.title);
+      setValue('description', editTask.description || '');
+      setValue('dueDate', editTask.dueDate.toISOString().split('T')[0]);
+      setValue('priority', editTask.priority);
+    } else if (!isEditing) {
+      reset();
+    }
+  }, [isEditing, editTask, setValue, reset]);
 
   const onFormSubmit = async (data: TaskFormData) => {
     try {
@@ -72,7 +93,7 @@ const TaskForm = ({ isOpen, onClose, onSubmit, isLoading = false }: TaskFormProp
             fontWeight="bold"
             mb={4}
           >
-            Create New Task
+            {isEditing ? 'Edit Task' : 'Create New Task'}
           </Text>
 
           <VStack
@@ -170,7 +191,13 @@ const TaskForm = ({ isOpen, onClose, onSubmit, isLoading = false }: TaskFormProp
               colorScheme="blue"
               disabled={isLoading || isSubmitting}
             >
-              {isLoading || isSubmitting ? 'Creating...' : 'Create Task'}
+              {isLoading || isSubmitting
+                ? isEditing
+                  ? 'Updating...'
+                  : 'Creating...'
+                : isEditing
+                  ? 'Update Task'
+                  : 'Create Task'}
             </Button>
           </HStack>
         </form>
