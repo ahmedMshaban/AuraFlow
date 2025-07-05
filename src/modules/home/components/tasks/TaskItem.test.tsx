@@ -130,6 +130,7 @@ describe('TaskItem', () => {
     task: createMockTask(),
     onToggleStatus: vi.fn(),
     onDelete: vi.fn(),
+    onEdit: vi.fn(),
   };
 
   beforeEach(() => {
@@ -395,6 +396,7 @@ describe('TaskItem', () => {
       task: complexTask,
       onToggleStatus: vi.fn(),
       onDelete: vi.fn(),
+      onEdit: vi.fn(),
     };
 
     expect(() => render(<TaskItem {...props} />)).not.toThrow();
@@ -403,6 +405,7 @@ describe('TaskItem', () => {
   it('maintains task ID consistency in callbacks', () => {
     const mockOnToggleStatus = vi.fn();
     const mockOnDelete = vi.fn();
+    const mockOnEdit = vi.fn();
     const customTask = createMockTask({ id: 'custom-task-id-123' });
 
     render(
@@ -410,6 +413,7 @@ describe('TaskItem', () => {
         task={customTask}
         onToggleStatus={mockOnToggleStatus}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />,
     );
 
@@ -468,6 +472,42 @@ describe('TaskItem', () => {
       expect(priorityBadge?.getAttribute('data-colorscheme')).toBe(expectedColor);
 
       unmount();
+    });
+  });
+
+  describe('Edit functionality', () => {
+    it('renders edit button', () => {
+      render(<TaskItem {...defaultProps} />);
+
+      expect(screen.getByText('Edit')).toBeDefined();
+    });
+
+    it('calls onEdit with task when edit button is clicked', () => {
+      const mockOnEdit = vi.fn();
+      const task = createMockTask({ id: 'edit-test-task' });
+
+      render(
+        <TaskItem
+          {...defaultProps}
+          task={task}
+          onEdit={mockOnEdit}
+        />,
+      );
+
+      const editButton = screen.getByText('Edit');
+      fireEvent.click(editButton);
+
+      expect(mockOnEdit).toHaveBeenCalledTimes(1);
+      expect(mockOnEdit).toHaveBeenCalledWith(task);
+    });
+
+    it('edit button has correct styling', () => {
+      render(<TaskItem {...defaultProps} />);
+
+      const editButton = screen.getByText('Edit');
+      expect(editButton.getAttribute('data-size')).toBe('sm');
+      expect(editButton.getAttribute('data-variant')).toBe('outline');
+      expect(editButton.getAttribute('data-colorscheme')).toBe('blue');
     });
   });
 });

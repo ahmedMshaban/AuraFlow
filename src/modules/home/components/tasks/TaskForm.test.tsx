@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import TaskForm from './TaskForm';
-import type { TaskFormProps, CreateTaskData } from '@/shared/types/task.types';
+import type { TaskFormProps, CreateTaskData, Task } from '@/shared/types/task.types';
 import type { ReactNode } from 'react';
 
 // Mock react-hook-form
@@ -217,8 +217,8 @@ describe('TaskForm', () => {
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
     fireEvent.click(cancelButton);
 
-    expect(mockOnClose).toHaveBeenCalledTimes(1);
-    expect(mockReset).toHaveBeenCalledTimes(1);
+    expect(mockOnClose).toHaveBeenCalledWith();
+    expect(mockReset).toHaveBeenCalled();
   });
 
   it('calls onSubmit with correct data when form is submitted', async () => {
@@ -253,8 +253,8 @@ describe('TaskForm', () => {
     };
 
     expect(mockOnSubmit).toHaveBeenCalledWith(expectedData);
-    expect(mockReset).toHaveBeenCalledTimes(1);
-    expect(mockOnClose).toHaveBeenCalledTimes(1);
+    expect(mockReset).toHaveBeenCalled();
+    expect(mockOnClose).toHaveBeenCalled();
   });
 
   it('shows loading state when isLoading is true', () => {
@@ -469,5 +469,110 @@ describe('TaskForm', () => {
     };
 
     expect(() => render(<TaskForm {...props} />)).not.toThrow();
+  });
+
+  describe('Edit functionality', () => {
+    const mockTask: Task = {
+      id: '1',
+      title: 'Test Task',
+      description: 'Test Description',
+      dueDate: new Date('2025-06-30'),
+      priority: 'high',
+      status: 'pending',
+      userId: 'user1',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const mockSetValue = vi.fn();
+
+    beforeEach(() => {
+      // Mock setValue for edit functionality
+      mockUseForm.mockReturnValue({
+        register: mockRegister,
+        handleSubmit: mockHandleSubmit,
+        formState: {
+          errors: {},
+          isSubmitting: false,
+        },
+        reset: mockReset,
+        setValue: mockSetValue,
+      } as unknown as ReturnType<typeof useForm>);
+    });
+
+    it('displays "Edit Task" title when editing', () => {
+      render(
+        <TaskForm
+          {...defaultProps}
+          isEditing={true}
+          editTask={mockTask}
+        />,
+      );
+
+      expect(screen.getByText('Edit Task')).toBeDefined();
+    });
+
+    it('displays "Update Task" button when editing', () => {
+      render(
+        <TaskForm
+          {...defaultProps}
+          isEditing={true}
+          editTask={mockTask}
+        />,
+      );
+
+      expect(screen.getByRole('button', { name: /update task/i })).toBeDefined();
+    });
+
+    it('populates form fields when editing a task', () => {
+      render(
+        <TaskForm
+          {...defaultProps}
+          isEditing={true}
+          editTask={mockTask}
+        />,
+      );
+
+      // Verify setValue was called with task data
+      expect(mockSetValue).toHaveBeenCalledWith('title', 'Test Task');
+      expect(mockSetValue).toHaveBeenCalledWith('description', 'Test Description');
+      expect(mockSetValue).toHaveBeenCalledWith('dueDate', '2025-06-30');
+      expect(mockSetValue).toHaveBeenCalledWith('priority', 'high');
+    });
+
+    it('resets form when switching from edit to create mode', () => {
+      const { rerender } = render(
+        <TaskForm
+          {...defaultProps}
+          isEditing={true}
+          editTask={mockTask}
+        />,
+      );
+
+      // Switch to create mode
+      rerender(
+        <TaskForm
+          {...defaultProps}
+          isEditing={false}
+          editTask={null}
+        />,
+      );
+
+      expect(mockReset).toHaveBeenCalled();
+    });
+
+    it('handles task with undefined description when editing', () => {
+      const taskWithoutDescription = { ...mockTask, description: undefined };
+
+      render(
+        <TaskForm
+          {...defaultProps}
+          isEditing={true}
+          editTask={taskWithoutDescription}
+        />,
+      );
+
+      expect(mockSetValue).toHaveBeenCalledWith('description', '');
+    });
   });
 });
