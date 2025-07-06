@@ -375,6 +375,19 @@
   font-style: italic;
 }
 
+.searchFilterIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 11px;
+  color: var(--text-muted, rgba(255, 255, 255, 0.6));
+  margin-top: 0.25rem;
+}
+
+.searchFilterIndicator span {
+  font-style: italic;
+}
+
 /* Search Results Styles */
 .searchResultsContainer {
   margin-bottom: 2rem;

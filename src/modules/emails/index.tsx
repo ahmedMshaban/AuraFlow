@@ -91,6 +91,7 @@ const EmailsPage = () => {
                     currentSearchQuery={currentSearchQuery}
                     searchEmails={searchEmails}
                     clearSearch={clearSearch}
+                    selectedView={selectedView}
                   />
                 </div>
               </div>

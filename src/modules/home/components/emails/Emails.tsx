@@ -31,6 +31,7 @@ const Emails = ({
   currentSearchQuery = '',
   searchEmails,
   clearSearch,
+  selectedView = 'my-month',
 }: EmailsProps) => {
   const [activeTab, setActiveTab] = useState<'focused' | 'others'>('focused');
 
@@ -130,6 +131,7 @@ const Emails = ({
           onClear={clearSearch}
           isLoading={isSearching}
           placeholder="Search emails by subject, sender, or content..."
+          activeFilter={selectedView}
         />
       )}
 

@@ -206,11 +206,18 @@ export const useGmail = (selectedView: ViewType) => {
       setCurrentSearchQuery(query);
 
       try {
-        // Import getEmails here to avoid circular dependencies
+        // Import getEmails and date utils here to avoid circular dependencies
         const { getEmails } = await import('@/shared/services/email/operations/api');
+        const { getDateQueryForView } = await import('@/shared/services/email/utils/dateUtils');
+
+        // Get date query for the selected view to filter search results
+        const dateQuery = getDateQueryForView(selectedView);
+
+        // Combine user search query with date filter
+        const combinedQuery = dateQuery ? `${query} ${dateQuery}` : query;
 
         const response = await getEmails({
-          q: query,
+          q: combinedQuery,
           maxResults,
         });
 
@@ -230,7 +237,7 @@ export const useGmail = (selectedView: ViewType) => {
         setIsSearching(false);
       }
     },
-    [authStatus.isAuthenticated],
+    [authStatus.isAuthenticated, selectedView],
   );
 
   // Clear search results

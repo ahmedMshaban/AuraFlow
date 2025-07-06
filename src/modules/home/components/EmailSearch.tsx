@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { FaSearch, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaTimes, FaCalendarAlt } from 'react-icons/fa';
 import { Input, IconButton } from '@chakra-ui/react';
+import type { ViewType } from '@/shared/hooks/useFilters';
 
 import styles from '../infrastructure/styles/home.module.css';
 
@@ -9,9 +10,29 @@ interface EmailSearchProps {
   onClear: () => void;
   isLoading?: boolean;
   placeholder?: string;
+  activeFilter?: ViewType;
 }
 
-const EmailSearch = ({ onSearch, onClear, isLoading = false, placeholder = 'Search emails...' }: EmailSearchProps) => {
+const getFilterDisplayName = (filter: ViewType): string => {
+  switch (filter) {
+    case 'my-day':
+      return 'Today';
+    case 'my-week':
+      return 'This Week';
+    case 'my-month':
+      return 'This Month';
+    default:
+      return 'This Month';
+  }
+};
+
+const EmailSearch = ({
+  onSearch,
+  onClear,
+  isLoading = false,
+  placeholder = 'Search emails...',
+  activeFilter = 'my-month',
+}: EmailSearchProps) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = () => {
@@ -67,6 +88,10 @@ const EmailSearch = ({ onSearch, onClear, isLoading = false, placeholder = 'Sear
             <FaSearch />
           </IconButton>
         </div>
+      </div>
+      <div className={styles.searchFilterIndicator}>
+        <FaCalendarAlt size={12} />
+        <span>Searching in: {getFilterDisplayName(activeFilter)}</span>
       </div>
       {isLoading && <div className={styles.searchLoadingIndicator}>Searching emails...</div>}
     </div>
