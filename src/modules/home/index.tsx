@@ -83,6 +83,7 @@ const Home = () => {
                 </div>
                 <div className={styles.workAreaContent}>
                   <Emails
+                    maxEmails={10} // Fetch more emails for better categorization
                     isAuthenticated={isAuthenticated}
                     isLoading={isLoading}
                     error={error}
@@ -95,6 +96,7 @@ const Home = () => {
                     signOut={signOut}
                     fetchEmailsByPriority={fetchEmailsByPriority}
                     isHomePage={true} // This indicates it's on the home page (with limits)
+                    selectedView={selectedView} // Pass the current filter to ensure consistency
                   />
                 </div>
               </div>

@@ -1,7 +1,9 @@
 import { Box } from '@chakra-ui/react';
 import type { GmailMessageWithStress } from '@/shared/types/gmail.types';
+import type { ViewType } from '@/shared/hooks/useFilters';
 import EmailItem from './emails/EmailItem';
 import styles from '../infrastructure/styles/home.module.css';
+import { getFilterSearchDescription } from '../infrastructure/helpers/getFilterDisplayNames';
 
 interface SearchResultsProps {
   searchResults: GmailMessageWithStress[];
@@ -9,9 +11,17 @@ interface SearchResultsProps {
   isSearching: boolean;
   searchError: string | null;
   onClearSearch: () => void;
+  activeFilter?: ViewType;
 }
 
-const SearchResults = ({ searchResults, searchQuery, isSearching, searchError, onClearSearch }: SearchResultsProps) => {
+const SearchResults = ({
+  searchResults,
+  searchQuery,
+  isSearching,
+  searchError,
+  onClearSearch,
+  activeFilter = 'my-month',
+}: SearchResultsProps) => {
   if (isSearching) {
     return (
       <div className={styles.searchResultsContainer}>
@@ -59,7 +69,10 @@ const SearchResults = ({ searchResults, searchQuery, isSearching, searchError, o
           </button>
         </div>
         <div className={styles.noResultsMessage}>
-          <p>No emails found for "{searchQuery}". Try a different search term.</p>
+          <p>
+            No emails found for "{searchQuery}" in {getFilterSearchDescription(activeFilter)}. Try a different search
+            term or change the time filter.
+          </p>
         </div>
       </div>
     );
@@ -70,7 +83,8 @@ const SearchResults = ({ searchResults, searchQuery, isSearching, searchError, o
       <div className={styles.searchResultsContainer}>
         <div className={styles.searchResultsHeader}>
           <h3>
-            Search Results for "{searchQuery}" ({searchResults.length} found)
+            Search Results for "{searchQuery}" in {getFilterSearchDescription(activeFilter)} ({searchResults.length}{' '}
+            found)
           </h3>
           <button
             onClick={onClearSearch}

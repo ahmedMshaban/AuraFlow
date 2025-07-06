@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaSearch, FaTimes, FaCalendarAlt } from 'react-icons/fa';
 import { Input, IconButton } from '@chakra-ui/react';
 import type { ViewType } from '@/shared/hooks/useFilters';
 
 import styles from '../infrastructure/styles/home.module.css';
+import { getFilterDisplayName } from '../infrastructure/helpers/getFilterDisplayNames';
 
 interface EmailSearchProps {
   onSearch: (query: string) => void;
@@ -13,19 +14,6 @@ interface EmailSearchProps {
   activeFilter?: ViewType;
 }
 
-const getFilterDisplayName = (filter: ViewType): string => {
-  switch (filter) {
-    case 'my-day':
-      return 'Today';
-    case 'my-week':
-      return 'This Week';
-    case 'my-month':
-      return 'This Month';
-    default:
-      return 'This Month';
-  }
-};
-
 const EmailSearch = ({
   onSearch,
   onClear,
@@ -34,6 +22,16 @@ const EmailSearch = ({
   activeFilter = 'my-month',
 }: EmailSearchProps) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const previousFilterRef = useRef<ViewType>(activeFilter);
+
+  // Re-search when filter changes and there's an active search query
+  useEffect(() => {
+    // Only re-search if filter actually changed and there's a search query
+    if (previousFilterRef.current !== activeFilter && searchQuery.trim()) {
+      onSearch(searchQuery.trim());
+    }
+    previousFilterRef.current = activeFilter;
+  }, [activeFilter, searchQuery, onSearch]);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {

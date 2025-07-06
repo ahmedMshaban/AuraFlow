@@ -84,7 +84,6 @@ const EmailsPage = () => {
                     signOut={signOut}
                     fetchEmailsByPriority={fetchEmailsByPriority}
                     isHomePage={false} // This indicates it's the full emails page
-                    // Search props
                     searchResults={searchResults}
                     isSearching={isSearching}
                     searchError={searchError}

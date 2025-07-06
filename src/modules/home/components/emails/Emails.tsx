@@ -143,6 +143,7 @@ const Emails = ({
           isSearching={isSearching}
           searchError={searchError}
           onClearSearch={clearSearch || (() => {})}
+          activeFilter={selectedView}
         />
       )}
 
