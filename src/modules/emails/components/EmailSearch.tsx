@@ -3,8 +3,8 @@ import { FaSearch, FaTimes, FaCalendarAlt } from 'react-icons/fa';
 import { Input, IconButton } from '@chakra-ui/react';
 import type { ViewType } from '@/shared/hooks/useFilters';
 
-import styles from '../infrastructure/styles/home.module.css';
-import { getFilterDisplayName } from '../infrastructure/helpers/getFilterDisplayNames';
+import styles from '../../home/infrastructure/styles/home.module.css';
+import { getFilterDisplayName } from '../../home/infrastructure/helpers/getFilterDisplayNames';
 
 interface EmailSearchProps {
   onSearch: (query: string) => void;

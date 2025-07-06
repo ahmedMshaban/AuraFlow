@@ -1,9 +1,9 @@
 import { Box } from '@chakra-ui/react';
 import type { GmailMessageWithStress } from '@/shared/types/gmail.types';
 import type { ViewType } from '@/shared/hooks/useFilters';
-import EmailItem from './emails/EmailItem';
-import styles from '../infrastructure/styles/home.module.css';
-import { getFilterSearchDescription } from '../infrastructure/helpers/getFilterDisplayNames';
+import EmailItem from '../../home/components/emails/EmailItem';
+import styles from '../../home/infrastructure/styles/home.module.css';
+import { getFilterSearchDescription } from '../../home/infrastructure/helpers/getFilterDisplayNames';
 
 interface SearchResultsProps {
   searchResults: GmailMessageWithStress[];

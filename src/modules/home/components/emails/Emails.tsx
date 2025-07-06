@@ -8,8 +8,8 @@ import type { EmailsProps } from '../../infrastructure/types/emails.types';
 
 import EmailItem from './EmailItem';
 import EmailAuthentication from './EmailAuthentication';
-import EmailSearch from '../EmailSearch';
-import SearchResults from '../SearchResults';
+import EmailSearch from '../../../emails/components/EmailSearch';
+import SearchResults from '../../../emails/components/SearchResults';
 
 const Emails = ({
   maxEmails = 5,

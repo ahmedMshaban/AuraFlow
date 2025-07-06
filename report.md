@@ -62,6 +62,108 @@ To ensure the newest emails always appear at the top when switching between view
 - Combined results maintain date ordering within priority groups
 - View switching clears previous results and re-sorts based on new date ranges
 
+## 🔍 Email Search Functionality
+
+### Smart Search with Date Filtering
+
+The email search feature provides intelligent search capabilities that automatically respect the active time filter (Today, This Week, This Month), ensuring users only search within relevant time periods.
+
+#### Key Search Features
+
+- **Filter-Aware Search**: Automatically combines user search queries with active date filters
+- **Real-Time Search**: Instant search execution with loading states and progress indicators
+- **Auto-Refresh on Filter Change**: Search results automatically update when time filters change
+- **Gmail API Integration**: Direct Gmail API search using advanced query syntax
+- **Stress Analysis Integration**: Search results include the same stress scoring as regular emails
+
+#### Search Components
+
+1. **EmailSearch Component**:
+   - Clean search input with search and clear buttons
+   - Active filter indicator showing current time period being searched
+   - Loading states and visual feedback
+   - Keyboard shortcuts (Enter to search)
+   - Auto-refresh when filter changes during active search
+
+2. **SearchResults Component**:
+   - Dedicated search results display with clear context
+   - Shows search query and time period being searched
+   - Result count and contextual messaging
+   - Individual email cards with full stress analysis
+   - Error handling and "no results" states
+
+3. **Helper Functions**:
+   - `getFilterDisplayName()`: User-friendly filter names (Today, This Week, etc.)
+   - `getFilterSearchDescription()`: Contextual search scope descriptions
+
+#### Search Technical Implementation
+
+**Date Query Integration**:
+
+```typescript
+// Combines user query with date filter automatically
+const dateQuery = getDateQueryForView(selectedView);
+const combinedQuery = dateQuery ? `${userQuery} ${dateQuery}` : userQuery;
+```
+
+**Smart Re-search Logic**:
+
+- Uses `useRef` to track filter changes and prevent unnecessary re-renders
+- Only triggers new search when filter actually changes AND there's an active search
+- Maintains search history and state across filter switches
+
+**Gmail Query Examples**:
+
+- Today + "meeting": `meeting after:2025-07-06 before:2025-07-07`
+- This Week + "from:boss@company.com": `from:boss@company.com after:2025-06-29`
+- This Month + "subject:urgent": `subject:urgent after:2025-06-06`
+
+#### User Experience Features
+
+**Visual Feedback**:
+
+- Search input shows current filter context: "Searching in: Today"
+- Results header shows: "Search Results for 'meeting' in emails from today (3 found)"
+- Loading states with contextual messages
+
+**Error Handling**:
+
+- Network error recovery with retry options
+- Empty state guidance with filter change suggestions
+- Clear error messages with actionable next steps
+
+**Accessibility**:
+
+- Full keyboard navigation support
+- Screen reader friendly labels and descriptions
+- Clear focus indicators and semantic HTML
+
+#### Search Scope by Filter
+
+- **Today**: Searches emails received today only
+- **This Week**: Searches emails from the last 7 days  
+- **This Month**: Searches emails from the last 30 days
+
+#### Integration Points
+
+**Gmail Hook Integration**:
+
+- Extends `useGmail` hook with search state management
+- Maintains separate search results from regular email lists
+- Preserves authentication and error handling patterns
+
+**UI Integration**:
+
+- Embedded directly in Emails component for authenticated users
+- Only visible on dedicated emails page (not dashboard)
+- Seamless transition between search and browse modes
+
+**Performance Optimization**:
+
+- Debounced search execution to prevent API spam
+- Efficient state management with minimal re-renders
+- Smart cleanup of search state on component unmount
+
 ## notes
 
 - Currently, we only have read-only access to Gmail, so the "mark as read" feature is unavailable.
