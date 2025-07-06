@@ -24,6 +24,10 @@ export const useGmail = (selectedView: ViewType) => {
   const [otherEmails, setOtherEmails] = useState<GmailMessageWithStress[]>([]);
   const [isLoadingEmails, setIsLoadingEmails] = useState(false);
   const [emailsError, setEmailsError] = useState<string | null>(null);
+  const [searchResults, setSearchResults] = useState<GmailMessageWithStress[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [currentSearchQuery, setCurrentSearchQuery] = useState<string>('');
 
   // Check authentication status on mount
   useEffect(() => {
@@ -190,6 +194,52 @@ export const useGmail = (selectedView: ViewType) => {
     [authStatus.isAuthenticated, selectedView],
   );
 
+  // Search emails function
+  const searchEmails = useCallback(
+    async (query: string, maxResults = 20) => {
+      if (!authStatus.isAuthenticated || !query.trim()) {
+        return;
+      }
+
+      setIsSearching(true);
+      setSearchError(null);
+      setCurrentSearchQuery(query);
+
+      try {
+        // Import getEmails here to avoid circular dependencies
+        const { getEmails } = await import('@/shared/services/email/operations/api');
+
+        const response = await getEmails({
+          q: query,
+          maxResults,
+        });
+
+        if (response.success) {
+          // Add stress analysis to search results
+          const emailsWithStress = await addPriorityToEmails(response.data.messages);
+          setSearchResults(emailsWithStress);
+        } else {
+          setSearchError(response.error || 'Failed to search emails');
+          setSearchResults([]);
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to search emails';
+        setSearchError(errorMessage);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    },
+    [authStatus.isAuthenticated],
+  );
+
+  // Clear search results
+  const clearSearch = useCallback(() => {
+    setSearchResults([]);
+    setSearchError(null);
+    setCurrentSearchQuery('');
+  }, []);
+
   return {
     // Authentication state
     authStatus,
@@ -203,9 +253,17 @@ export const useGmail = (selectedView: ViewType) => {
     isLoadingEmails,
     emailsError,
 
+    // Search state
+    searchResults,
+    isSearching,
+    searchError,
+    currentSearchQuery,
+
     // Actions
     authenticate: authenticateUser,
     signOut: signOutUser,
     fetchEmailsByPriority,
+    searchEmails,
+    clearSearch,
   };
 };

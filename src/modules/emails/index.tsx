@@ -23,9 +23,15 @@ const EmailsPage = () => {
     otherEmails,
     isLoadingEmails,
     emailsError,
+    searchResults,
+    isSearching,
+    searchError,
+    currentSearchQuery,
     authenticate,
     signOut,
     fetchEmailsByPriority,
+    searchEmails,
+    clearSearch,
   } = useGmail(selectedView);
 
   return (
@@ -78,6 +84,13 @@ const EmailsPage = () => {
                     signOut={signOut}
                     fetchEmailsByPriority={fetchEmailsByPriority}
                     isHomePage={false} // This indicates it's the full emails page
+                    // Search props
+                    searchResults={searchResults}
+                    isSearching={isSearching}
+                    searchError={searchError}
+                    currentSearchQuery={currentSearchQuery}
+                    searchEmails={searchEmails}
+                    clearSearch={clearSearch}
                   />
                 </div>
               </div>

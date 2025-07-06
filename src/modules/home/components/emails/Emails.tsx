@@ -8,6 +8,8 @@ import type { EmailsProps } from '../../infrastructure/types/emails.types';
 
 import EmailItem from './EmailItem';
 import EmailAuthentication from './EmailAuthentication';
+import EmailSearch from '../EmailSearch';
+import SearchResults from '../SearchResults';
 
 const Emails = ({
   maxEmails = 5,
@@ -22,7 +24,13 @@ const Emails = ({
   authenticate,
   signOut,
   fetchEmailsByPriority,
-  isHomePage = true, // Default to home page mode
+  isHomePage = true,
+  searchResults = [],
+  isSearching = false,
+  searchError = null,
+  currentSearchQuery = '',
+  searchEmails,
+  clearSearch,
 }: EmailsProps) => {
   const [activeTab, setActiveTab] = useState<'focused' | 'others'>('focused');
 
@@ -115,6 +123,27 @@ const Emails = ({
         </HStack>
       </Box>
 
+      {/* Email Search - Only show when authenticated and search functions are available */}
+      {searchEmails && clearSearch && (
+        <EmailSearch
+          onSearch={searchEmails}
+          onClear={clearSearch}
+          isLoading={isSearching}
+          placeholder="Search emails by subject, sender, or content..."
+        />
+      )}
+
+      {/* Search Results - Show when there's an active search */}
+      {currentSearchQuery && (
+        <SearchResults
+          searchResults={searchResults}
+          searchQuery={currentSearchQuery}
+          isSearching={isSearching}
+          searchError={searchError}
+          onClearSearch={clearSearch || (() => {})}
+        />
+      )}
+
       {/* Loading emails */}
       {isLoadingEmails && (
         <VStack py={8}>
@@ -140,8 +169,8 @@ const Emails = ({
         </Box>
       )}
 
-      {/* Emails with Tabs */}
-      {otherEmails.length > 0 || focusedEmails.length > 0 ? (
+      {/* Emails with Tabs - Only show when not searching */}
+      {!currentSearchQuery && (otherEmails.length > 0 || focusedEmails.length > 0) ? (
         <Box>
           {shouldShowFocusedOnly ? (
             // Show only focused emails when stressed
@@ -294,7 +323,7 @@ const Emails = ({
             )}
           </HStack>
         </Box>
-      ) : !isLoadingEmails && !emailsError ? (
+      ) : !currentSearchQuery && !isLoadingEmails && !emailsError ? (
         <VStack
           py={10}
           color="gray.500"

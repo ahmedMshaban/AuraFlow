@@ -21,4 +21,10 @@ export interface EmailsProps {
   signOut: () => void; // Function to sign out
   fetchEmailsByPriority: (focusedCount: number, otherCount: number) => void; // Function to fetch emails by priority
   isHomePage?: boolean; // Optional prop to determine if it's on the home page (with limits) or emails page (full view)
+  searchResults?: GmailMessageWithStress[];
+  isSearching?: boolean;
+  searchError?: string | null;
+  currentSearchQuery?: string;
+  searchEmails?: (query: string, maxResults?: number) => Promise<void>;
+  clearSearch?: () => void;
 }
