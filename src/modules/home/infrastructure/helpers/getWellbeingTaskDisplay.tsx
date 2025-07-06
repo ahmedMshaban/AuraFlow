@@ -54,10 +54,6 @@ const getWellbeingTaskDisplay = (
         remainingTasks = taskStats.thisMonthDue;
         label = remainingTasks === 0 ? 'month achieved! 🏆' : 'tasks this month';
         break;
-      case 'all-time':
-        remainingTasks = taskStats.pending;
-        label = remainingTasks === 0 ? 'everything done! 🎯' : 'pending tasks';
-        break;
       default:
         remainingTasks = taskStats.pending;
         label = remainingTasks === 0 ? 'all caught up! ✨' : 'pending tasks';

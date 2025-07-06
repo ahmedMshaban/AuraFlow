@@ -30,9 +30,6 @@ export function getDateQueryForView(viewType: ViewType): string {
       return `after:${monthAgoStr}`;
     }
 
-    case 'all-time':
-      return ''; // No date filter - get all emails
-
     default:
       return ''; // No date filter
   }

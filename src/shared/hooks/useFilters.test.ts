@@ -47,16 +47,6 @@ describe('useFilters', () => {
       expect(result.current.selectedView).toBe('my-month');
     });
 
-    it('should update to all-time view', () => {
-      const { result } = renderHook(() => useFilters());
-
-      act(() => {
-        result.current.setSelectedView('all-time');
-      });
-
-      expect(result.current.selectedView).toBe('all-time');
-    });
-
     it('should handle multiple consecutive updates', () => {
       const { result } = renderHook(() => useFilters());
 
@@ -100,7 +90,7 @@ describe('useFilters', () => {
   describe('ViewType validation', () => {
     it('should handle all valid ViewType values', () => {
       const { result } = renderHook(() => useFilters());
-      const validViewTypes: ViewType[] = ['my-day', 'my-week', 'my-month', 'all-time'];
+      const validViewTypes: ViewType[] = ['my-day', 'my-week', 'my-month'];
 
       validViewTypes.forEach((viewType) => {
         act(() => {

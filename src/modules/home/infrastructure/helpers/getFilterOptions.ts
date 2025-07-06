@@ -31,7 +31,6 @@ const getFilterOptions = (isCurrentlyStressed: boolean): Array<{ label: string; 
     { label: 'My Day', value: 'my-day' },
     { label: 'My Week', value: 'my-week' },
     { label: 'My Month', value: 'my-month' },
-    { label: 'All Time', value: 'all-time' },
   ];
 };
 
