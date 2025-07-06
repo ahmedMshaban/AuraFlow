@@ -5,8 +5,9 @@ import { getDateQueryForView, sortEmailsByDate } from '../utils/dateUtils';
 
 /**
  * Get emails categorized by priority levels with clear separation and date filtering
- * Focused: Starred, Personal Important Unread, Recent Important
- * Others: Promotional, Social, Updates, Forums, Read emails
+ * Focused: Starred, Important emails (read and unread), Recent emails (read and unread)
+ * Others: Promotional, Social, Updates (non-important), Forums
+ * Priority system: 1=Starred, 2=Unread Important, 3=Read Important/Unread Recent, 4=Read Recent
  */
 export async function getEmailsByPriority(
   focusedCount: number = 5,
@@ -39,40 +40,59 @@ export async function getEmailsByPriority(
       });
     }
 
-    // 2. Collect unread important emails from personal category
+    // 2. Collect important emails from personal category (both read and unread)
     if (personalEmails.success) {
       personalEmails.data.forEach((email: GmailMessage) => {
         if (
-          !email.read &&
           email.important &&
           !email.labels.includes('CATEGORY_PROMOTIONS') &&
           !email.labels.includes('CATEGORY_SOCIAL')
         ) {
-          allFocusedCandidates.push({ email, priority: 2 });
+          // Prioritize unread over read, but include both
+          const priority = email.read ? 3 : 2;
+          allFocusedCandidates.push({ email, priority });
         }
       });
     }
 
-    // 3. Collect important emails from updates category
+    // 3. Collect important emails from updates category (both read and unread)
     if (updatesEmails.success) {
       updatesEmails.data.forEach((email: GmailMessage) => {
-        if (!email.read && email.important && email.labels.includes('CATEGORY_UPDATES')) {
-          allFocusedCandidates.push({ email, priority: 2 });
+        if (email.important && email.labels.includes('CATEGORY_UPDATES')) {
+          // Prioritize unread over read, but include both
+          const priority = email.read ? 3 : 2;
+          allFocusedCandidates.push({ email, priority });
         }
       });
     }
 
-    // 4. Collect recent unread emails from personal category
+    // 4. Collect recent emails from personal category (both read and unread)
     if (personalEmails.success) {
       const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
       personalEmails.data.forEach((email: GmailMessage) => {
         if (
-          !email.read &&
           new Date(email.date).getTime() > oneDayAgo &&
           !email.labels.includes('CATEGORY_PROMOTIONS') &&
           !email.labels.includes('CATEGORY_SOCIAL')
         ) {
-          allFocusedCandidates.push({ email, priority: 3 });
+          // Recent emails get lower priority, unread still preferred
+          const priority = email.read ? 4 : 3;
+          allFocusedCandidates.push({ email, priority });
+        }
+      });
+    }
+
+    // 5. If we don't have enough focused emails, add more from personal category
+    if (personalEmails.success && allFocusedCandidates.length < focusedCount * 1.5) {
+      personalEmails.data.forEach((email: GmailMessage) => {
+        if (
+          !email.labels.includes('CATEGORY_PROMOTIONS') &&
+          !email.labels.includes('CATEGORY_SOCIAL') &&
+          !allFocusedCandidates.some((candidate) => candidate.email.id === email.id)
+        ) {
+          // General personal emails get lowest priority in focused
+          const priority = email.read ? 6 : 5;
+          allFocusedCandidates.push({ email, priority });
         }
       });
     }
@@ -117,8 +137,8 @@ export async function getEmailsByPriority(
             !otherEmailsSet.has(email.id) &&
             !focusedEmailsMap.has(email.id) && // Don't duplicate from focused
             otherEmails.length < otherCount &&
-            // Exclude important updates that should be in focused
-            !(email.important && email.labels.includes('CATEGORY_UPDATES') && !email.read)
+            // Exclude important updates that should be in focused (both read and unread)
+            !(email.important && email.labels.includes('CATEGORY_UPDATES'))
           ) {
             otherEmailsSet.add(email.id);
             otherEmails.push(email);
