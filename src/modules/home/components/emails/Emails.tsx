@@ -265,10 +265,11 @@ const Emails = ({
           )}
 
           {/* Refresh button and View All link */}
-          <VStack
+          <HStack
             gap={3}
             mt={5}
             textAlign="center"
+            justifyContent="center"
           >
             <Button
               onClick={() => fetchEmailsByPriority(maxEmails, maxEmails)}
@@ -287,11 +288,11 @@ const Emails = ({
                   size="sm"
                   variant="outline"
                 >
-                  View All Emails ({focusedEmails.length + otherEmails.length})
+                  View More Emails
                 </Button>
               </RouterLink>
             )}
-          </VStack>
+          </HStack>
         </Box>
       ) : !isLoadingEmails && !emailsError ? (
         <VStack

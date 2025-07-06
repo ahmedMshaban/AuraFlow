@@ -10,6 +10,18 @@ vi.mock('@/shared/hooks/useStressAnalytics', () => ({
   useStressAnalytics: vi.fn(),
 }));
 
+// Mock react-router
+vi.mock('react-router', () => ({
+  Link: ({ children, to, ...props }: { children: ReactNode; to: string; [key: string]: unknown }) => (
+    <a
+      href={to}
+      {...props}
+    >
+      {children}
+    </a>
+  ),
+}));
+
 // Mock react-icons
 vi.mock('react-icons/fi', () => ({
   FiMail: ({ size }: { size?: number }) => (
@@ -24,7 +36,7 @@ vi.mock('react-icons/fi', () => ({
 
 // Mock Chakra UI components
 vi.mock('@chakra-ui/react', () => ({
-  Box: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>,
+  Box: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   Button: ({
     children,
     onClick,
@@ -555,6 +567,43 @@ describe('Emails', () => {
 
     it('renders without crashing when all props are provided', () => {
       expect(() => render(<Emails {...defaultProps} />)).not.toThrow();
+    });
+  });
+
+  describe('Navigation', () => {
+    it('shows View More Emails link when on home page and emails exist', () => {
+      render(
+        <Emails
+          {...defaultProps}
+          isHomePage={true}
+        />,
+      );
+
+      expect(screen.getByText('View More Emails')).toBeDefined();
+    });
+
+    it('does not show View More Emails link when not on home page', () => {
+      render(
+        <Emails
+          {...defaultProps}
+          isHomePage={false}
+        />,
+      );
+
+      expect(screen.queryByText('View More Emails')).toBeNull();
+    });
+
+    it('does not show View More Emails link when no emails exist', () => {
+      render(
+        <Emails
+          {...defaultProps}
+          isHomePage={true}
+          focusedEmails={[]}
+          otherEmails={[]}
+        />,
+      );
+
+      expect(screen.queryByText('View More Emails')).toBeNull();
     });
   });
 });
