@@ -9,19 +9,26 @@
 
 .libraryTitle {
   color: #ffffff;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
 }
 
+:global(.theme-calm) .libraryTitle {
+  color: var(--chakra-colors-gray-800);
+}
+
 .librarySubtitle {
   color: rgba(255, 255, 255, 0.8);
-  font-size: 1rem;
+  font-size: 1.25rem;
   margin: 0;
-  max-width: 600px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.5;
+}
+
+:global(.theme-calm) .librarySubtitle {
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .activitiesGrid {
@@ -37,6 +44,11 @@
   color: #ffffff;
 }
 
+:global(.theme-calm) .placeholderComponent {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
 .placeholderIcon {
   font-size: 4rem;
   margin-bottom: 1rem;
@@ -48,10 +60,18 @@
   color: #ffffff;
 }
 
+:global(.theme-calm) .placeholderComponent h3 {
+  color: var(--chakra-colors-gray-800);
+}
+
 .placeholderComponent p {
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.8);
   margin: 0;
+}
+
+:global(.theme-calm) .placeholderComponent p {
+  color: rgba(0, 0, 0, 0.8);
 }
 
 @media (max-width: 768px) {

@@ -118,25 +118,6 @@ body.theme-calm * {
   transition-timing-function: ease-out;
 }
 
-/* Button enhancements for calm theme */
-body.theme-calm button,
-body.theme-calm .chakra-button {
-  background: var(--accent-primary) !important;
-  color: var(--text-inverse) !important;
-  border: none !important;
-  border-radius: 12px !important;
-  padding: 12px 24px !important;
-  font-weight: 500 !important;
-  transition: all 0.3s ease !important;
-}
-
-body.theme-calm button:hover,
-body.theme-calm .chakra-button:hover {
-  background: var(--accent-secondary) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: var(--shadow-md) !important;
-}
-
 /* Card enhancements */
 body.theme-calm .workArea {
   backdrop-filter: blur(20px);

@@ -82,15 +82,6 @@ export const StressMonitoringPanel: React.FC = () => {
             <h3 className={styles.sectionTitle}>Last Result</h3>
             <div className={styles.statusGrid}>
               <div className={styles.statusItem}>
-                <span className={styles.statusLabel}>Stress Level</span>
-                <span className={styles.statusValue}>
-                  <span
-                    className={`${styles.stressIndicator} ${getStressIndicatorClass(lastStressResult.stressLevel)}`}
-                  ></span>
-                  {lastStressResult.stressLevel}%
-                </span>
-              </div>
-              <div className={styles.statusItem}>
                 <span className={styles.statusLabel}>Dominant Expression</span>
                 <span className={styles.statusValue}>{lastStressResult.dominantExpression}</span>
               </div>
@@ -182,7 +173,7 @@ export const StressMonitoringPanel: React.FC = () => {
                 <div className={styles.historyTime}>{new Date(entry.timestamp).toLocaleString()}</div>
                 <div className={styles.historyDetails}>
                   <span className={`${styles.stressIndicator} ${getStressIndicatorClass(entry.stressLevel)}`}></span>
-                  <strong>{entry.dominantExpression}</strong> - Level: {entry.stressLevel}%
+                  <strong>{entry.dominantExpression}</strong>
                 </div>
               </div>
             ))}
