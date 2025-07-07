@@ -18,5 +18,64 @@
   box-shadow: var(--shadow-lg, 0 10px 15px rgba(0, 0, 0, 0.1));
   color: var(--text-inverse, white);
   transition: all 0.3s ease;
+}
+
+.sidebarBodyContainer {
+  margin-bottom: auto;
+  height: calc(100% - 113px);
+  overflow-y: auto;
+}
+
+.sidebarBodyContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebarBodyContainer::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.sidebarBodyContainer::-webkit-scrollbar-thumb {
+  background: var(--accent-primary, #667eea);
+  border-radius: 4px;
+  opacity: 0.3;
+}
+
+.sidebarBodyContainer::-webkit-scrollbar-thumb:hover {
+  opacity: 0.5;
+}
+
+.sidebarLinksContainer,
+.sidebarBodyContainer {
   padding: 1.5rem;
+}
+
+.sidebarLinksContainer {
+  display: flex;
+  gap: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  justify-content: space-between;
+}
+
+.sidebarPanelLink {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  transition: all 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.sidebarPanelLink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.sidebarPanelHeader {
+  text-align: left;
+}
+
+.sidebarTitle {
+  font-size: 28px;
 }

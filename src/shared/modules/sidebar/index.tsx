@@ -1,7 +1,16 @@
+import { FaBookOpen, FaTasks, FaEnvelope, FaHome } from 'react-icons/fa';
+import { useNavigate } from 'react-router';
+
 import styles from './infrastructure/styles/sidebar.module.css';
 import StressMonitoringPanel from '@/shared/components/StressMonitoringPanel';
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <div
       style={{
@@ -10,7 +19,50 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
       className={styles.sidebarContainer}
     >
       <div className={styles.sidebarContent}>
-        <StressMonitoringPanel />
+        <div className={styles.sidebarBodyContainer}>
+          <div className={styles.sidebarPanel}>
+            <div className={styles.sidebarPanelHeader}>
+              <h2 className={styles.sidebarTitle}>Settings</h2>
+            </div>
+            <StressMonitoringPanel />
+          </div>
+        </div>
+
+        <div className={styles.sidebarLinksContainer}>
+          {/* Home link */}
+          <div
+            className={styles.sidebarPanelLink}
+            onClick={() => handleNavigation('/')}
+            style={{ cursor: 'pointer' }}
+          >
+            <FaHome />
+            Home
+          </div>
+          <div
+            className={styles.sidebarPanelLink}
+            onClick={() => handleNavigation('/activities')}
+            style={{ cursor: 'pointer' }}
+          >
+            <FaBookOpen />
+            <span>Library</span>
+          </div>
+          <div
+            className={styles.sidebarPanelLink}
+            onClick={() => handleNavigation('/tasks')}
+            style={{ cursor: 'pointer' }}
+          >
+            <FaTasks />
+            <span>My Tasks</span>
+          </div>
+          <div
+            className={styles.sidebarPanelLink}
+            onClick={() => handleNavigation('/emails')}
+            style={{ cursor: 'pointer' }}
+          >
+            <FaEnvelope />
+            <span>My Emails</span>
+          </div>
+        </div>
       </div>
     </div>
   );
