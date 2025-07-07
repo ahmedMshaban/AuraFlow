@@ -5,8 +5,10 @@ import {
   selectStressHistory,
   selectTestInterval,
   selectAutoTestEnabled,
+  selectManualStressModeEnabled,
   setTestInterval,
   setAutoTestEnabled,
+  setManualStressModeEnabled,
   clearStressHistory,
 } from '../store/slices/stressMonitoringSlice';
 import { stressMonitoringService } from '../services/stressMonitoringService';
@@ -23,6 +25,7 @@ export const useStressMonitoring = () => {
   const stressHistory = useSelector(selectStressHistory);
   const testInterval = useSelector(selectTestInterval);
   const autoTestEnabled = useSelector(selectAutoTestEnabled);
+  const isManualStressModeEnabled = useSelector(selectManualStressModeEnabled);
 
   // Time helpers
   const getLastTestTime = () => {
@@ -54,6 +57,10 @@ export const useStressMonitoring = () => {
     dispatch(setAutoTestEnabled(enabled));
   };
 
+  const toggleManualStressMode = () => {
+    dispatch(setManualStressModeEnabled(!isManualStressModeEnabled));
+  };
+
   const clearHistory = () => {
     dispatch(clearStressHistory());
   };
@@ -67,11 +74,13 @@ export const useStressMonitoring = () => {
     stressHistory,
     testInterval,
     autoTestEnabled,
+    isManualStressModeEnabled,
 
     // Actions
     triggerStressTest,
     setInterval,
     setAutoTest,
+    toggleManualStressMode,
     clearHistory,
   };
 };

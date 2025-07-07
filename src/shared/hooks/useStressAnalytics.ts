@@ -1,11 +1,14 @@
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { useStressMonitoring } from './useStressMonitoring';
+import { selectManualStressModeEnabled } from '../store/slices/stressMonitoringSlice';
 
 /**
  * Hook to analyze stress data and provide insights
  */
 export const useStressAnalytics = () => {
   const { stressHistory, lastStressResult } = useStressMonitoring();
+  const isManualStressModeEnabled = useSelector(selectManualStressModeEnabled);
 
   // Calculate average stress level from history
   const averageStressLevel = useMemo(() => {
@@ -47,9 +50,12 @@ export const useStressAnalytics = () => {
 
   // Determine if the user is currently stressed
   const isCurrentlyStressed = useMemo(() => {
+    // If manual stress mode is enabled, always return true
+    if (isManualStressModeEnabled) return true;
+
     if (!lastStressResult) return false;
     return lastStressResult.isStressed;
-  }, [lastStressResult]);
+  }, [lastStressResult, isManualStressModeEnabled]);
 
   // Calculate percentage of time the user appears stressed
   const stressPercentage = useMemo(() => {

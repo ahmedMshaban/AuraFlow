@@ -25,6 +25,8 @@ export interface StressMonitoringState {
     maxHistoryItems: number;
     // Whether to automatically test stress levels periodically
     autoTestEnabled: boolean;
+    // Manual stress mode for testing and demonstration
+    isManualStressModeEnabled: boolean;
   };
 }
 
@@ -39,6 +41,7 @@ const initialState: StressMonitoringState = {
     testInterval: 30, // Default to 30 minutes
     maxHistoryItems: 100, // Store up to 100 history items
     autoTestEnabled: true, // Enabled by default
+    isManualStressModeEnabled: false, // Disabled by default
   },
 };
 
@@ -86,6 +89,11 @@ export const stressMonitoringSlice = createSlice({
       state.config.autoTestEnabled = action.payload;
     },
 
+    // Enable or disable manual stress mode
+    setManualStressModeEnabled: (state, action: PayloadAction<boolean>) => {
+      state.config.isManualStressModeEnabled = action.payload;
+    },
+
     // Clear stress history
     clearStressHistory: (state) => {
       state.stressHistory = [];
@@ -94,8 +102,13 @@ export const stressMonitoringSlice = createSlice({
 });
 
 // Export actions
-export const { recordStressResult, setTestInterval, setAutoTestEnabled, clearStressHistory } =
-  stressMonitoringSlice.actions;
+export const {
+  recordStressResult,
+  setTestInterval,
+  setAutoTestEnabled,
+  setManualStressModeEnabled,
+  clearStressHistory,
+} = stressMonitoringSlice.actions;
 
 // Export selectors
 export const selectLastStressResult = (state: RootState) => state.stressMonitoring.lastStressResult;
@@ -103,6 +116,8 @@ export const selectLastTestTimestamp = (state: RootState) => state.stressMonitor
 export const selectStressHistory = (state: RootState) => state.stressMonitoring.stressHistory;
 export const selectTestInterval = (state: RootState) => state.stressMonitoring.config.testInterval;
 export const selectAutoTestEnabled = (state: RootState) => state.stressMonitoring.config.autoTestEnabled;
+export const selectManualStressModeEnabled = (state: RootState) =>
+  state.stressMonitoring.config.isManualStressModeEnabled;
 
 // Export reducer
 export default stressMonitoringSlice.reducer;

@@ -465,3 +465,79 @@ Activities/
 ✅ **Personal Expression**: Creative outlets for individual needs
 
 This Activities module represents a comprehensive approach to digital wellness, combining evidence-based stress relief techniques with modern web technology to create an engaging, accessible, and effective mental health support tool.
+
+🧠 Complete Understanding of Stress Functionality
+
+1. Architecture Overview
+The stress monitoring system is built with a multi-layered architecture:
+
+📊 Data Layer: Redux store with stressMonitoringSlice 🔧 Service Layer: stressMonitoringService (singleton) for scheduling and coordination 🎯 Component Layer: StressMonitor, FaceAnalysis, StressDetector 🎨 Adaptation Layer: StressAdaptationContext for UI/UX changes 🎛️ Control Layer: StressMonitoringPanel for user configuration
+
+2. Core Components & Flow
+A. Stress Detection Process
+Trigger: Either automatic (scheduled) or manual (button click)
+Event: Custom triggerStressTest event dispatched
+Modal: FaceAnalysis component opens with webcam access
+Analysis: StressDetector uses face-api.js to analyze facial expressions
+Results: Returns StressAnalysisResult with:
+stressLevel (0-100)
+dominantExpression (angry, happy, sad, etc.)
+expressions (raw scores for all emotions)
+isStressed (boolean threshold check)
+timestamp
+B. Data Management (Redux)
+C. Automatic Scheduling
+Service: stressMonitoringService manages timers
+Initialization: Only when user is authenticated
+Scheduling: Based on testInterval (30/60 min)
+Persistence: Uses Redux persist for state
+Cleanup: Proper cleanup on logout/unmount
+3. Stress Adaptations System
+A. Adaptation Logic (stressAdaptations.types.ts)
+B. Adaptive Behaviors
+Theme: default vs calm (high stress triggers calm theme)
+UI Simplification: Reduces complexity at moderate+ stress
+Notifications: Reduced at moderate+ stress
+Break Intervals: More frequent for higher stress (20min high, 30min moderate, 45min low)
+Motivational Messages: Context-aware based on dominant expression
+C. Real-time Adaptations
+Theme switching: CSS variables updated dynamically
+Component behavior: Context provides adaptation state
+Break suggestions: Time-based with stress-level intervals
+4. User Experience Flow
+A. First-time Users
+Modal: "Let's Make AuraFlow Work Better for You!"
+Calibration: "3 seconds to calibrate!"
+Setup: Explanation of stress monitoring
+B. Returning Users
+Modal: "Quick Wellness Check-In"
+Analysis: "Checking your current state..."
+Results: Immediate feedback
+C. Post-Analysis Actions
+High Stress: Toast + redirect to /activities
+Low Stress: Positive reinforcement toast
+Data Storage: Results saved to history
+Next Test: Automatically scheduled
+5. Manual Stress Mode (New Feature)
+Toggle: In StressMonitoringPanel
+State: Local component state (manualStressMode)
+Purpose: Force stress adaptations for testing
+Implementation: Ready for integration with adaptation system
+6. Data Analytics (useStressAnalytics)
+Average Stress: Overall historical average
+Trends: Hour/day/week calculations
+Stress Percentage: % of time user appears stressed
+Dominant Expression: Most common stress expression
+Current State: Real-time stress status
+7. Integration Points
+Authentication: Only active when user logged in
+Navigation: Auto-redirect to activities when stressed
+Toasts: Contextual feedback system
+Persistence: Redux-persist for data retention
+Cleanup: Proper service cleanup on logout
+8. Technical Details
+Face Detection: Uses face-api.js with pre-trained models
+Serialization: Handles Date/number conversion for Redux
+Event System: Custom events for component communication
+Error Handling: Graceful degradation and null checks
+Performance: Singleton service pattern prevents multiple timers

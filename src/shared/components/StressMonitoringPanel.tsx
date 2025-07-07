@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, HStack } from '@chakra-ui/react';
 import { useStressMonitoring } from '../hooks/useStressMonitoring';
 import { useStressAdaptation } from '../adaptations/StressAdaptationContext';
@@ -16,14 +16,15 @@ export const StressMonitoringPanel: React.FC = () => {
     stressHistory,
     testInterval,
     autoTestEnabled,
+    isManualStressModeEnabled,
     triggerStressTest,
     setInterval,
     setAutoTest,
+    toggleManualStressMode,
     clearHistory,
   } = useStressMonitoring();
 
   const { theme } = useStressAdaptation();
-  const [manualStressMode, setManualStressMode] = useState(false);
 
   // Format time remaining until next test
   const formatTimeRemaining = () => {
@@ -42,7 +43,7 @@ export const StressMonitoringPanel: React.FC = () => {
   };
 
   const handleManualStressToggle = () => {
-    setManualStressMode(!manualStressMode);
+    toggleManualStressMode();
   };
 
   return (
@@ -55,6 +56,12 @@ export const StressMonitoringPanel: React.FC = () => {
           <div className={styles.statusItem}>
             <span className={styles.statusLabel}>Auto-testing</span>
             <span className={styles.statusValue}>{autoTestEnabled ? 'Enabled' : 'Disabled'}</span>
+          </div>
+          <div className={styles.statusItem}>
+            <span className={styles.statusLabel}>Manual Stress Mode</span>
+            <span className={`${styles.statusValue} ${isManualStressModeEnabled ? styles.manualStressModeActive : ''}`}>
+              {isManualStressModeEnabled ? 'Active' : 'Inactive'}
+            </span>
           </div>
           <div className={styles.statusItem}>
             <span className={styles.statusLabel}>Test Interval</span>
@@ -128,7 +135,7 @@ export const StressMonitoringPanel: React.FC = () => {
             colorPalette="orange"
             size="sm"
           >
-            {manualStressMode ? 'Exit Stress Mode' : 'Trigger Stress Mode'}
+            {isManualStressModeEnabled ? 'Exit Stress Mode' : 'Trigger Stress Mode'}
           </Button>
         </HStack>
 

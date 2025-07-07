@@ -18,6 +18,10 @@ interface StressAdaptationContextType {
   averageStressLevel: number | null;
   stressPercentage: number;
 
+  // Manual stress mode
+  isManualStressModeEnabled: boolean;
+  toggleManualStressMode: () => void;
+
   // Actions
   suggestBreakNow: () => void;
   dismissBreakSuggestion: () => void;
@@ -37,7 +41,7 @@ interface StressAdaptationProviderProps {
 
 export const StressAdaptationProvider: React.FC<StressAdaptationProviderProps> = ({ children }) => {
   // Get stress data from our hooks
-  const { lastStressResult } = useStressMonitoring();
+  const { lastStressResult, isManualStressModeEnabled, toggleManualStressMode } = useStressMonitoring();
   const { isCurrentlyStressed, averageStressLevel, stressPercentage } = useStressAnalytics();
 
   // Break suggestion state
@@ -45,7 +49,9 @@ export const StressAdaptationProvider: React.FC<StressAdaptationProviderProps> =
   const [lastBreakTime, setLastBreakTime] = useState<number | null>(null);
 
   // Calculate stress adaptations
-  const stressLevel = lastStressResult?.stressLevel ?? 0;
+  // When manual stress mode is enabled, force high stress level for adaptations
+  const actualStressLevel = lastStressResult?.stressLevel ?? 0;
+  const stressLevel = isManualStressModeEnabled ? 85 : actualStressLevel; // Force high stress when manual mode is on
 
   const isDominantExpression = (expression: string) => {
     return lastStressResult?.dominantExpression === expression;
@@ -98,6 +104,10 @@ export const StressAdaptationProvider: React.FC<StressAdaptationProviderProps> =
       averageStressLevel: averageStressLevel || 0,
       stressPercentage,
 
+      // Manual stress mode
+      isManualStressModeEnabled,
+      toggleManualStressMode,
+
       // Actions
       suggestBreakNow,
       dismissBreakSuggestion,
@@ -115,6 +125,8 @@ export const StressAdaptationProvider: React.FC<StressAdaptationProviderProps> =
       isCurrentlyStressed,
       averageStressLevel,
       stressPercentage,
+      isManualStressModeEnabled,
+      toggleManualStressMode,
       isBreakSuggested,
       lastBreakTime,
     ],

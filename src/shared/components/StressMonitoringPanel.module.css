@@ -135,3 +135,8 @@
 .stressHigh {
   background-color: #ff6b6b;
 }
+
+.manualStressModeActive {
+  color: #ff6b6b;
+  font-weight: bold;
+}

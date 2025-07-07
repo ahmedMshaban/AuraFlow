@@ -33,7 +33,6 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
           <div
             className={styles.sidebarPanelLink}
             onClick={() => handleNavigation('/')}
-            style={{ cursor: 'pointer' }}
           >
             <FaHome />
             Home
@@ -41,7 +40,6 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
           <div
             className={styles.sidebarPanelLink}
             onClick={() => handleNavigation('/activities')}
-            style={{ cursor: 'pointer' }}
           >
             <FaBookOpen />
             <span>Library</span>
@@ -49,7 +47,6 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
           <div
             className={styles.sidebarPanelLink}
             onClick={() => handleNavigation('/tasks')}
-            style={{ cursor: 'pointer' }}
           >
             <FaTasks />
             <span>My Tasks</span>
@@ -57,7 +54,6 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
           <div
             className={styles.sidebarPanelLink}
             onClick={() => handleNavigation('/emails')}
-            style={{ cursor: 'pointer' }}
           >
             <FaEnvelope />
             <span>My Emails</span>
