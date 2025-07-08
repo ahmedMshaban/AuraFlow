@@ -5,6 +5,7 @@ import type { GmailMessageWithStress } from '@/shared/types/gmail.types';
 import formatDate from '../../infrastructure/helpers/formatDate';
 import getPriorityIcon from '../../infrastructure/helpers/getPriorityIcon';
 import getStressColor from '../../infrastructure/helpers/getStressColor';
+import openGmailEmail from '../../infrastructure/helpers/openGmailEmail';
 
 const EmailItem = ({ email }: { email: GmailMessageWithStress }) => {
   return (
@@ -21,6 +22,7 @@ const EmailItem = ({ email }: { email: GmailMessageWithStress }) => {
         transform: 'translateY(-1px)',
         boxShadow: 'md',
       }}
+      onClick={() => openGmailEmail(email.id)}
     >
       <HStack
         justify="space-between"
