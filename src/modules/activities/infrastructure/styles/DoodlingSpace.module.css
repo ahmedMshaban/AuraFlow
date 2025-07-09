@@ -182,7 +182,10 @@
 .canvas {
   max-width: 100%;
   max-height: 100%;
-  cursor: crosshair;
+  /* Image source https://www.flaticon.com/free-icon/pencil-cursor_63612*/
+  cursor:
+    url('../../../../assets/images/pencil-cursor.png') 0 24,
+    crosshair;
   border-radius: 8px;
 }
 

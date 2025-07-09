@@ -215,7 +215,7 @@ const Emails = ({
               >
                 <Button
                   variant={activeTab === 'focused' ? 'solid' : 'ghost'}
-                  colorScheme={activeTab === 'focused' ? 'blue' : 'gray'}
+                  colorPalette={activeTab === 'focused' ? 'blue' : 'gray'}
                   size="sm"
                   onClick={() => setActiveTab('focused')}
                   borderRadius="md md 0 0"
@@ -234,7 +234,7 @@ const Emails = ({
                 </Button>
                 <Button
                   variant={activeTab === 'others' ? 'solid' : 'ghost'}
-                  colorScheme={activeTab === 'others' ? 'blue' : 'gray'}
+                  colorPalette={activeTab === 'others' ? 'blue' : 'gray'}
                   size="sm"
                   onClick={() => setActiveTab('others')}
                   borderRadius="md md 0 0"
@@ -307,7 +307,7 @@ const Emails = ({
               onClick={() => fetchEmailsByPriority(maxEmails, maxEmails)}
               loading={isLoadingEmails}
               loadingText="Refreshing..."
-              colorScheme="blue"
+              colorPalette="blue"
             >
               Refresh Emails
             </Button>
@@ -316,7 +316,7 @@ const Emails = ({
             {isHomePage && (focusedEmails.length > 0 || otherEmails.length > 0) && (
               <RouterLink to="/emails">
                 <Button
-                  colorScheme="blue"
+                  colorPalette="blue"
                   size="sm"
                   variant="outline"
                 >

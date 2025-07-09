@@ -75,7 +75,7 @@ vi.mock('@chakra-ui/react', () => ({
     onClick,
     size,
     variant,
-    colorScheme,
+    colorPalette,
     ml,
     title,
     ...props
@@ -84,7 +84,7 @@ vi.mock('@chakra-ui/react', () => ({
     onClick?: () => void;
     size?: string;
     variant?: string;
-    colorScheme?: string;
+    colorPalette?: string;
     ml?: string;
     title?: string;
     [key: string]: unknown;
@@ -93,7 +93,7 @@ vi.mock('@chakra-ui/react', () => ({
       onClick={onClick}
       data-size={size}
       data-variant={variant}
-      data-colorscheme={colorScheme}
+      data-colorPalette={colorPalette}
       data-ml={ml}
       title={title}
       {...props}
@@ -801,12 +801,12 @@ describe('Tasks', () => {
 
     it('shows loading state when updating task', async () => {
       const mockUpdateTask = vi.fn().mockImplementation(() => new Promise<void>(() => {})); // Never resolves
-      
+
       render(
         <Tasks
           {...defaultProps}
           updateTask={mockUpdateTask}
-        />
+        />,
       );
 
       // Open edit form

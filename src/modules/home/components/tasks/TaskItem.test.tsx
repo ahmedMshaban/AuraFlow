@@ -12,21 +12,21 @@ vi.mock('@chakra-ui/react', () => ({
     children,
     onClick,
     size,
-    colorScheme,
+    colorPalette,
     variant,
     ...props
   }: {
     children: ReactNode;
     onClick?: () => void;
     size?: string;
-    colorScheme?: string;
+    colorPalette?: string;
     variant?: string;
     [key: string]: unknown;
   }) => (
     <button
       onClick={onClick}
       data-size={size}
-      data-colorscheme={colorScheme}
+      data-colorPalette={colorPalette}
       data-variant={variant}
       {...props}
     >
@@ -51,18 +51,18 @@ vi.mock('@chakra-ui/react', () => ({
   ),
   Badge: ({
     children,
-    colorScheme,
+    colorPalette,
     size,
     ...props
   }: {
     children: ReactNode;
-    colorScheme?: string;
+    colorPalette?: string;
     size?: string;
     [key: string]: unknown;
   }) => (
     <span
       data-testid="badge"
-      data-colorscheme={colorScheme}
+      data-colorPalette={colorPalette}
       data-size={size}
       {...props}
     >
@@ -158,12 +158,12 @@ describe('TaskItem', () => {
     // Check priority badge
     const priorityBadge = badges.find((badge) => badge.textContent === 'medium');
     expect(priorityBadge).toBeDefined();
-    expect(priorityBadge?.getAttribute('data-colorscheme')).toBe('yellow');
+    expect(priorityBadge?.getAttribute('data-colorPalette')).toBe('yellow');
 
     // Check status badge
     const statusBadge = badges.find((badge) => badge.textContent === 'pending');
     expect(statusBadge).toBeDefined();
-    expect(statusBadge?.getAttribute('data-colorscheme')).toBe('blue');
+    expect(statusBadge?.getAttribute('data-colorPalette')).toBe('blue');
   });
 
   it('renders high priority task correctly', () => {
@@ -177,7 +177,7 @@ describe('TaskItem', () => {
 
     const priorityBadge = screen.getAllByTestId('badge').find((badge) => badge.textContent === 'high');
     expect(priorityBadge).toBeDefined();
-    expect(priorityBadge?.getAttribute('data-colorscheme')).toBe('red');
+    expect(priorityBadge?.getAttribute('data-colorPalette')).toBe('red');
   });
 
   it('renders low priority task correctly', () => {
@@ -191,7 +191,7 @@ describe('TaskItem', () => {
 
     const priorityBadge = screen.getAllByTestId('badge').find((badge) => badge.textContent === 'low');
     expect(priorityBadge).toBeDefined();
-    expect(priorityBadge?.getAttribute('data-colorscheme')).toBe('green');
+    expect(priorityBadge?.getAttribute('data-colorPalette')).toBe('green');
   });
 
   it('renders completed task with appropriate styling', () => {
@@ -205,7 +205,7 @@ describe('TaskItem', () => {
 
     const statusBadge = screen.getAllByTestId('badge').find((badge) => badge.textContent === 'completed');
     expect(statusBadge).toBeDefined();
-    expect(statusBadge?.getAttribute('data-colorscheme')).toBe('green');
+    expect(statusBadge?.getAttribute('data-colorPalette')).toBe('green');
 
     // Check that the button text changes to "Undo" for completed tasks
     expect(screen.getByText('Undo')).toBeDefined();
@@ -222,7 +222,7 @@ describe('TaskItem', () => {
 
     const statusBadge = screen.getAllByTestId('badge').find((badge) => badge.textContent === 'overdue');
     expect(statusBadge).toBeDefined();
-    expect(statusBadge?.getAttribute('data-colorscheme')).toBe('red');
+    expect(statusBadge?.getAttribute('data-colorPalette')).toBe('red');
   });
 
   it('does not render description when not provided', () => {
@@ -308,13 +308,13 @@ describe('TaskItem', () => {
     // Complete button
     const completeButton = screen.getByText('Complete');
     expect(completeButton.getAttribute('data-size')).toBe('sm');
-    expect(completeButton.getAttribute('data-colorscheme')).toBe('green');
+    expect(completeButton.getAttribute('data-colorPalette')).toBe('green');
     expect(completeButton.getAttribute('data-variant')).toBe('outline');
 
     // Delete button
     const deleteButton = screen.getByText('Delete');
     expect(deleteButton.getAttribute('data-size')).toBe('sm');
-    expect(deleteButton.getAttribute('data-colorscheme')).toBe('red');
+    expect(deleteButton.getAttribute('data-colorPalette')).toBe('red');
     expect(deleteButton.getAttribute('data-variant')).toBe('outline');
   });
 
@@ -329,7 +329,7 @@ describe('TaskItem', () => {
 
     const undoButton = screen.getByText('Undo');
     expect(undoButton.getAttribute('data-size')).toBe('sm');
-    expect(undoButton.getAttribute('data-colorscheme')).toBe('yellow');
+    expect(undoButton.getAttribute('data-colorPalette')).toBe('yellow');
     expect(undoButton.getAttribute('data-variant')).toBe('outline');
   });
 
@@ -445,7 +445,7 @@ describe('TaskItem', () => {
 
       const statusBadge = screen.getAllByTestId('badge').find((badge) => badge.textContent === status);
       expect(statusBadge).toBeDefined();
-      expect(statusBadge?.getAttribute('data-colorscheme')).toBe(expectedColor);
+      expect(statusBadge?.getAttribute('data-colorPalette')).toBe(expectedColor);
 
       unmount();
     });
@@ -469,7 +469,7 @@ describe('TaskItem', () => {
 
       const priorityBadge = screen.getAllByTestId('badge').find((badge) => badge.textContent === priority);
       expect(priorityBadge).toBeDefined();
-      expect(priorityBadge?.getAttribute('data-colorscheme')).toBe(expectedColor);
+      expect(priorityBadge?.getAttribute('data-colorPalette')).toBe(expectedColor);
 
       unmount();
     });
@@ -507,7 +507,7 @@ describe('TaskItem', () => {
       const editButton = screen.getByText('Edit');
       expect(editButton.getAttribute('data-size')).toBe('sm');
       expect(editButton.getAttribute('data-variant')).toBe('outline');
-      expect(editButton.getAttribute('data-colorscheme')).toBe('blue');
+      expect(editButton.getAttribute('data-colorPalette')).toBe('blue');
     });
   });
 });

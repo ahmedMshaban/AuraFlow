@@ -36,13 +36,13 @@ vi.mock('@chakra-ui/react', () => ({
   Input: (props: { [key: string]: unknown }) => {
     // Filter out React-specific props that shouldn't be on DOM elements
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { colorScheme, isBackground, isLoading, size, variant, ...domProps } = props;
+    const { colorPalette, isBackground, isLoading, size, variant, ...domProps } = props;
     return <input {...domProps} />;
   },
   IconButton: (props: { [key: string]: unknown }) => {
     // Filter out React-specific props that shouldn't be on DOM elements
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { colorScheme, isBackground, isLoading, size, variant, ...domProps } = props;
+    const { colorPalette, isBackground, isLoading, size, variant, ...domProps } = props;
     return <button {...domProps} />;
   },
 }));

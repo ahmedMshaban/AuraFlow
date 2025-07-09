@@ -131,7 +131,7 @@ const Tasks = ({
               key={tab.key}
               size="sm"
               variant={activeTab === tab.key ? 'solid' : 'outline'}
-              colorScheme={tab.color}
+              colorPalette={tab.color}
               onClick={() => setActiveTab(tab.key)}
               title={tab.description}
             >
@@ -139,7 +139,7 @@ const Tasks = ({
             </Button>
           ))}
           <Button
-            colorScheme="blue"
+            colorPalette="blue"
             size="sm"
             ml="auto"
             onClick={() => setIsModalOpen(true)}
@@ -186,7 +186,7 @@ const Tasks = ({
                 >
                   <RouterLink to="/tasks">
                     <Button
-                      colorScheme="blue"
+                      colorPalette="blue"
                       size="sm"
                     >
                       View All {currentTab.label} Tasks ({currentTab.count})

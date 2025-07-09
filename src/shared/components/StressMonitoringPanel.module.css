@@ -53,8 +53,8 @@
 }
 
 :global(.theme-calm) .resultCard {
-  background: rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(203, 213, 225, 0.8);
 }
 
 .controlsSection {
@@ -71,15 +71,27 @@
 .select {
   padding: 0.75rem;
   border-radius: 8px;
-  border: 1px solid var(--chakra-colors-gray-600);
-  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
   font-size: 0.9rem;
   min-width: 150px;
 }
 
+:global(.theme-calm) .select {
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  background: rgba(248, 250, 252, 0.9);
+  color: var(--chakra-colors-gray-700);
+}
+
 .select option {
   background: var(--bg-primary, #2d3748);
-  color: var(--text-primary, #2d3748);
+  color: var(--text-primary, white);
+}
+
+:global(.theme-calm) .select option {
+  background: rgba(248, 250, 252, 1);
+  color: var(--chakra-colors-gray-700);
 }
 
 .historySection {
@@ -96,8 +108,8 @@
 }
 
 :global(.theme-calm) .historyContainer {
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  background: rgba(248, 250, 252, 0.6);
 }
 
 .historyItem {
@@ -109,8 +121,8 @@
 }
 
 :global(.theme-calm) .historyItem {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(203, 213, 225, 0.6);
+  background: rgba(241, 245, 249, 0.7);
 }
 
 .historyItem:last-child {
@@ -150,4 +162,165 @@
 .manualStressModeActive {
   color: #ff6b6b;
   font-weight: bold;
+}
+
+.testNowButton {
+  background: rgba(34, 197, 94, 0.8) !important;
+  border: 1px solid rgba(34, 197, 94, 0.9) !important;
+  color: white !important;
+  transition: all 0.2s ease !important;
+}
+
+.testNowButton:hover {
+  background: rgba(34, 197, 94, 0.9) !important;
+  border-color: rgba(34, 197, 94, 1) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+:global(.theme-calm) .testNowButton {
+  background: rgba(34, 197, 94, 0.85) !important;
+  border-color: rgba(34, 197, 94, 1) !important;
+  color: white !important;
+}
+
+:global(.theme-calm) .testNowButton:hover {
+  background: rgba(22, 163, 74, 0.95) !important;
+  border-color: rgba(22, 163, 74, 1) !important;
+  color: white !important;
+}
+
+/* Enable Auto-Test Button - Blue theme */
+.enableAutoButton {
+  background: rgba(59, 130, 246, 0.8) !important;
+  border: 1px solid rgba(59, 130, 246, 0.9) !important;
+  color: white !important;
+  transition: all 0.2s ease !important;
+}
+
+.enableAutoButton:hover {
+  background: rgba(59, 130, 246, 0.9) !important;
+  border-color: rgba(59, 130, 246, 1) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+:global(.theme-calm) .enableAutoButton {
+  background: rgba(59, 130, 246, 0.85) !important;
+  border-color: rgba(59, 130, 246, 1) !important;
+  color: white !important;
+}
+
+:global(.theme-calm) .enableAutoButton:hover {
+  background: rgba(37, 99, 235, 0.95) !important;
+  border-color: rgba(37, 99, 235, 1) !important;
+  color: white !important;
+}
+
+/* Disable Auto-Test Button - Red theme */
+.disableAutoButton {
+  background: rgba(239, 68, 68, 0.8) !important;
+  border: 1px solid rgba(239, 68, 68, 0.9) !important;
+  color: white !important;
+  transition: all 0.2s ease !important;
+}
+
+.disableAutoButton:hover {
+  background: rgba(239, 68, 68, 0.9) !important;
+  border-color: rgba(239, 68, 68, 1) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+:global(.theme-calm) .disableAutoButton {
+  background: rgba(239, 68, 68, 0.85) !important;
+  border-color: rgba(239, 68, 68, 1) !important;
+  color: white !important;
+}
+
+:global(.theme-calm) .disableAutoButton:hover {
+  background: rgba(220, 38, 38, 0.95) !important;
+  border-color: rgba(220, 38, 38, 1) !important;
+  color: white !important;
+}
+
+/* Trigger Stress Mode Button - Orange theme */
+.triggerStressButton {
+  background: rgba(249, 115, 22, 0.8) !important;
+  border: 1px solid rgba(249, 115, 22, 0.9) !important;
+  color: white !important;
+  transition: all 0.2s ease !important;
+}
+
+.triggerStressButton:hover {
+  background: rgba(249, 115, 22, 0.9) !important;
+  border-color: rgba(249, 115, 22, 1) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+:global(.theme-calm) .triggerStressButton {
+  background: rgba(249, 115, 22, 0.85) !important;
+  border-color: rgba(249, 115, 22, 1) !important;
+  color: white !important;
+}
+
+:global(.theme-calm) .triggerStressButton:hover {
+  background: rgba(234, 88, 12, 0.95) !important;
+  border-color: rgba(234, 88, 12, 1) !important;
+  color: white !important;
+}
+
+/* Exit Stress Mode Button - Green theme */
+.exitStressButton {
+  background: rgba(34, 197, 94, 0.8) !important;
+  border: 1px solid rgba(34, 197, 94, 0.9) !important;
+  color: white !important;
+  transition: all 0.2s ease !important;
+}
+
+.exitStressButton:hover {
+  background: rgba(34, 197, 94, 0.9) !important;
+  border-color: rgba(34, 197, 94, 1) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+:global(.theme-calm) .exitStressButton {
+  background: rgba(34, 197, 94, 0.85) !important;
+  border-color: rgba(34, 197, 94, 1) !important;
+  color: white !important;
+}
+
+:global(.theme-calm) .exitStressButton:hover {
+  background: rgba(22, 163, 74, 0.95) !important;
+  border-color: rgba(22, 163, 74, 1) !important;
+  color: white !important;
+}
+
+/* Clear History Button - Red theme */
+.clearHistoryButton {
+  background: rgba(239, 68, 68, 0.8) !important;
+  border: 1px solid rgba(239, 68, 68, 0.9) !important;
+  color: white !important;
+  transition: all 0.2s ease !important;
+}
+
+.clearHistoryButton:hover {
+  background: rgba(239, 68, 68, 0.9) !important;
+  border-color: rgba(239, 68, 68, 1) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+:global(.theme-calm) .clearHistoryButton {
+  background: rgba(239, 68, 68, 0.85) !important;
+  border-color: rgba(239, 68, 68, 1) !important;
+  color: white !important;
+}
+
+:global(.theme-calm) .clearHistoryButton:hover {
+  background: rgba(220, 38, 38, 0.95) !important;
+  border-color: rgba(220, 38, 38, 1) !important;
+  color: white !important;
 }

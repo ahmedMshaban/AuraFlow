@@ -83,7 +83,8 @@ const FaceAnalysis = ({ onAnalysisComplete, onClose }: FaceAnalysisProps) => {
                               emotion state
                             </li>
                             <li>
-                              <span>Gentle Check-ins:</span> We'll briefly check in (no camera always on!).
+                              <span>Periodic Monitoring:</span> We'll check your emotional state occasionally to keep
+                              things personalized (your camera isn't always on).
                             </li>
                             <li>
                               <span>Adapt Just for You:</span> If we sense stress, we'll simplify tasks or suggest

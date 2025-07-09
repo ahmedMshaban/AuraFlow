@@ -54,8 +54,7 @@
   box-shadow: 0 0 30px rgba(80, 200, 120, 0.4);
 }
 
-.breathBox.hold1,
-.breathBox.hold2 {
+.breathBox.hold1 {
   transform: scale(1.2);
   border-color: rgba(255, 193, 7, 0.8);
   box-shadow: 0 0 30px rgba(255, 193, 7, 0.4);
@@ -65,6 +64,12 @@
   transform: scale(0.8);
   border-color: rgba(74, 144, 226, 0.8);
   box-shadow: 0 0 30px rgba(74, 144, 226, 0.4);
+}
+
+.breathBox.hold2 {
+  transform: scale(0.8);
+  border-color: rgba(255, 193, 7, 0.8);
+  box-shadow: 0 0 30px rgba(255, 193, 7, 0.4);
 }
 
 .innerBox {

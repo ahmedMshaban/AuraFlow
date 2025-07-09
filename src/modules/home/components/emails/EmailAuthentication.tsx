@@ -55,7 +55,7 @@ const EmailAuthentication = ({ isCurrentlyStressed, authenticate, isLoading, err
         <Button
           onClick={authenticate}
           size="lg"
-          colorScheme="blue"
+          colorPalette="blue"
           loading={isLoading}
           loadingText="Connecting..."
         >

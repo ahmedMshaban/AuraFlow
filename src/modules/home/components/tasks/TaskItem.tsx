@@ -32,13 +32,13 @@ const TaskItem = ({ task, onToggleStatus, onDelete, onEdit }: TaskItemProps) => 
           </Text>
           <HStack gap={2}>
             <Badge
-              colorScheme={getPriorityColor(task.priority)}
+              colorPalette={getPriorityColor(task.priority)}
               size="sm"
             >
               {task.priority}
             </Badge>
             <Badge
-              colorScheme={getStatusColor(task.status)}
+              colorPalette={getStatusColor(task.status)}
               size="sm"
             >
               {task.status}
@@ -71,7 +71,7 @@ const TaskItem = ({ task, onToggleStatus, onDelete, onEdit }: TaskItemProps) => 
           <HStack gap={2}>
             <Button
               size="sm"
-              colorScheme="blue"
+              colorPalette="blue"
               variant="outline"
               onClick={() => onEdit(task)}
             >
@@ -79,7 +79,7 @@ const TaskItem = ({ task, onToggleStatus, onDelete, onEdit }: TaskItemProps) => 
             </Button>
             <Button
               size="sm"
-              colorScheme={task.status === 'completed' ? 'yellow' : 'green'}
+              colorPalette={task.status === 'completed' ? 'yellow' : 'green'}
               variant="outline"
               onClick={() => onToggleStatus(task.id, task.status)}
             >
@@ -87,7 +87,7 @@ const TaskItem = ({ task, onToggleStatus, onDelete, onEdit }: TaskItemProps) => 
             </Button>
             <Button
               size="sm"
-              colorScheme="red"
+              colorPalette="red"
               variant="outline"
               onClick={() => onDelete(task.id)}
             >

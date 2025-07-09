@@ -41,7 +41,7 @@ vi.mock('@chakra-ui/react', () => ({
     children,
     onClick,
     variant,
-    colorScheme,
+    colorPalette,
     size,
     loading,
     loadingText,
@@ -50,7 +50,7 @@ vi.mock('@chakra-ui/react', () => ({
     children: ReactNode;
     onClick?: () => void;
     variant?: string;
-    colorScheme?: string;
+    colorPalette?: string;
     size?: string;
     loading?: boolean;
     loadingText?: string;
@@ -60,7 +60,7 @@ vi.mock('@chakra-ui/react', () => ({
       onClick={onClick}
       disabled={loading}
       data-variant={variant}
-      data-colorscheme={colorScheme}
+      data-colorPalette={colorPalette}
       data-size={size}
       {...props}
     >
@@ -112,19 +112,19 @@ vi.mock('@chakra-ui/react', () => ({
   ),
   Badge: ({
     children,
-    colorScheme,
+    colorPalette,
     variant,
     ml,
     size,
   }: {
     children: ReactNode;
-    colorScheme?: string;
+    colorPalette?: string;
     variant?: string;
     ml?: number;
     size?: string;
   }) => (
     <span
-      data-colorscheme={colorScheme}
+      data-colorPalette={colorPalette}
       data-variant={variant}
       data-ml={ml}
       data-size={size}

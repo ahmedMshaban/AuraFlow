@@ -42,18 +42,18 @@ vi.mock('@chakra-ui/react', () => ({
   Heading: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => <h3 {...props}>{children}</h3>,
   Badge: ({
     children,
-    colorScheme,
+    colorPalette,
     variant,
     ...props
   }: {
     children: ReactNode;
-    colorScheme?: string;
+    colorPalette?: string;
     variant?: string;
     [key: string]: unknown;
   }) => (
     <span
       data-testid="badge"
-      data-colorscheme={colorScheme}
+      data-colorPalette={colorPalette}
       data-variant={variant}
       {...props}
     >
@@ -209,7 +209,7 @@ describe('EmailItem', () => {
     const badge = screen.getByTestId('badge');
     expect(badge).toBeDefined();
     expect(badge.textContent).toBe('LOW PRIORITY');
-    expect(badge.getAttribute('data-colorscheme')).toBe('green');
+    expect(badge.getAttribute('data-colorPalette')).toBe('green');
     expect(screen.getByTestId('mail-icon')).toBeDefined();
   });
 
@@ -231,7 +231,7 @@ describe('EmailItem', () => {
     const badge = screen.getByTestId('badge');
     expect(badge).toBeDefined();
     expect(badge.textContent).toBe('MEDIUM PRIORITY');
-    expect(badge.getAttribute('data-colorscheme')).toBe('orange');
+    expect(badge.getAttribute('data-colorPalette')).toBe('orange');
     expect(screen.getByTestId('clock-icon')).toBeDefined();
   });
 
@@ -253,7 +253,7 @@ describe('EmailItem', () => {
     const badge = screen.getByTestId('badge');
     expect(badge).toBeDefined();
     expect(badge.textContent).toBe('HIGH PRIORITY');
-    expect(badge.getAttribute('data-colorscheme')).toBe('red');
+    expect(badge.getAttribute('data-colorPalette')).toBe('red');
     expect(screen.getByTestId('alert-triangle-icon')).toBeDefined();
   });
 
@@ -379,6 +379,6 @@ describe('EmailItem', () => {
 
     // Verify that the badge has correct color scheme
     const badge = screen.getByTestId('badge');
-    expect(badge.getAttribute('data-colorscheme')).toBe('green');
+    expect(badge.getAttribute('data-colorPalette')).toBe('green');
   });
 });

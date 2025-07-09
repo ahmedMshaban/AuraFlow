@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, HStack } from '@chakra-ui/react';
+import { FaPlay, FaToggleOn, FaToggleOff, FaExclamationTriangle, FaCheckCircle, FaTrash } from 'react-icons/fa';
 import { useStressMonitoring } from '../hooks/useStressMonitoring';
 import { useStressAdaptation } from '../adaptations/StressAdaptationContext';
 import styles from './StressMonitoringPanel.module.css';
@@ -107,26 +108,47 @@ export const StressMonitoringPanel: React.FC = () => {
         >
           <Button
             onClick={triggerStressTest}
-            colorPalette="green"
             size="sm"
+            className={styles.testNowButton}
           >
+            <FaPlay style={{ marginRight: '0.5rem' }} />
             Test Now
           </Button>
 
           <Button
             onClick={() => setAutoTest(!autoTestEnabled)}
-            colorPalette={autoTestEnabled ? 'red' : 'blue'}
             size="sm"
+            className={autoTestEnabled ? styles.disableAutoButton : styles.enableAutoButton}
           >
-            {autoTestEnabled ? 'Disable Auto-Test' : 'Enable Auto-Test'}
+            {autoTestEnabled ? (
+              <>
+                <FaToggleOff style={{ marginRight: '0.5rem' }} />
+                Disable Auto-Test
+              </>
+            ) : (
+              <>
+                <FaToggleOn style={{ marginRight: '0.5rem' }} />
+                Enable Auto-Test
+              </>
+            )}
           </Button>
 
           <Button
             onClick={handleManualStressToggle}
-            colorPalette="orange"
             size="sm"
+            className={isManualStressModeEnabled ? styles.exitStressButton : styles.triggerStressButton}
           >
-            {isManualStressModeEnabled ? 'Exit Stress Mode' : 'Trigger Stress Mode'}
+            {isManualStressModeEnabled ? (
+              <>
+                <FaCheckCircle style={{ marginRight: '0.5rem' }} />
+                Exit Stress Mode
+              </>
+            ) : (
+              <>
+                <FaExclamationTriangle style={{ marginRight: '0.5rem' }} />
+                Trigger Stress Mode
+              </>
+            )}
           </Button>
         </HStack>
 
@@ -154,9 +176,10 @@ export const StressMonitoringPanel: React.FC = () => {
 
         <Button
           onClick={clearHistory}
-          colorPalette="red"
           size="sm"
+          className={styles.clearHistoryButton}
         >
+          <FaTrash style={{ marginRight: '0.5rem' }} />
           Clear History
         </Button>
       </div>

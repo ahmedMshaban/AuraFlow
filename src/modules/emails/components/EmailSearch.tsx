@@ -79,7 +79,7 @@ const EmailSearch = ({
             onClick={handleSearch}
             size="sm"
             variant="solid"
-            colorScheme="blue"
+            colorPalette="blue"
             disabled={isLoading || !searchQuery.trim()}
             aria-label="Search emails"
           >

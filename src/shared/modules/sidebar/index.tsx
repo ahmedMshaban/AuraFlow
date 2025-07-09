@@ -1,11 +1,16 @@
-import { FaBookOpen, FaTasks, FaEnvelope, FaHome } from 'react-icons/fa';
+import { FaBookOpen, FaTasks, FaEnvelope, FaHome, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
+import { Button } from '@chakra-ui/react';
 
 import styles from './infrastructure/styles/sidebar.module.css';
 import StressMonitoringPanel from '@/shared/components/StressMonitoringPanel';
+import { useAuth } from '@/shared/hooks/useAuth';
+import useSidebar from './infrastructure/hooks/useSidebar';
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   const navigate = useNavigate();
+  const authContext = useAuth();
+  const { handleSignOut } = useSidebar();
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -23,6 +28,19 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
           <div className={styles.sidebarPanel}>
             <div className={styles.sidebarPanelHeader}>
               <h2 className={styles.sidebarTitle}>Settings</h2>
+              {authContext?.currentUser && (
+                <div className={styles.signOutContainer}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className={styles.signOutButton}
+                    onClick={handleSignOut}
+                  >
+                    <FaSignOutAlt style={{ marginRight: '0.5rem' }} />
+                    Sign Out
+                  </Button>
+                </div>
+              )}
             </div>
             <StressMonitoringPanel />
           </div>
@@ -42,7 +60,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
             onClick={() => handleNavigation('/activities')}
           >
             <FaBookOpen />
-            <span>Library</span>
+            <span>Activities</span>
           </div>
           <div
             className={styles.sidebarPanelLink}

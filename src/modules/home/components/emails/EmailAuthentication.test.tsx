@@ -24,7 +24,7 @@ vi.mock('@chakra-ui/react', () => ({
     children,
     onClick,
     size,
-    colorScheme,
+    colorPalette,
     loading,
     loadingText,
     ...props
@@ -32,7 +32,7 @@ vi.mock('@chakra-ui/react', () => ({
     children: ReactNode;
     onClick?: () => void;
     size?: string;
-    colorScheme?: string;
+    colorPalette?: string;
     loading?: boolean;
     loadingText?: string;
     [key: string]: unknown;
@@ -41,7 +41,7 @@ vi.mock('@chakra-ui/react', () => ({
       onClick={onClick}
       disabled={loading}
       data-size={size}
-      data-colorscheme={colorScheme}
+      data-colorPalette={colorPalette}
       {...props}
     >
       {loading ? loadingText : children}

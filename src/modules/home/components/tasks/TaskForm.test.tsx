@@ -27,7 +27,7 @@ vi.mock('@chakra-ui/react', () => ({
     children,
     onClick,
     type,
-    colorScheme,
+    colorPalette,
     variant,
     disabled,
     ...props
@@ -35,7 +35,7 @@ vi.mock('@chakra-ui/react', () => ({
     children: ReactNode;
     onClick?: () => void;
     type?: 'button' | 'submit' | 'reset';
-    colorScheme?: string;
+    colorPalette?: string;
     variant?: string;
     disabled?: boolean;
     [key: string]: unknown;
@@ -44,7 +44,7 @@ vi.mock('@chakra-ui/react', () => ({
       onClick={onClick}
       type={type}
       disabled={disabled}
-      data-colorscheme={colorScheme}
+      data-colorPalette={colorPalette}
       data-variant={variant}
       {...props}
     >

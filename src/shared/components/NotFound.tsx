@@ -42,7 +42,7 @@ export const NotFound = () => {
         >
           <Link to="/home">
             <Button
-              colorScheme="blue"
+              colorPalette="blue"
               size="lg"
             >
               Go to Home
@@ -51,7 +51,7 @@ export const NotFound = () => {
           <Link to="/login">
             <Button
               variant="outline"
-              colorScheme="gray"
+              colorPalette="gray"
               size="lg"
             >
               Go to Login

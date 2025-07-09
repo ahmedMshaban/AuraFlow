@@ -85,11 +85,14 @@
 }
 
 :global(.theme-calm) .sidebarPanelLink:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(203, 213, 225, 0.3); /* slate.300 with transparency */
 }
 
 .sidebarPanelHeader {
   text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .sidebarTitle {
@@ -98,4 +101,35 @@
 
 :global(.theme-calm) .sidebarTitle {
   color: var(--chakra-colors-gray-800);
+}
+
+.signOutContainer {
+  display: flex;
+  align-items: center;
+}
+
+.signOutButton {
+  background: rgba(254, 202, 202, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  color: rgba(254, 202, 202, 0.9) !important;
+  transition: all 0.2s ease !important;
+}
+
+.signOutButton:hover {
+  background: rgba(254, 202, 202, 0.2) !important;
+  border-color: rgba(239, 68, 68, 0.6) !important;
+  color: rgba(254, 202, 202, 1) !important;
+  transform: translateY(-1px) !important;
+}
+
+:global(.theme-calm) .signOutButton {
+  background: rgba(254, 242, 242, 1) !important;
+  border-color: rgba(252, 165, 165, 1) !important;
+  color: rgba(220, 38, 38, 1) !important;
+}
+
+:global(.theme-calm) .signOutButton:hover {
+  background: rgba(254, 226, 226, 1) !important;
+  border-color: rgba(248, 113, 113, 1) !important;
+  color: rgba(185, 28, 28, 1) !important;
 }

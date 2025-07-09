@@ -67,7 +67,7 @@ const EmailItem = ({ email }: { email: GmailMessageWithStress }) => {
       {email.stressAnalysis && (
         <Badge
           mt={2}
-          colorScheme={
+          colorPalette={
             email.stressAnalysis.priority === 'high'
               ? 'red'
               : email.stressAnalysis.priority === 'medium'

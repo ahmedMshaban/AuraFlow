@@ -188,7 +188,7 @@ const TaskForm = ({
             </Button>
             <Button
               type="submit"
-              colorScheme="blue"
+              colorPalette="blue"
               disabled={isLoading || isSubmitting}
             >
               {isLoading || isSubmitting
