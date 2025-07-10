@@ -47,7 +47,6 @@ async function downloadFile(url, filePath) {
         response.pipe(file);
         file.on('finish', () => {
           file.close();
-          console.log(`Downloaded ${fileName}`);
           resolve();
         });
       })
@@ -59,8 +58,6 @@ async function downloadFile(url, filePath) {
 }
 
 async function downloadModels() {
-  console.log('Downloading face-api.js models...');
-
   for (const url of modelUrls) {
     const fileName = path.basename(url);
     const filePath = path.join(modelsDir, fileName);
@@ -71,8 +68,6 @@ async function downloadModels() {
       console.error(`Error downloading ${fileName}:`, err);
     }
   }
-
-  console.log('All models downloaded successfully!');
 }
 
 downloadModels();

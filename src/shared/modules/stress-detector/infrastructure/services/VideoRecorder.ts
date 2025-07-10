@@ -33,15 +33,12 @@ export class VideoRecorder {
 
     // Find a supported MIME type
     const mimeType = this.getSupportedMimeType();
-    console.log(`Using MIME type: ${mimeType}`);
 
     try {
       this.mediaRecorder = new MediaRecorder(stream, { mimeType });
 
       // Configure event handlers
       this.mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this);
-
-      console.log('Video recorder setup complete');
     } catch (error) {
       console.error('Failed to create MediaRecorder:', error);
       throw error;
@@ -99,13 +96,11 @@ export class VideoRecorder {
         // Start recording
         this.mediaRecorder!.start();
         this.startTime = Date.now();
-        console.log('Recording started...');
 
         // Set timer to stop recording after specified duration
         setTimeout(() => {
           if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
             this.mediaRecorder.stop();
-            console.log('Recording stopped after', finalOptions.duration, 'ms');
           }
         }, finalOptions.duration);
       } catch (error) {

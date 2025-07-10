@@ -15,7 +15,6 @@ export const useWebcam = ({ onCaptureReady, onStreamAvailable }: UseWebcamProps 
   useEffect(() => {
     return () => {
       if (stream) {
-        console.log('Cleaning up camera stream');
         stream.getTracks().forEach((track) => track.stop());
       }
     };
@@ -24,8 +23,6 @@ export const useWebcam = ({ onCaptureReady, onStreamAvailable }: UseWebcamProps 
   // Start webcam
   const startCamera = useCallback(async () => {
     try {
-      console.log('Requesting camera access...');
-
       // Check if browser supports getUserMedia
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error('Browser does not support camera access');
@@ -39,7 +36,6 @@ export const useWebcam = ({ onCaptureReady, onStreamAvailable }: UseWebcamProps 
           frameRate: { ideal: 30 },
         },
       });
-      console.log('✅ Camera access granted');
       setStream(mediaStream);
 
       // Notify parent component that stream is available
@@ -52,13 +48,10 @@ export const useWebcam = ({ onCaptureReady, onStreamAvailable }: UseWebcamProps 
 
         // Add event listeners to ensure video is ready
         videoRef.current.onloadedmetadata = () => {
-          console.log('Video metadata loaded');
-
           // Ensure video plays after metadata is loaded
           videoRef.current
             ?.play()
             .then(() => {
-              console.log('Video playback started');
               setIsActive(true);
               if (onCaptureReady) onCaptureReady();
             })
@@ -67,9 +60,7 @@ export const useWebcam = ({ onCaptureReady, onStreamAvailable }: UseWebcamProps 
             });
         };
 
-        videoRef.current.onloadeddata = () => {
-          console.log(`Video ready with dimensions: ${videoRef.current?.videoWidth}x${videoRef.current?.videoHeight}`);
-        };
+        videoRef.current.onloadeddata = () => {};
 
         videoRef.current.onerror = (e) => {
           console.error('Video error:', e);
@@ -96,8 +87,6 @@ export const useWebcam = ({ onCaptureReady, onStreamAvailable }: UseWebcamProps 
       if (videoRef.current) {
         videoRef.current.srcObject = null;
       }
-
-      console.log('Camera stopped');
     }
   }, [stream]);
 

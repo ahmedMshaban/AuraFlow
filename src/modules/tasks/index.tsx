@@ -77,6 +77,7 @@ const TasksPage = () => {
                     isCreating={isCreating}
                     isCurrentlyStressed={isCurrentlyStressed}
                     isHomePage={false} // This indicates it's the full tasks page
+                    currentView={selectedView} // Pass the current filter view
                   />
                 </div>
               </div>

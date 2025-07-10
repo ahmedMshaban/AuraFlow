@@ -174,14 +174,16 @@ export const StressMonitoringPanel: React.FC = () => {
           </select>
         </HStack>
 
-        <Button
-          onClick={clearHistory}
-          size="sm"
-          className={styles.clearHistoryButton}
-        >
-          <FaTrash style={{ marginRight: '0.5rem' }} />
-          Clear History
-        </Button>
+        {stressHistory.length > 0 && (
+          <Button
+            onClick={clearHistory}
+            size="sm"
+            className={styles.clearHistoryButton}
+          >
+            <FaTrash style={{ marginRight: '0.5rem' }} />
+            Clear History
+          </Button>
+        )}
       </div>
 
       {stressHistory.length > 0 && (

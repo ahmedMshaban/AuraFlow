@@ -6,6 +6,7 @@ import type { TasksProps, Task, CreateTaskData } from '@/shared/types/task.types
 import TaskForm from './TaskForm';
 import TaskItem from './TaskItem';
 import getTabsForMode from '../../infrastructure/helpers/getTasksTabsForMode';
+import { getFilterDescription } from '../../infrastructure/helpers/getFilterDescription';
 
 const Tasks = ({
   upcomingTasks,
@@ -21,6 +22,7 @@ const Tasks = ({
   isCreating,
   isCurrentlyStressed,
   isHomePage = true, // Default to home page mode
+  currentView = 'my-day', // Default to day view
 }: TasksProps) => {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'overdue' | 'completed' | 'priority'>('upcoming');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -163,7 +165,20 @@ const Tasks = ({
               {isCurrentlyStressed ? (
                 <Text color="green.600">🎉 No priority tasks right now - you're doing great!</Text>
               ) : (
-                <Text color="gray.500">No {currentTab.label.toLowerCase()} tasks</Text>
+                <Text color="gray.500">
+                  No {currentTab.label.toLowerCase()} tasks {getFilterDescription(currentView)}
+                  {!isHomePage && currentView !== 'my-month' && (
+                    <Text
+                      as="span"
+                      color="blue.500"
+                      fontSize="sm"
+                      display="block"
+                      mt={1}
+                    >
+                      Try switching to a different time period to see more tasks
+                    </Text>
+                  )}
+                </Text>
               )}
             </Box>
           ) : (

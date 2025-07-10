@@ -70,6 +70,7 @@ export interface TasksProps {
   isCreating: boolean;
   isCurrentlyStressed: boolean;
   isHomePage?: boolean; // Optional prop to determine if it's on the home page (with limits) or tasks page (full view)
+  currentView?: 'my-day' | 'my-week' | 'my-month'; // Current filter view
 }
 
 export interface TaskFormProps {

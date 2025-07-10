@@ -119,6 +119,7 @@ const Home = () => {
                     toggleTaskStatus={toggleTaskStatus}
                     isCreating={isCreating}
                     isCurrentlyStressed={isCurrentlyStressed}
+                    currentView={selectedView}
                   />
                 </div>
               </div>

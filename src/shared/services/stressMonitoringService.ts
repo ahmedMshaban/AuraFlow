@@ -20,7 +20,6 @@ class StressMonitoringService {
    * This should be called when the app starts
    */
   public initialize(): void {
-    console.log('Initializing stress monitoring service');
     this.scheduleNextTest();
 
     // Listen for store changes that might affect our scheduling
@@ -52,7 +51,6 @@ class StressMonitoringService {
 
     // Don't schedule if auto testing is disabled
     if (!autoTestEnabled) {
-      console.log('Auto stress testing is disabled');
       return;
     }
 
@@ -81,7 +79,6 @@ class StressMonitoringService {
     const delayMs = Math.max(0, nextTestTime - now);
 
     // Schedule the test
-    console.log(`Scheduling next stress test in ${delayMs / 1000} seconds (${delayMs / (60 * 1000)} minutes)`);
     this.timerId = window.setTimeout(this.triggerStressTest.bind(this), delayMs);
   }
 
@@ -92,8 +89,6 @@ class StressMonitoringService {
   public triggerStressTest(): void {
     // Clear any existing timer since we're running now
     this.clearScheduledTest();
-
-    console.log('Triggering stress test');
 
     // Dispatch an event to notify the app that a stress test should be shown
     const event = new CustomEvent('triggerStressTest');
@@ -144,7 +139,6 @@ class StressMonitoringService {
    */
   public clearAllScheduledTests(): void {
     this.clearScheduledTest();
-    console.log('All stress monitoring tests cleared');
   }
 }
 

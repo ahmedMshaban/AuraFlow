@@ -15,7 +15,6 @@ export const AuthenticatedStressMonitoring: React.FC = () => {
   // Initialize stress monitoring only when user is logged in
   useEffect(() => {
     if (currentUser) {
-      console.log('User is logged in, initializing stress monitoring');
       stressMonitoringService.initialize();
     }
 

@@ -52,7 +52,6 @@ export const useVideoRecorder = ({
 
       // Setup the recorder
       videoRecorder.setup(stream);
-      console.log('Video recorder setup complete');
       setCameraReady(true);
     } catch (error) {
       console.error('Failed to setup video recorder:', error);
@@ -65,7 +64,6 @@ export const useVideoRecorder = ({
   const startRecordingWithCountdown = useCallback(async () => {
     // Prevent recording multiple times
     if (hasRecorded) {
-      console.log('Recording already completed. No need to record again.');
       return;
     }
 
@@ -99,16 +97,12 @@ export const useVideoRecorder = ({
     setRecordingTime(Math.floor(recordingDuration / 1000));
 
     try {
-      console.log('Starting recording with duration:', recordingDuration);
-
       // Make sure we have a short delay before starting recording to ensure states have updated
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const result = await videoRecorder.startRecording({
         duration: recordingDuration,
       });
-
-      console.log('Recording completed successfully');
 
       // Mark as recorded to prevent further recordings
       setHasRecorded(true);

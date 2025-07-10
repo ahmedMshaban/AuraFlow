@@ -13,11 +13,9 @@ export type ViewType = 'my-day' | 'my-week' | 'my-month';
  * const { selectedView, setSelectedView } = useFilters();
  *
  * // Default view is 'my-day'
- * console.log(selectedView); // 'my-day'
  *
  * // Change to weekly view
  * setSelectedView('my-week');
- * console.log(selectedView); // 'my-week'
  * ```
  */
 const useFilters = (): {

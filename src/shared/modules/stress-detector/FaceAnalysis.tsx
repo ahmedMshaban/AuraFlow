@@ -122,7 +122,6 @@ const FaceAnalysis = ({ onAnalysisComplete, onClose }: FaceAnalysisProps) => {
                       </p>
                       <StressDetector
                         onAnalysisComplete={(result) => {
-                          console.log('Analysis complete:', result);
                           if (onAnalysisComplete) {
                             onAnalysisComplete(result);
                           }

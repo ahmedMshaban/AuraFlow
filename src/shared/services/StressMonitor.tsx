@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 
 import FaceAnalysis from '../modules/stress-detector/FaceAnalysis';
 import { stressMonitoringService } from './stressMonitoringService';
-import { recordStressResult } from '../store/slices/stressMonitoringSlice';
 import type { StressAnalysisResult } from '../modules/stress-detector/infrastructure/types/FaceExpressions.types';
 
 /**
@@ -13,13 +11,11 @@ import type { StressAnalysisResult } from '../modules/stress-detector/infrastruc
  */
 export const StressMonitor = () => {
   const [showAnalysis, setShowAnalysis] = useState<boolean>(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Listen for stress test triggers
   useEffect(() => {
     const handleTriggerStressTest = () => {
-      console.log('StressMonitor received triggerStressTest event');
       setShowAnalysis(true);
     };
 
@@ -34,9 +30,7 @@ export const StressMonitor = () => {
 
   // Handle analysis completion
   const handleAnalysisComplete = (result: StressAnalysisResult) => {
-    console.log('Stress analysis completed with result:', result);
-
-    // Serialize the result before sending to Redux
+    // Serialize the result before sending to the service
     const serializedResult = {
       ...result,
       // Convert FaceExpressions object to a plain object with numeric values
@@ -52,10 +46,7 @@ export const StressMonitor = () => {
             : Date.now(),
     };
 
-    // Record the serialized result in Redux
-    dispatch(recordStressResult(serializedResult));
-
-    // Also record in the service to schedule the next test
+    // Record in the service (which will handle Redux dispatch and schedule the next test)
     stressMonitoringService.recordTestResult(serializedResult);
 
     // Hide the analysis component
@@ -64,7 +55,7 @@ export const StressMonitor = () => {
     // Show appropriate toast based on stress level
     if (result.isStressed) {
       // Show stressed toast and redirect to activities page
-      toast.success('🌿 Take a moment to breathe. Let\'s find some calming activities for you.', {
+      toast.success("🌿 Take a moment to breathe. Let's find some calming activities for you.", {
         duration: 5000,
         style: {
           background: '#fed6e3',
@@ -84,7 +75,7 @@ export const StressMonitor = () => {
       }, 1500);
     } else {
       // Show not stressed toast
-      toast.success('✨ You\'re in a great headspace! Keep up the amazing work.', {
+      toast.success("✨ You're in a great headspace! Keep up the amazing work.", {
         duration: 5000,
         style: {
           background: '#f0f8ff',

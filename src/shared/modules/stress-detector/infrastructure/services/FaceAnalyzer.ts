@@ -26,7 +26,6 @@ export class FaceAnalyzer {
 
     try {
       this.isLoading = true;
-      console.log('Loading face-api.js models...');
 
       // Set models path
       const modelsPath = '/models';
@@ -40,7 +39,6 @@ export class FaceAnalyzer {
 
       this.modelsLoaded = true;
       this.isLoading = false;
-      console.log('✅ face-api.js models loaded');
     } catch (error) {
       this.isLoading = false;
       console.error('❌ Error loading face-api.js models:', error);
