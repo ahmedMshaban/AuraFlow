@@ -346,7 +346,7 @@ describe('Tasks', () => {
 
       render(<Tasks {...propsWithNoUpcoming} />);
 
-      expect(screen.getByText('No upcoming tasks')).toBeDefined();
+      expect(screen.getByText('No upcoming tasks today')).toBeDefined();
     });
   });
 
@@ -548,7 +548,7 @@ describe('Tasks', () => {
 
       render(<Tasks {...emptyProps} />);
 
-      expect(screen.getByText('No upcoming tasks')).toBeDefined();
+      expect(screen.getByText('No upcoming tasks today')).toBeDefined();
     });
 
     it('resets to first available tab when current tab becomes invalid', () => {

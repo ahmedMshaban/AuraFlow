@@ -10,13 +10,13 @@ vi.mock('../infrastructure/helpers/getFilterDisplayNames', () => ({
   getFilterSearchDescription: vi.fn((filter: ViewType) => {
     switch (filter) {
       case 'my-day':
-        return 'Today';
+        return 'emails from today';
       case 'my-week':
-        return 'This Week';
+        return 'emails from the last 7 days';
       case 'my-month':
-        return 'This Month';
+        return 'emails from the last 30 days';
       default:
-        return 'This Month';
+        return 'emails from the last 30 days';
     }
   }),
 }));
@@ -36,7 +36,7 @@ vi.mock('../infrastructure/styles/home.module.css', () => ({
 }));
 
 // Mock EmailItem component
-vi.mock('./emails/EmailItem', () => ({
+vi.mock('../../home/components/emails/EmailItem', () => ({
   default: ({ email }: { email: GmailMessageWithStress }) => (
     <div data-testid={`email-item-${email.id}`}>
       <span>{email.subject}</span>
@@ -45,7 +45,7 @@ vi.mock('./emails/EmailItem', () => ({
   ),
 }));
 
-// Mock Chakra UI Box component
+// Mock Chakra UI components
 vi.mock('@chakra-ui/react', () => ({
   Box: ({
     children,
@@ -62,6 +62,25 @@ vi.mock('@chakra-ui/react', () => ({
     >
       {children}
     </div>
+  ),
+  HStack: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
+    <div
+      data-testid="hstack"
+      {...props}
+    >
+      {children}
+    </div>
+  ),
+  Text: ({ children, as, ...props }: { children: React.ReactNode; as?: string; [key: string]: unknown }) => {
+    const Component = as || 'span';
+    return React.createElement(Component, props, children);
+  },
+  Heading: ({ children, as, ...props }: { children: React.ReactNode; as?: string; [key: string]: unknown }) => {
+    const Component = as || 'h3';
+    return React.createElement(Component, props, children);
+  },
+  Badge: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
+    <span {...props}>{children}</span>
   ),
 }));
 
@@ -189,7 +208,9 @@ describe('SearchResults', () => {
       );
 
       expect(screen.getByText('No Results Found')).toBeInTheDocument();
-      expect(screen.getByText(/No emails found for "no results query" in This Month/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/No emails found for "no results query" in emails from the last 30 days/),
+      ).toBeInTheDocument();
     });
 
     it('should show clear search button in no results state', () => {
@@ -230,7 +251,7 @@ describe('SearchResults', () => {
         />,
       );
 
-      expect(screen.getByText(/No emails found for "test" in Today/)).toBeInTheDocument();
+      expect(screen.getByText(/No emails found for "test" in emails from today/)).toBeInTheDocument();
     });
   });
 
@@ -245,7 +266,9 @@ describe('SearchResults', () => {
         />,
       );
 
-      expect(screen.getByText(/Search Results for "test query" in This Month \(1 found\)/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Search Results for "test query" in emails from the last 30 days \(1 found\)/),
+      ).toBeInTheDocument();
       expect(screen.getByTestId('email-item-1')).toBeInTheDocument();
     });
 
@@ -268,7 +291,9 @@ describe('SearchResults', () => {
         />,
       );
 
-      expect(screen.getByText(/Search Results for "multiple results" in This Month \(2 found\)/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Search Results for "multiple results" in emails from the last 30 days \(2 found\)/),
+      ).toBeInTheDocument();
       expect(screen.getByTestId('email-item-1')).toBeInTheDocument();
       expect(screen.getByTestId('email-item-2')).toBeInTheDocument();
     });
@@ -311,7 +336,9 @@ describe('SearchResults', () => {
         />,
       );
 
-      expect(screen.getByText(/Search Results for "test" in This Week \(1 found\)/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Search Results for "test" in emails from the last 7 days \(1 found\)/),
+      ).toBeInTheDocument();
     });
   });
 
@@ -339,7 +366,7 @@ describe('SearchResults', () => {
 
       // Component shows results even with empty query if results exist
       expect(container.firstChild).not.toBeNull();
-      expect(screen.getByText(/Search Results for "" in This Month \(1 found\)/)).toBeInTheDocument();
+      expect(screen.getByText(/Search Results for "" in emails from the last 30 days \(1 found\)/)).toBeInTheDocument();
     });
   });
 
@@ -355,12 +382,12 @@ describe('SearchResults', () => {
         />,
       );
 
-      expect(screen.getByText(/No emails found for "test" in This Month/)).toBeInTheDocument();
+      expect(screen.getByText(/No emails found for "test" in emails from the last 30 days/)).toBeInTheDocument();
     });
 
     it('should handle all filter types correctly', () => {
       const filters: ViewType[] = ['my-day', 'my-week', 'my-month'];
-      const expectedTexts = ['Today', 'This Week', 'This Month'];
+      const expectedTexts = ['emails from today', 'emails from the last 7 days', 'emails from the last 30 days'];
 
       filters.forEach((filter, index) => {
         const { unmount } = render(
@@ -390,7 +417,7 @@ describe('SearchResults', () => {
         />,
       );
 
-      const heading = screen.getByRole('heading', { level: 3 });
+      const heading = screen.getByRole('heading', { level: 3, name: /Search Results for "test"/ });
       expect(heading).toBeInTheDocument();
       expect(heading).toHaveTextContent(/Search Results for "test"/);
     });
@@ -434,7 +461,7 @@ describe('SearchResults', () => {
         />,
       );
 
-      expect(screen.getByText(/No emails found for "test" in This Month/)).toBeInTheDocument();
+      expect(screen.getByText(/No emails found for "test" in emails from the last 30 days/)).toBeInTheDocument();
     });
 
     it('should handle empty searchQuery correctly', () => {

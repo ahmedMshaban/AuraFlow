@@ -16,12 +16,15 @@ class MockVideoElement {
 
 // Mock for MediaStream
 class MockMediaStream {
-  tracks: MediaStreamTrack[] = [
-    { stop: vi.fn() } as unknown as MediaStreamTrack,
-    { stop: vi.fn() } as unknown as MediaStreamTrack,
-  ];
+  constructor() {
+    this.tracks = [{ stop: vi.fn() } as unknown as MediaStreamTrack, { stop: vi.fn() } as unknown as MediaStreamTrack];
+  }
 
-  getTracks = vi.fn().mockImplementation(() => this.tracks);
+  tracks: MediaStreamTrack[];
+
+  getTracks() {
+    return this.tracks;
+  }
 }
 
 // Setup global mocks
@@ -31,9 +34,6 @@ const mockMediaDevices = { getUserMedia: mockGetUserMedia };
 describe('useWebcam', () => {
   // Setup mocks before tests
   beforeEach(() => {
-    // Mock video element ref
-    const mockVideoEl = new MockMediaStream();
-
     // Mock navigator.mediaDevices
     Object.defineProperty(globalThis.navigator, 'mediaDevices', {
       writable: true,
@@ -43,7 +43,8 @@ describe('useWebcam', () => {
     // Create a stub for HTMLVideoElement
     vi.spyOn(HTMLVideoElement.prototype, 'play').mockImplementation(() => Promise.resolve());
 
-    // Mock successful media stream
+    // Mock successful media stream - default to success
+    const mockVideoEl = new MockMediaStream();
     mockGetUserMedia.mockResolvedValue(mockVideoEl);
 
     vi.clearAllMocks();
@@ -79,15 +80,21 @@ describe('useWebcam', () => {
 
     await act(async () => {
       await result.current.startCamera();
+    });
 
-      // Simulate video loaded events
-      if (mockVideo.onloadedmetadata) mockVideo.onloadedmetadata();
+    // Simulate video loaded event to trigger the play
+    await act(async () => {
+      if (mockVideo.onloadedmetadata) {
+        mockVideo.onloadedmetadata();
+      }
     });
 
     // Verify state updates
     expect(result.current.stream).toBe(mockMediaStream);
     expect(onStreamAvailable).toHaveBeenCalledWith(mockMediaStream);
     expect(mockVideo.play).toHaveBeenCalled();
+    expect(result.current.isActive).toBe(true);
+    expect(onCaptureReady).toHaveBeenCalled();
   });
 
   it('should set error if getUserMedia throws an exception', async () => {
@@ -139,7 +146,12 @@ describe('useWebcam', () => {
 
   it('should handle the case when video ref is not available', async () => {
     const onCaptureReady = vi.fn();
-    const { result } = renderHook(() => useWebcam({ onCaptureReady }));
+    const onStreamAvailable = vi.fn();
+
+    const mockMediaStream = new MockMediaStream();
+    mockGetUserMedia.mockResolvedValueOnce(mockMediaStream);
+
+    const { result } = renderHook(() => useWebcam({ onCaptureReady, onStreamAvailable }));
 
     // Ensure videoRef.current is null
     result.current.videoRef.current = null;
@@ -148,8 +160,14 @@ describe('useWebcam', () => {
       await result.current.startCamera();
     });
 
+    // onStreamAvailable should still be called since stream is created
+    expect(onStreamAvailable).toHaveBeenCalledWith(mockMediaStream);
     // onCaptureReady should not have been called since video element wasn't available
     expect(onCaptureReady).not.toHaveBeenCalled();
+    // Stream should still be set
+    expect(result.current.stream).toBe(mockMediaStream);
+    // isActive should be false since video couldn't be played
+    expect(result.current.isActive).toBe(false);
   });
 
   it('should clean up on unmount', async () => {
@@ -188,10 +206,11 @@ describe('useWebcam', () => {
   });
 
   it('should handle play error', async () => {
+    const onCaptureReady = vi.fn();
     const mockMediaStream = new MockMediaStream();
     mockGetUserMedia.mockResolvedValueOnce(mockMediaStream);
 
-    const { result } = renderHook(() => useWebcam());
+    const { result } = renderHook(() => useWebcam({ onCaptureReady }));
 
     // Mock the video element ref
     const mockVideo = new MockVideoElement();
@@ -202,13 +221,20 @@ describe('useWebcam', () => {
 
     await act(async () => {
       await result.current.startCamera();
-
-      // Simulate video loaded event
-      if (mockVideo.onloadedmetadata) mockVideo.onloadedmetadata();
     });
 
-    // Should still have set the stream but isActive should be false
+    // Simulate video loaded event that will trigger play (which will fail)
+    await act(async () => {
+      if (mockVideo.onloadedmetadata) {
+        mockVideo.onloadedmetadata();
+      }
+    });
+
+    // Should have set the stream
     expect(result.current.stream).toBe(mockMediaStream);
-    expect(result.current.isActive).toBe(false); // This will actually be true in the implementation as-is
+    // onCaptureReady should not have been called due to play error
+    expect(onCaptureReady).not.toHaveBeenCalled();
+    // isActive should be false since play failed
+    expect(result.current.isActive).toBe(false);
   });
 });

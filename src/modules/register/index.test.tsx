@@ -65,7 +65,7 @@ vi.mock('@/shared/theme/button/Button', () => ({
 }));
 
 // Mock images
-vi.mock('../../assets/images/auraFlow-normal-white.png', () => ({
+vi.mock('../../assets/images/auraFlow-normal-colors.png', () => ({
   default: 'mock-logo.png',
 }));
 
@@ -182,7 +182,8 @@ describe('Register', () => {
       const button = screen.getByTestId('button');
       expect(button).toBeDefined();
       expect(button.getAttribute('data-as-child')).toBe('true');
-      expect(button.getAttribute('data-variant')).toBe('outline');
+      // The Button component doesn't have a variant prop in the Register component, so it should be null
+      expect(button.getAttribute('data-variant')).toBeNull();
     });
 
     it('has proper image credit link attributes', () => {
