@@ -96,7 +96,7 @@
 }
 
 .sidebarTitle {
-  font-size: 28px;
+  font-size: 1.75rem;
 }
 
 :global(.theme-calm) .sidebarTitle {

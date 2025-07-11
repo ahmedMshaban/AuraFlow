@@ -18,7 +18,7 @@
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -34,7 +34,7 @@
 
 .countdown {
   margin: 20px 0;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
@@ -102,7 +102,7 @@
   cursor: pointer;
   background-color: #0078d4;
   color: white;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .recording-actions button:hover {

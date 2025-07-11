@@ -160,7 +160,7 @@ const TaskForm = ({
                   padding: '8px 12px',
                   border: '1px solid #E2E8F0',
                   borderRadius: '6px',
-                  fontSize: '16px',
+                  fontSize: '1rem',
                   backgroundColor: 'white',
                 }}
                 {...register('priority', {

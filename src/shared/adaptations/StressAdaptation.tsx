@@ -47,14 +47,14 @@ export const StressAdaptations: React.FC = () => {
               alignItems: 'center',
             }}
           >
-            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>AuraFlow Suggestion</h3>
+            <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600 }}>AuraFlow Suggestion</h3>
             <button
               onClick={dismissBreakSuggestion}
               style={{
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                fontSize: '18px',
+                fontSize: '1.125rem',
                 padding: '5px',
               }}
             >
@@ -62,9 +62,9 @@ export const StressAdaptations: React.FC = () => {
             </button>
           </div>
 
-          <p style={{ margin: '10px 0', fontSize: '14px' }}>{motivationalMessage}</p>
+          <p style={{ margin: '10px 0', fontSize: '0.875rem' }}>{motivationalMessage}</p>
 
-          <div style={{ fontSize: '12px', color: '#666', marginTop: '10px' }}>
+          <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '10px' }}>
             <p>Current adaptations:</p>
             <ul style={{ paddingLeft: '20px', margin: '5px 0' }}>
               <li>Theme: {themeLabel}</li>
@@ -89,7 +89,7 @@ export const StressAdaptations: React.FC = () => {
                 padding: '8px 16px',
                 borderRadius: '4px',
                 cursor: 'pointer',
-                fontSize: '13px',
+                fontSize: '0.8125rem',
               }}
             >
               Take a Break
