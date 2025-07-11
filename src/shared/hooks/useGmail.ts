@@ -9,7 +9,61 @@ import type { GmailAuthStatus, GmailMessageWithStress } from '../types/gmail.typ
 import type { ViewType } from '@/shared/hooks/useFilters';
 
 /**
- * Custom hook for Gmail integration with stress analysis
+ * Comprehensive hook for Gmail integration with stress-aware email management.
+ * Provides complete email functionality including authentication, fetching, searching,
+ * and stress-based prioritization of messages.
+ *
+ * Core Features:
+ * - Gmail OAuth authentication and session management
+ * - Stress-aware email categorization (focused vs other)
+ * - View-based date filtering (day/week/month)
+ * - Real-time email search with stress analysis
+ * - Priority classification for better email management
+ *
+ * Authentication Flow:
+ * - Automatic auth status checking on mount
+ * - Google OAuth popup authentication
+ * - Profile information retrieval
+ * - Secure session management
+ *
+ * Email Management:
+ * - Categorizes emails by stress-based priority
+ * - Applies date filters based on selected view
+ * - Provides search functionality with stress analysis
+ * - Maintains separate focused and other email lists
+ *
+ * @param selectedView - Current time-based view filter for date range filtering
+ * @returns Object containing auth state, email data, and management functions
+ *
+ * @example
+ * ```tsx
+ * function EmailDashboard() {
+ *   const { selectedView } = useFilters();
+ *   const {
+ *     isAuthenticated,
+ *     focusedEmails,
+ *     otherEmails,
+ *     authenticate,
+ *     fetchEmailsByPriority,
+ *     searchEmails
+ *   } = useGmail(selectedView);
+ *
+ *   if (!isAuthenticated) {
+ *     return <Button onClick={authenticate}>Connect Gmail</Button>;
+ *   }
+ *
+ *   return (
+ *     <div>
+ *       <EmailList title="Priority Emails" emails={focusedEmails} />
+ *       <EmailList title="Other Emails" emails={otherEmails} />
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @note Integrates with stress monitoring for intelligent email prioritization
+ * @see {@link useFilters} for view-based filtering
+ * @see {@link useStressMonitoring} for stress analysis integration
  */
 export const useGmail = (selectedView: ViewType) => {
   const [authStatus, setAuthStatus] = useState<GmailAuthStatus>({

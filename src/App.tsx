@@ -6,80 +6,80 @@ import StoreProvider from './shared/services/StoreProvider';
 import AuthenticatedStressMonitoring from './shared/components/AuthenticatedStressMonitoring';
 import { RouteGuard, NotFound } from './shared/components';
 
-import Login from './modules/login';
-import Register from './modules/register';
-import Home from './modules/home';
-import Activities from './modules/activities';
-import TasksPage from './modules/tasks';
-import EmailsPage from './modules/emails';
+import Login from './pages/login';
+import Register from './pages/register';
+import Home from './pages/home';
+import Activities from './pages/activities';
+import TasksPage from './pages/tasks';
+import EmailsPage from './pages/emails';
 import './shared/adaptations/themes.css';
 import './App.css';
 
-function App() {
-  const routesArray = [
-    {
-      path: '/',
-      element: (
-        <RouteGuard isPublicRoute>
-          <Login />
-        </RouteGuard>
-      ),
-    },
-    {
-      path: '/login',
-      element: (
-        <RouteGuard isPublicRoute>
-          <Login />
-        </RouteGuard>
-      ),
-    },
-    {
-      path: '/register',
-      element: (
-        <RouteGuard isPublicRoute>
-          <Register />
-        </RouteGuard>
-      ),
-    },
-    {
-      path: '/home',
-      element: (
-        <RouteGuard>
-          <Home />
-        </RouteGuard>
-      ),
-    },
-    {
-      path: '/activities',
-      element: (
-        <RouteGuard>
-          <Activities />
-        </RouteGuard>
-      ),
-    },
-    {
-      path: '/tasks',
-      element: (
-        <RouteGuard>
-          <TasksPage />
-        </RouteGuard>
-      ),
-    },
-    {
-      path: '/emails',
-      element: (
-        <RouteGuard>
-          <EmailsPage />
-        </RouteGuard>
-      ),
-    },
-    {
-      path: '*',
-      element: <NotFound />,
-    },
-  ];
+const routes = [
+  {
+    path: '/',
+    element: (
+      <RouteGuard isPublicRoute>
+        <Login />
+      </RouteGuard>
+    ),
+  },
+  {
+    path: '/login',
+    element: (
+      <RouteGuard isPublicRoute>
+        <Login />
+      </RouteGuard>
+    ),
+  },
+  {
+    path: '/register',
+    element: (
+      <RouteGuard isPublicRoute>
+        <Register />
+      </RouteGuard>
+    ),
+  },
+  {
+    path: '/home',
+    element: (
+      <RouteGuard>
+        <Home />
+      </RouteGuard>
+    ),
+  },
+  {
+    path: '/activities',
+    element: (
+      <RouteGuard>
+        <Activities />
+      </RouteGuard>
+    ),
+  },
+  {
+    path: '/tasks',
+    element: (
+      <RouteGuard>
+        <TasksPage />
+      </RouteGuard>
+    ),
+  },
+  {
+    path: '/emails',
+    element: (
+      <RouteGuard>
+        <EmailsPage />
+      </RouteGuard>
+    ),
+  },
+  {
+    path: '*',
+    element: <NotFound />,
+  },
+];
 
-  const routesElement = useRoutes(routesArray);
+function App() {
+  const routesElement = useRoutes(routes);
 
   return (
     <StoreProvider>

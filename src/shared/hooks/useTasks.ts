@@ -13,6 +13,71 @@ import type { Task, CreateTaskData, UpdateTaskData, TaskStats, TaskFilters } fro
 
 import type { ViewType } from '@/shared/hooks/useFilters';
 
+/**
+ * Comprehensive hook for task management with stress-aware prioritization.
+ * Provides complete CRUD operations for tasks with intelligent categorization,
+ * filtering, and analytics capabilities.
+ *
+ * Core Features:
+ * - Full task lifecycle management (create, read, update, delete)
+ * - View-based filtering (day/week/month)
+ * - Task categorization (upcoming, overdue, completed)
+ * - Real-time task statistics and analytics
+ * - User-specific task isolation
+ *
+ * Task Operations:
+ * - Create tasks with due dates and priorities
+ * - Update task status, content, and metadata
+ * - Delete tasks with proper cleanup
+ * - Toggle completion status efficiently
+ * - Bulk operations and filtering
+ *
+ * Analytics & Insights:
+ * - Task completion statistics
+ * - Overdue task tracking
+ * - Time-based task distribution
+ * - Productivity metrics
+ *
+ * @param selectedView - Optional view filter for date-based task filtering
+ * @returns Object containing task data, statistics, and management functions
+ *
+ * @example
+ * ```tsx
+ * function TaskManager() {
+ *   const { selectedView } = useFilters();
+ *   const {
+ *     tasks,
+ *     upcomingTasks,
+ *     overdueTasks,
+ *     taskStats,
+ *     createTask,
+ *     updateTask,
+ *     toggleTaskStatus
+ *   } = useTasks(selectedView);
+ *
+ *   const handleCreateTask = async (data) => {
+ *     await createTask({
+ *       title: data.title,
+ *       description: data.description,
+ *       dueDate: data.dueDate,
+ *       priority: 'medium'
+ *     });
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       <TaskStats stats={taskStats} />
+ *       <TaskList tasks={upcomingTasks} onToggle={toggleTaskStatus} />
+ *       <CreateTaskForm onSubmit={handleCreateTask} />
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @note Requires user authentication for task access
+ * @see {@link useAuth} for authentication state
+ * @see {@link useFilters} for view-based filtering
+ */
 export const useTasks = (selectedView?: ViewType) => {
   const authContext = useAuth();
   const currentUser = authContext?.currentUser;

@@ -4,7 +4,60 @@ import { useStressMonitoring } from './useStressMonitoring';
 import { selectManualStressModeEnabled } from '../store/slices/stressMonitoringSlice';
 
 /**
- * Hook to analyze stress data and provide insights
+ * Advanced hook for analyzing stress data and providing actionable insights.
+ * Processes stress monitoring history to generate meaningful analytics and trends.
+ * Supports both automatic facial expression detection and manual stress mode.
+ *
+ * Analytics Features:
+ * - Average stress level calculations
+ * - Time-based stress trend analysis (hour/day/week)
+ * - Current stress state determination
+ * - Stress frequency percentage tracking
+ * - Dominant stress expression identification
+ *
+ * Trend Analysis:
+ * - Hourly stress patterns for immediate awareness
+ * - Daily stress trends for routine optimization
+ * - Weekly stress patterns for lifestyle insights
+ * - Comparative analysis across time periods
+ *
+ * Manual Mode Support:
+ * - Overrides automatic detection when enabled
+ * - Allows user-controlled stress state simulation
+ * - Useful for testing stress adaptations
+ *
+ * @returns Object containing comprehensive stress analytics and insights
+ *
+ * @example
+ * ```tsx
+ * function StressDashboard() {
+ *   const {
+ *     averageStressLevel,
+ *     isCurrentlyStressed,
+ *     stressTrends,
+ *     stressPercentage,
+ *     dominantStressExpression
+ *   } = useStressAnalytics();
+ *
+ *   return (
+ *     <div>
+ *       <StressGauge
+ *         current={averageStressLevel}
+ *         isStressed={isCurrentlyStressed}
+ *       />
+ *       <TrendChart trends={stressTrends} />
+ *       <InsightPanel
+ *         percentage={stressPercentage}
+ *         expression={dominantStressExpression}
+ *       />
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @note Requires stress monitoring to be active for meaningful data
+ * @see {@link useStressMonitoring} for raw stress data collection
+ * @see {@link useStressAdaptation} for applying analytics to UI adaptations
  */
 export const useStressAnalytics = () => {
   const { stressHistory, lastStressResult } = useStressMonitoring();

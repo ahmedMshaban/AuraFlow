@@ -8,6 +8,62 @@ import RenderStepIndicator from './components/RenderStepIndicator';
 import useFaceAnalysisModal from './infrastructure/hooks/useFaceAnalysisModal';
 import styles from './infrastructure/styles/FaceAnalysis.module.css';
 
+/**
+ * Main facial analysis modal component for stress detection and wellness check-ins.
+ * Provides a guided user experience for capturing facial expressions and analyzing stress levels.
+ * Adapts messaging based on user history and guides through multi-step analysis process.
+ *
+ * Modal Features:
+ * - Adaptive messaging based on user history (first-time vs returning users)
+ * - Multi-step guided process with visual progress indicators
+ * - Camera permissions and setup handling
+ * - Real-time facial expression analysis
+ * - Stress level calculation and reporting
+ *
+ * User Experience Flow:
+ * - Step 0: Introduction and camera setup instructions
+ * - Step 1: 3-second video recording for facial analysis
+ * - Step 2: Results display and completion
+ *
+ * Adaptive Messaging:
+ * - New users: Educational onboarding about stress monitoring
+ * - Returning users: Quick wellness check-in interface
+ * - Contextual step titles based on progress and user status
+ *
+ * @param onAnalysisComplete - Callback function called when analysis is finished
+ * @param onClose - Optional callback for modal close events
+ *
+ * @example
+ * ```tsx
+ * function StressMonitoringDashboard() {
+ *   const [showAnalysis, setShowAnalysis] = useState(false);
+ *
+ *   const handleAnalysisComplete = (result) => {
+ *     console.log('Stress level:', result.stressLevel);
+ *     setShowAnalysis(false);
+ *     // Update UI adaptations based on stress level
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       <Button onClick={() => setShowAnalysis(true)}>
+ *         Check Stress Level
+ *       </Button>
+ *       {showAnalysis && (
+ *         <FaceAnalysis
+ *           onAnalysisComplete={handleAnalysisComplete}
+ *           onClose={() => setShowAnalysis(false)}
+ *         />
+ *       )}
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @note Requires camera permissions and good lighting for accurate analysis
+ * @see {@link StressDetector} for the core analysis functionality
+ * @see {@link useStressMonitoring} for stress data integration
+ */
 const FaceAnalysis = ({ onAnalysisComplete, onClose }: FaceAnalysisProps) => {
   const stressHistory = useSelector(selectStressHistory);
   const { open, setOpen, step, setStep, handleSkip, handleNextStep } = useFaceAnalysisModal(onClose || (() => {}));

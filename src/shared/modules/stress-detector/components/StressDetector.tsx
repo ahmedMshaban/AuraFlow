@@ -1,7 +1,61 @@
 /**
+ * Core stress detection component that analyzes facial expressions from video input.
+ * Orchestrates the complete stress analysis workflow from model loading to result display.
+ * Provides real-time feedback and error handling for the facial analysis process.
  *
- * A component that analyzes facial expressions from a 5-second video
- * and provides stress level feedback.
+ * Component Features:
+ * - Automatic facial analysis model loading and management
+ * - 3-second video recording for expression capture
+ * - Real-time facial expression detection and analysis
+ * - Stress level calculation based on expression patterns
+ * - Comprehensive error handling and user feedback
+ *
+ * Analysis Workflow:
+ * - Load facial recognition models (face detection, landmarks, expressions)
+ * - Initialize camera and video capture
+ * - Record 3-second video segment of user's face
+ * - Analyze facial expressions frame by frame
+ * - Calculate stress levels from expression data
+ * - Provide results and insights to user
+ *
+ * Error Handling:
+ * - Model loading failures with retry options
+ * - Camera access issues and permissions
+ * - Poor lighting or face detection problems
+ * - Analysis processing errors
+ *
+ * @param onAnalysisComplete - Callback function to handle completed analysis results
+ * @param currentStep - Current step in the analysis process for UI coordination
+ *
+ * @example
+ * ```tsx
+ * function StressAnalysisModal() {
+ *   const [currentStep, setCurrentStep] = useState(0);
+ *
+ *   const handleAnalysisComplete = (result) => {
+ *     console.log('Analysis complete:', {
+ *       stressLevel: result.stressLevel,
+ *       dominantExpression: result.dominantExpression,
+ *       confidence: result.confidence
+ *     });
+ *
+ *     // Process results for UI adaptations
+ *     updateStressAdaptations(result);
+ *   };
+ *
+ *   return (
+ *     <StressDetector
+ *       onAnalysisComplete={handleAnalysisComplete}
+ *       currentStep={currentStep}
+ *     />
+ *   );
+ * }
+ * ```
+ *
+ * @note Requires webcam access and adequate lighting for accurate results
+ * @see {@link VideoCapture} for video recording functionality
+ * @see {@link useFaceModel} for model loading management
+ * @see {@link useFaceAnalysis} for expression analysis logic
  */
 
 import React from 'react';

@@ -2,7 +2,52 @@ import React from 'react';
 import { useStressAdaptation } from './StressAdaptationContext';
 
 /**
- * Component that displays and applies stress adaptations
+ * A dynamic stress adaptation display component that provides real-time stress management suggestions.
+ * Shows contextual break suggestions, theme adaptations, and motivational messaging based on
+ * the user's current stress level and behavioral patterns.
+ *
+ * Features:
+ * - Animated break suggestion notifications with slide-in/out transitions
+ * - Dynamic theme application to document body for visual stress reduction
+ * - Motivational messaging tailored to stress level and context
+ * - Adaptive interface simplification during high stress periods
+ * - Dismissible notifications with user control
+ * - Visual adaptation indicators showing current applied changes
+ * - Accessible design with proper contrast and readable typography
+ *
+ * Visual Adaptations:
+ * - Theme switching between standard and calming color palettes
+ * - Background colors adapt based on stress level
+ * - Simplified UI elements when stress is detected
+ * - Smooth transitions for non-jarring user experience
+ *
+ * Break Management:
+ * - Intelligent break suggestions based on stress patterns
+ * - Contextual motivational messages for stress relief
+ * - User-controlled dismissal of break suggestions
+ * - Visual indicators of current adaptive measures
+ * - Call-to-action buttons for break engagement
+ *
+ * @returns A floating stress adaptation interface with dynamic suggestions
+ *
+ * @example
+ * ```tsx
+ * // Basic usage - renders adaptive stress management interface
+ * <StressAdaptations />
+ *
+ * // The component automatically:
+ * // - Monitors stress levels from context
+ * // - Applies appropriate theme adaptations
+ * // - Shows break suggestions when needed
+ * // - Provides motivational messaging
+ * // - Manages visual transitions and animations
+ * ```
+ *
+ * @note Component applies theme classes directly to document.body for global theming
+ * @note Break suggestions appear as floating notifications with smooth animations
+ * @note All adaptations are user-dismissible while maintaining adaptive behavior
+ * @see {@link useStressAdaptation} For stress adaptation context and state management
+ * @see {@link StressAdaptationContext} For global stress adaptation state
  */
 export const StressAdaptations: React.FC = () => {
   const { theme, simplifyUI, motivationalMessage, isBreakSuggested, dismissBreakSuggestion } = useStressAdaptation();

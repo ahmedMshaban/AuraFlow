@@ -14,7 +14,61 @@ import {
 import { stressMonitoringService } from '../services/stressMonitoringService';
 
 /**
- * Custom hook for working with stress monitoring data
+ * Primary hook for stress monitoring functionality and real-time stress detection.
+ * Manages facial expression analysis, stress level tracking, and automated testing.
+ * Provides comprehensive stress monitoring controls and data access.
+ *
+ * Core Features:
+ * - Real-time facial expression detection
+ * - Automated stress testing at configurable intervals
+ * - Manual stress mode for testing and demonstration
+ * - Historical stress data management
+ * - Configurable monitoring settings
+ *
+ * Monitoring Capabilities:
+ * - Continuous facial expression analysis
+ * - Stress level calculation based on expressions
+ * - Automated periodic stress assessments
+ * - Manual trigger for immediate stress testing
+ * - Historical data tracking and storage
+ *
+ * Configuration Options:
+ * - Adjustable test intervals (minutes)
+ * - Auto-testing enable/disable
+ * - Manual stress mode toggle
+ * - History data management
+ *
+ * @returns Object containing stress data, settings, and control functions
+ *
+ * @example
+ * ```tsx
+ * function StressControls() {
+ *   const {
+ *     lastStressResult,
+ *     isManualStressModeEnabled,
+ *     triggerStressTest,
+ *     setInterval,
+ *     toggleManualStressMode
+ *   } = useStressMonitoring();
+ *
+ *   return (
+ *     <div>
+ *       <Text>Current Stress: {lastStressResult?.stressLevel}%</Text>
+ *       <Button onClick={triggerStressTest}>Test Now</Button>
+ *       <Switch
+ *         isChecked={isManualStressModeEnabled}
+ *         onChange={toggleManualStressMode}
+ *       >
+ *         Manual Mode
+ *       </Switch>
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @note Requires camera access for facial expression detection
+ * @see {@link useStressAnalytics} for processed analytics from this data
+ * @see {@link StressAdaptation} for UI adaptations based on stress levels
  */
 export const useStressMonitoring = () => {
   const dispatch = useDispatch();
