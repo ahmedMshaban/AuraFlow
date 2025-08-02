@@ -16,7 +16,6 @@ An emotion-aware adaptive task management system designed to reduce workplace st
 ## 🚀 Live Demo
 
 - **Live Application**: [https://aura-flow-gamma.vercel.app/](https://aura-flow-gamma.vercel.app/)
-- **GitHub Repository**: [https://github.com/ahmedMshaban/AuraFlow/](https://github.com/ahmedMshaban/AuraFlow/)
 
 ## 🛠️ Prerequisites
 
@@ -153,13 +152,6 @@ AuraFlow prioritizes user privacy:
 - **Minimal Data Storage**: Only stress scores are stored, never raw biometric data
 - **Secure Authentication**: OAuth 2.0 with Google and Firebase
 - **Session Management**: Tokens are stored securely and cleared on logout
-
-## 📊 Performance
-
-- **Stress Detection**: ~2.3 seconds average processing time
-- **UI Adaptation**: <500ms response time
-- **Gmail API**: ~1.8 seconds average response
-- **Task Operations**: <300ms average response
 
 ## 👨‍💻 Author
 
